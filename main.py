@@ -36,8 +36,7 @@ def choosefile():
 
 def gui(root):
     frame = tk.Frame(root)
-    root.title("Exemple ouverture fichier")
-    frame.pack(expand=1, fill='both')
+    root.title("Office Assistant")
  
 def Convertir_pdf():
     chemin_final = Chemin
@@ -65,7 +64,7 @@ def Convertir_pdf():
         IMG_Mult[0].save(r""+nom, save_all=True, append_images=IMG_Mult[1:])
 
 def Erreur_Chemin_Sauvegadre():
-    messagebox.showinfo("Erreur", "Chemin de suavegarde Manquant")
+    messagebox.showinfo("Erreur", "Chemin de sauvegarde manquant")
 def Erreur_Selection_img():
     messagebox.showinfo("Erreur", "Pas d'image selectionnée")
 def Erreur_nom_fichier():
@@ -88,41 +87,48 @@ root.geometry("700x700")   # Taille de la fenetre
 
 root.resizable(width=False, height=False) #blocage de la taille de la fenetre
 
+tabControl = ttk.Notebook(root)
+tab1 = ttk.Frame(tabControl)
+tab2 = ttk.Frame(tabControl)
+tabControl.add(tab1, text ='Pdf Creator')
+tabControl.add(tab2, text ='In Progress')
+tabControl.pack(expand= 1, fill ="both")
+
 gui(root) # Selection du fichier csv
 
 #-----------BOUTON SAVE-----------------#
 
-Bouton_Emplacement_Sauvegarde = tk.Button(root, text="Dossier de Sauvegarde", command=Save_Path)
+Bouton_Emplacement_Sauvegarde = tk.Button(tab1, text="Dossier de Sauvegarde", command=Save_Path)
 Bouton_Emplacement_Sauvegarde.place(x=50, y=25, width=200, height=40)
 
-Bouton_Selec_image = tk.Button(root, text="Selectionner fichier", command=choosefile)
+Bouton_Selec_image = tk.Button(tab1, text="Selectionner fichier", command=choosefile)
 Bouton_Selec_image.place(x=150, y=160, width=400, height=50)
 
-Bouton_Validation = tk.Button(root, text="Convertir en Pdf", command=Convertir_pdf)
+Bouton_Validation = tk.Button(tab1, text="Convertir en Pdf", command=Convertir_pdf)
 Bouton_Validation.place(x=150, y=500, width=400, height=50)
 
-Bouton_Reset= Button(root, text="Reset selection", command=RESET)
+Bouton_Reset= Button(tab1, text="Reset selection", command=RESET)
 Bouton_Reset.place(x=150, y=575, width=200, height=50)
 
-Bouton_Quitter = Button(root, text="Quitter", command=root.destroy)
+Bouton_Quitter = Button(tab1, text="Quitter", command=root.destroy)
 Bouton_Quitter.place(x=350, y=575, width=200, height=50)
 
 
 # CHemin de la sauvegarde
-lbl1 = Label(root, text='Veuillez selectionner un dossier', width=10)
+lbl1 = Label(tab1, text='Veuillez selectionner un dossier', width=10)
 lbl1.place(x=250, y=25, width=400, height=40)
 
 
 #Nom fichier final
-lbl2 = Label(root, text="Nom du fichier pdf créé : ", width=10)
+lbl2 = Label(tab1, text="Nom du fichier pdf créé : ", width=10)
 lbl2.place(x=50, y=100, width=200, height=30)
-entry2 = Entry(root, text="")
+entry2 = Entry(tab1, text="")
 Nom_fichier_init = "Nom du fichier"
 entry2.insert(0, Nom_fichier_init)
 entry2.place(x=250, y=100, width=300, height=30)
 
 #tableau
-tableau = ttk.Treeview(root, columns=('Position', 'Fichier','Chemin'))
+tableau = ttk.Treeview(tab1, columns=('Position', 'Fichier','Chemin'))
 tableau.heading('Position', text='Numéro')
 tableau.column("Position", minwidth=80, width=65, stretch=NO)
 tableau.heading('Fichier', text='Nom du fichier')
