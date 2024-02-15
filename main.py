@@ -98,6 +98,15 @@ gui(root) # Selection du fichier csv
 
 #-----------BOUTON SAVE-----------------#
 
+#------------VARIABLE_SPACE-------------#
+
+#Tableau : 
+Tableau_x_position = 50 ; Tableau_y_position = 220 
+Tableau_width = 600 ; Tableau_Height = 250
+
+
+#----------------------------------------
+
 Bouton_Emplacement_Sauvegarde = tk.Button(tab1, text="Dossier de Sauvegarde", command=Save_Path)
 Bouton_Emplacement_Sauvegarde.place(x=50, y=25, width=200, height=40)
 
@@ -117,7 +126,6 @@ Bouton_Quitter.place(x=350, y=575, width=200, height=50)
 # CHemin de la sauvegarde
 lbl1 = Label(tab1, text='Veuillez selectionner un dossier', width=10)
 lbl1.place(x=250, y=25, width=400, height=40)
-
 
 #Nom fichier final
 lbl2 = Label(tab1, text="Nom du fichier pdf créé : ", width=10)
