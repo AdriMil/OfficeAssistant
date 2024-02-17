@@ -25,8 +25,6 @@ chemin_final=''
 Images_Multiple=[]
 IMG_Mult=[]
 
-
-selected_picture = []
 #Gestion chemin fichier #Format adapté pour pyinstaller : 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -72,10 +70,7 @@ def choosefile():
         #On rempli le tableau pour voir l'image selectionnée
         tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],result))
 
-
-
 def choosemultifiles():
-    global selected_picture
     files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
         print("Fichiers sélectionnés:")
@@ -84,12 +79,9 @@ def choosemultifiles():
             words = file.split('/') 
             Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
             tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],file))
-            
-        
-        
+             
     else:
         Erreur_Annulation()
-
 
 def open_dialog():
     user_input = simpledialog.askstring("Nommez votre fichier ", "Nom du fichier :")
@@ -226,7 +218,6 @@ tableau.heading('Chemin', text='Chemin')
 tableau.column("Chemin", minwidth=120, width=400, stretch=NO) 
 tableau['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
 tableau.place(x=50, y=220, width=600, height=250)
-
 
 root.geometry(str(window_width) + "x" + str(window_height))  # Taille de la fenetre
 root.mainloop()
