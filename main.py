@@ -25,6 +25,8 @@ chemin_final=''
 Images_Multiple=[]
 IMG_Mult=[]
 
+
+selected_picture = []
 #Gestion chemin fichier #Format adapté pour pyinstaller : 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -69,6 +71,24 @@ def choosefile():
         Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
         #On rempli le tableau pour voir l'image selectionnée
         tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],result))
+
+
+
+def choosemultifiles():
+    global selected_picture
+    files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
+    if files:
+        print("Fichiers sélectionnés:")
+        for file in files:
+            liste_chemin.append(file)
+            words = file.split('/') 
+            Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
+            tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],file))
+            
+        
+        
+    else:
+        Erreur_Annulation()
 
 
 def open_dialog():
@@ -171,15 +191,18 @@ img_SelectFile = PhotoImage(file=resource_path("Pictures/AddFile.png"))
 img_Reset = PhotoImage(file=resource_path("Pictures/Reset.png"))
 img_Convert = PhotoImage(file=resource_path("Pictures/ConvertInPdf.png"))
 img_Exit = PhotoImage(file=resource_path("Pictures/Exit.png"))
+img_Test = PhotoImage(file=resource_path("Pictures/Test.png"))
 
 Btn_SelectFile = tk.Button(tab1) ; Btn_Reset = tk.Button(tab1) ; 
 Btn_Convertir = tk.Button(tab1) ; Btn_Quitter = tk.Button(tab1) ; 
+Btn_Test = tk.Button(tab1) ; 
 
 Boutons_Controle = [
-    [Btn_SelectFile, "Add file",img_SelectFile, choosefile ],
+    [Btn_SelectFile, "Add file",img_SelectFile, choosemultifiles ],
     [Btn_Reset, "Reset",img_Reset, RESET],
     [Btn_Convertir, "Convertir",img_Convert, open_dialog],
     [Btn_Quitter, "Quitter",img_Exit, root.destroy],
+    [Btn_Test, "Test",img_Test, choosemultifiles],
 ]
 
 # Boucle placement des bouttons
@@ -192,22 +215,6 @@ for i in range(0,len(Boutons_Controle)):
     Position_x_recalculee = Position_x_recalculee + Btn_controle_width + Space_Between_Btn
     Boutons_Controle[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
     Boutons_Controle[i].append(Btn_controle_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
-
-
-# Bouton_Emplacement_Sauvegarde = tk.Button(tab1, text="Dossier de Sauvegarde", command=Save_Path)
-# Bouton_Emplacement_Sauvegarde.place(x=50, y=25, width=200, height=40)
-
-# # CHemin de la sauvegarde
-# lbl1 = Label(tab1, text='Veuillez selectionner un dossier', width=10)
-# lbl1.place(x=250, y=25, width=400, height=40)
-
-# #Nom fichier final
-# lbl2 = Label(tab1, text="Nom du fichier pdf créé : ", width=10)
-# lbl2.place(x=50, y=100, width=200, height=30)
-# entry2 = Entry(tab1, text="")
-# Nom_fichier_init = "Nom du fichier"
-# entry2.insert(0, Nom_fichier_init)
-# entry2.place(x=250, y=100, width=300, height=30)
 
 #tableau
 tableau = ttk.Treeview(tab1, columns=('Position', 'Fichier','Chemin'))
