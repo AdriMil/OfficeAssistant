@@ -26,6 +26,8 @@ chemin_init="C:\\Users\Adrie\Desktop\Convertir PNG EN PDF Python"
 chemin_final=''
 Images_Multiple=[]
 IMG_Mult=[]
+files = None
+PlacementUniqueFleche = 0 #Permet de ne placer qu'une fois les boutons fleches 
 
 #Gestion chemin fichier #Format adapté pour pyinstaller : 
 def resource_path(relative_path):
@@ -56,23 +58,34 @@ def CalculPositionInitialeBoutonsDeControl():
 
     return Btn_controle_x_init
 
-def choosefile():
-    global Chemin
-    global chemin_init
-    result = filedialog.askopenfilename(initialdir=chemin_init)
-    if(result==''):
-        Erreur_Annulation()
-    else : 
-        liste_chemin.append(result)
-        #Permet de revenir sur le dernier chemin ouvert en cas de réutilisation du bouton.
-        chemin_init=result 
-        #On prend le nom du fichier qui trouve à la fin du chemin selectionné : 
-        words = result.split('/') 
-        Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
-        #On rempli le tableau pour voir l'image selectionnée
-        tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],result))
+def CalculPositionInitialeBoutonsFleche():
+    global Tableau_width,Boutons_Fleche, Btn_fleche_width,Space_Between_Btn_fleche,Position_x_recalculee_BtnsFleche, Tableau_x_position,window_width, Tableau_Height
+    NbBtn = len(Boutons_Fleche)
+    EspacePrisParLesBoutons = NbBtn * (Btn_fleche_width+Space_Between_Btn_fleche)
+    freeSpace = Tableau_width - (EspacePrisParLesBoutons)
+    if(freeSpace>0):
+        Position_x_recalculee_BtnsFleche = Tableau_x_position + (freeSpace / 2)
+        window_width = Tableau_width + Tableau_x_position *2 
+
+    else:
+        debord = EspacePrisParLesBoutons - Tableau_width
+        Position_x_recalculee_BtnsFleche = Tableau_x_position - (debord / 2)
+        window_width = Tableau_width + debord
+
+    return Position_x_recalculee_BtnsFleche
+
+def PlaceFlecheButtons():
+    global Boutons_Fleche,ImageReducer,Btn_fleche_width,Btn_fleche_height,policeSize,Position_x_recalculee_BtnsFleche,Btn_fleche_y_init,Space_Between_Btn_fleche
+    for i in range(0,len(Boutons_Fleche)):
+        Boutons_Fleche[i][2] = Boutons_Fleche[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
+        Boutons_Fleche[i][0].configure( width=Btn_fleche_width, height= Btn_fleche_height,image=Boutons_Fleche[i][2], command=Boutons_Fleche[i][3])
+        Boutons_Fleche[i][0].place(x=Position_x_recalculee_BtnsFleche, y=Btn_fleche_y_init)
+        Position_x_recalculee_BtnsFleche = Position_x_recalculee_BtnsFleche + Btn_fleche_width + Space_Between_Btn_fleche
+        Boutons_Fleche[i].append(Position_x_recalculee_BtnsFleche) #Sauvegarde de la valeur x du bouton à la fin de la liste
+        Boutons_Fleche[i].append(Btn_fleche_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
 def choosemultifiles():
+    global files,PlacementUniqueFleche
     files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
         print("Fichiers sélectionnés:")
@@ -81,9 +94,15 @@ def choosemultifiles():
             words = file.split('/') 
             Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
             tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],file))
-             
+        if (PlacementUniqueFleche == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons fleches
+            PlaceFlecheButtons()
+            PlacementUniqueFleche = 1
+            print("Fleches placées")
+        
     else:
         Erreur_Annulation()
+
+
 
 def open_dialog():
     user_input = simpledialog.askstring("Nommez votre fichier ", "Nom du fichier :")
@@ -95,7 +114,6 @@ def open_dialog():
     else:
         messagebox.showinfo("Erreur", "Donnez un titre au document qui va être créé")
         open_dialog()
-
 
 
 def gui(root):
@@ -133,6 +151,16 @@ def Save_Path():
     global Chemin
     Chemin = filedialog.askdirectory()
 
+def afficher_contenu_ligne(event):
+    global files
+    if files:
+        item = tableau.selection()[0]
+        contenu_ligne = tableau.item(item, 'values')
+        print("Contenu de la ligne sélectionnée :", contenu_ligne)
+
+def test():
+    print('test')
+
 root = tk.Tk()             #Creation de la fenetre
 
 
@@ -155,11 +183,15 @@ gui(root) # Selection du fichier csv
 Tableau_x_position = 50 ; Tableau_y_position = 220 
 Tableau_width = 600 ; Tableau_Height = 250
 
-#Bouton
+#Bouton Controle
 Btn_controle_width = 50 ; Btn_controle_height = 50 ; Space_Between_Btn = 10
 Btn_controle_x_init = 0 ; Btn_controle_y_init = Tableau_y_position - Btn_controle_height - 30
 window_height = Tableau_Height + Btn_controle_y_init + Tableau_y_position
 policeSize = 10
+
+#Bouton Fleches
+Btn_fleche_width = 25 ; Btn_fleche_height = 25 ; Space_Between_Btn_fleche = 10
+Btn_fleche_y_init = Tableau_y_position + Tableau_Height + 10
 
 #image Btn Controle 
 ImageReducer =  1
@@ -207,7 +239,26 @@ tableau.column("Chemin", minwidth=120, width=400, stretch=NO)
 tableau['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
 tableau.place(x=50, y=220, width=600, height=250)
 
+#----------------------------------------
+#Nom Bouton, Texte, Image, Fonction
+
+img_Fleche_Haut = PhotoImage(file=resource_path("Pictures/img_Fleche_Haut.png"))
+img_Fleche_Bas = PhotoImage(file=resource_path("Pictures/img_Fleche_Bas.png"))
+
+Btn_FlecheHaut = tk.Button(tab1) ; Btn_FlecheBas = tk.Button(tab1) ; 
+
+Boutons_Fleche = [
+    [Btn_FlecheHaut, "Monter",img_Fleche_Haut, test ],
+    [Btn_FlecheBas, "Descendre",img_Fleche_Bas, test],
+]
+
+# Boucle placement des bouttons
+Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche()
+
 # root.iconbitmap(resource_path("Pictures/IconeOfficeAssistanticoneV2.ico"))
+
+# Associer la fonction afficher_contenu_ligne à l'événement de clic sur une ligne
+tableau.bind('<ButtonRelease-1>', afficher_contenu_ligne)
 
 root.geometry(str(window_width) + "x" + str(window_height))  # Taille de la fenetre
 root.mainloop()
