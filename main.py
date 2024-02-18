@@ -9,6 +9,8 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image
 
+from PicturesConversion import process_images 
+
 
 #-------------POur PYINSTALLER--------------------#
 import os
@@ -108,22 +110,8 @@ def Convertir_pdf(FileName):
     elif(len(liste_chemin)==0):         #Verif si une image est selctionnée
         Erreur_Selection_img()
         
-    elif(len(liste_chemin)==1):         #Si une image à convertir
-        image_1 = Image.open(r""+liste_chemin[0])
-        im_1 = image_1.convert('RGB')
-        nom=chemin_final+'\\'+FileName+".pdf"
-        im_1.save(r""+nom)
-        OperationTerminee(liste_chemin,FileName,chemin_final)
-        
     else:                               #Si plusieurs images à convertir
-        Nb_image = len(liste_chemin)
-        for i in range(0,Nb_image):
-            Images_Multiple.append(Image.open(r""+liste_chemin[i]))
-        for i in range(0,Nb_image):
-            IMG_Mult.append(Images_Multiple[i].convert('RGB'))
-            
-        nom=chemin_final+'\\'+FileName+".pdf"
-        IMG_Mult[0].save(r""+nom, save_all=True, append_images=IMG_Mult[1:])
+        process_images(liste_chemin, FileName, chemin_final)
         OperationTerminee(liste_chemin,FileName,chemin_final)
 
 def Erreur_Chemin_Sauvegadre():
@@ -218,6 +206,8 @@ tableau.heading('Chemin', text='Chemin')
 tableau.column("Chemin", minwidth=120, width=400, stretch=NO) 
 tableau['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
 tableau.place(x=50, y=220, width=600, height=250)
+
+# root.iconbitmap(resource_path("Pictures/IconeOfficeAssistanticoneV2.ico"))
 
 root.geometry(str(window_width) + "x" + str(window_height))  # Taille de la fenetre
 root.mainloop()
