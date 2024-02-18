@@ -10,6 +10,7 @@ from tkinter import ttk
 from PIL import Image
 
 from PicturesConversion import process_images 
+from UpdatePosition import *
 
 
 #-------------POur PYINSTALLER--------------------#
@@ -28,6 +29,7 @@ Images_Multiple=[]
 IMG_Mult=[]
 files = None
 PlacementUniqueFleche = 0 #Permet de ne placer qu'une fois les boutons fleches 
+All_data_in_tableau = []
 
 #Gestion chemin fichier #Format adapté pour pyinstaller : 
 def resource_path(relative_path):
@@ -88,16 +90,17 @@ def choosemultifiles():
     global files,PlacementUniqueFleche
     files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
-        print("Fichiers sélectionnés:")
         for file in files:
             liste_chemin.append(file)
             words = file.split('/') 
             Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
             tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],file))
+            All_data_in_tableau.append([len(liste_chemin),words[-1],file]) #Give list of all data in tab -> will use do modify file order
+
+
         if (PlacementUniqueFleche == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons fleches
             PlaceFlecheButtons()
             PlacementUniqueFleche = 1
-            print("Fleches placées")
         
     else:
         Erreur_Annulation()
@@ -121,16 +124,17 @@ def gui(root):
     root.title("Office Assistant")
  
 def Convertir_pdf(FileName):
+    global liste_chemin_update
     Save_Path()
     chemin_final = Chemin
     if(chemin_final==''):               #Verif si un chemin final est indiqué
         Erreur_Chemin_Sauvegadre()
-    elif(len(liste_chemin)==0):         #Verif si une image est selctionnée
+    elif(len(liste_chemin)==0):         #Verif si au moins une image est selctionnée
         Erreur_Selection_img()
         
     else:                               #Si plusieurs images à convertir
-        process_images(liste_chemin, FileName, chemin_final)
-        OperationTerminee(liste_chemin,FileName,chemin_final)
+        process_images(liste_chemin_update, FileName, chemin_final)
+        OperationTerminee(liste_chemin_update,FileName,chemin_final)
 
 def Erreur_Chemin_Sauvegadre():
     messagebox.showinfo("Erreur", "Chemin de sauvegarde manquant")
@@ -152,10 +156,23 @@ def Save_Path():
     Chemin = filedialog.askdirectory()
 
 def afficher_contenu_ligne(event):
-    global files
+    global files, index_from_selected_ligne
     if files:
         item = tableau.selection()[0]
         contenu_ligne = tableau.item(item, 'values')
+        index_from_selected_ligne = int(contenu_ligne[0])
+
+def mettre_a_jour_tableau():
+    global tableau, All_data_in_tableau,liste_chemin_update
+    # Effacer toutes les lignes actuelles du tableau
+    for row in tableau.get_children():
+        tableau.delete(row)
+    # Réinsérer les données mises à jour
+    for data in All_data_in_tableau:
+        tableau.insert('', 'end', values=data)
+    liste_chemin_update=[]
+    liste_chemin_update = [element[2] for element in All_data_in_tableau]
+
 def ButtonFlecheDown():
     global index_from_selected_ligne,All_data_in_tableau,liste_chemin_update
     if (index_from_selected_ligne is not None):
@@ -169,6 +186,8 @@ def ButtonFlecheUp():
         ChangePlaceUp(All_data_in_tableau,index_from_selected_ligne)
         mettre_a_jour_tableau()
         index_from_selected_ligne -= 1
+
+
 
 
 root = tk.Tk()             #Creation de la fenetre
