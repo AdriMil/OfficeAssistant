@@ -146,11 +146,22 @@ def OperationTerminee(liste_chemin,FileName,chemin_final):
     message = "Fichier pdf créé avec succès\n\nDétails:\n- Nombre d'images : "+ str(len(liste_chemin)) +"\n- Nom du fichier : "+FileName+"\n- Chemin : "+chemin_final 
     messagebox.showinfo("Pdf créé ! ", message)
 def RESET():
-    tableau.delete(*tableau.get_children())
+    global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau
+
+    # Reset Arrows button
+    PlacementUniqueFleche = 0
+    Btn_FlecheBas.place_forget()
+    Btn_FlecheHaut.place_forget()
     liste_chemin.clear() #RESET de la liste liste_chemin
     Nom_Fichier.clear() #RESET de la liste Nom_Fichier
-    entry2.delete(0,END) #RESET du nom de fichier final
-    entry2.insert(0, Nom_fichier_init) # REmise du nom initial
+
+    #REset List of data
+    files = []
+    All_data_in_tableau = []
+    #REset displayed data in Tableau 
+    tableau.delete(*tableau.get_children())
+
+
 def Save_Path():
     global Chemin
     Chemin = filedialog.askdirectory()
@@ -186,9 +197,6 @@ def ButtonFlecheUp():
         ChangePlaceUp(All_data_in_tableau,index_from_selected_ligne)
         mettre_a_jour_tableau()
         index_from_selected_ligne -= 1
-
-
-
 
 root = tk.Tk()             #Creation de la fenetre
 
