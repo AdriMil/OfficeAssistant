@@ -156,10 +156,20 @@ def afficher_contenu_ligne(event):
     if files:
         item = tableau.selection()[0]
         contenu_ligne = tableau.item(item, 'values')
-        print("Contenu de la ligne sélectionnée :", contenu_ligne)
+def ButtonFlecheDown():
+    global index_from_selected_ligne,All_data_in_tableau,liste_chemin_update
+    if (index_from_selected_ligne is not None):
+        ChangePlaceDown(All_data_in_tableau,index_from_selected_ligne)
+        mettre_a_jour_tableau()
+        index_from_selected_ligne += 1
 
-def test():
-    print('test')
+def ButtonFlecheUp():
+    global index_from_selected_ligne,All_data_in_tableau,liste_chemin_update
+    if (index_from_selected_ligne is not None):
+        ChangePlaceUp(All_data_in_tableau,index_from_selected_ligne)
+        mettre_a_jour_tableau()
+        index_from_selected_ligne -= 1
+
 
 root = tk.Tk()             #Creation de la fenetre
 
@@ -248,8 +258,8 @@ img_Fleche_Bas = PhotoImage(file=resource_path("Pictures/img_Fleche_Bas.png"))
 Btn_FlecheHaut = tk.Button(tab1) ; Btn_FlecheBas = tk.Button(tab1) ; 
 
 Boutons_Fleche = [
-    [Btn_FlecheHaut, "Monter",img_Fleche_Haut, test ],
-    [Btn_FlecheBas, "Descendre",img_Fleche_Bas, test],
+    [Btn_FlecheHaut, "Monter",img_Fleche_Haut, ButtonFlecheUp ],
+    [Btn_FlecheBas, "Descendre",img_Fleche_Bas, ButtonFlecheDown],
 ]
 
 # Boucle placement des bouttons
