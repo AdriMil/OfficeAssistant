@@ -157,6 +157,7 @@ def RESET():
         Btn_FlecheHaut.place_forget()
         liste_chemin.clear() #RESET de la liste liste_chemin
         Nom_Fichier.clear() #RESET de la liste Nom_Fichier
+        Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
 
         #REset List of data
         files = []
