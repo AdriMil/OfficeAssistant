@@ -146,20 +146,23 @@ def OperationTerminee(liste_chemin,FileName,chemin_final):
     message = "Fichier pdf créé avec succès\n\nDétails:\n- Nombre d'images : "+ str(len(liste_chemin)) +"\n- Nom du fichier : "+FileName+"\n- Chemin : "+chemin_final 
     messagebox.showinfo("Pdf créé ! ", message)
 def RESET():
-    global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau
+    global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau,Position_x_recalculee_BtnsFleche
 
-    # Reset Arrows button
-    PlacementUniqueFleche = 0
-    Btn_FlecheBas.place_forget()
-    Btn_FlecheHaut.place_forget()
-    liste_chemin.clear() #RESET de la liste liste_chemin
-    Nom_Fichier.clear() #RESET de la liste Nom_Fichier
+    reponse = messagebox.askquestion("Confirmation", "Voulez-vous faire un reset des images selectionnées ?")
+    if reponse == 'yes':
 
-    #REset List of data
-    files = []
-    All_data_in_tableau = []
-    #REset displayed data in Tableau 
-    tableau.delete(*tableau.get_children())
+        # Reset Arrows button
+        PlacementUniqueFleche = 0
+        Btn_FlecheBas.place_forget()
+        Btn_FlecheHaut.place_forget()
+        liste_chemin.clear() #RESET de la liste liste_chemin
+        Nom_Fichier.clear() #RESET de la liste Nom_Fichier
+
+        #REset List of data
+        files = []
+        All_data_in_tableau = []
+        #REset displayed data in Tableau 
+        tableau.delete(*tableau.get_children())
 
 
 def Save_Path():
@@ -251,7 +254,7 @@ Boutons_Controle = [
     [Btn_Reset, "Reset",img_Reset, RESET],
     [Btn_Convertir, "Convertir",img_Convert, open_dialog],
     [Btn_Quitter, "Quitter",img_Exit, root.destroy],
-    [Btn_Test, "Test",img_Test, choosemultifiles],
+    # [Btn_Test, "Test",img_Test, choosemultifiles],
 ]
 
 # Boucle placement des bouttons
