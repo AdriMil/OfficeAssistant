@@ -30,6 +30,7 @@ IMG_Mult=[]
 files = None
 PlacementUniqueFleche = 0 #Permet de ne placer qu'une fois les boutons fleches 
 All_data_in_tableau = []
+liste_chemin_update=[]
 
 #Gestion chemin fichier #Format adapté pour pyinstaller : 
 def resource_path(relative_path):
@@ -125,6 +126,13 @@ def gui(root):
  
 def Convertir_pdf(FileName):
     global liste_chemin_update
+    if (liste_chemin_update == []):
+        print("liste_chemin_update is None")
+        GetFilesPAthList()
+
+
+    print("liste chemin udpate")
+    print(liste_chemin_update)
     Save_Path()
     chemin_final = Chemin
     if(chemin_final==''):               #Verif si un chemin final est indiqué
@@ -178,25 +186,31 @@ def afficher_contenu_ligne(event):
         index_from_selected_ligne = int(contenu_ligne[0])
 
 def mettre_a_jour_tableau():
-    global tableau, All_data_in_tableau,liste_chemin_update
+    global tableau
     # Effacer toutes les lignes actuelles du tableau
     for row in tableau.get_children():
         tableau.delete(row)
     # Réinsérer les données mises à jour
     for data in All_data_in_tableau:
         tableau.insert('', 'end', values=data)
+    GetFilesPAthList()
+    
+def GetFilesPAthList():
+    global All_data_in_tableau,liste_chemin_update
     liste_chemin_update=[]
     liste_chemin_update = [element[2] for element in All_data_in_tableau]
 
+
+
 def ButtonFlecheDown():
-    global index_from_selected_ligne,All_data_in_tableau,liste_chemin_update
+    global index_from_selected_ligne,All_data_in_tableau
     if (index_from_selected_ligne is not None):
         ChangePlaceDown(All_data_in_tableau,index_from_selected_ligne)
         mettre_a_jour_tableau()
         index_from_selected_ligne += 1
 
 def ButtonFlecheUp():
-    global index_from_selected_ligne,All_data_in_tableau,liste_chemin_update
+    global index_from_selected_ligne,All_data_in_tableau
     if (index_from_selected_ligne is not None):
         ChangePlaceUp(All_data_in_tableau,index_from_selected_ligne)
         mettre_a_jour_tableau()
