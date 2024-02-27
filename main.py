@@ -155,6 +155,7 @@ def OperationTerminee(liste_chemin,FileName,chemin_final):
     messagebox.showinfo("Pdf créé ! ", message)
 def RESET():
     global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau,Position_x_recalculee_BtnsFleche
+    global liste_chemin_update, chemin_final
 
     reponse = messagebox.askquestion("Confirmation", "Voulez-vous faire un reset des images selectionnées ?")
     if reponse == 'yes':
@@ -170,6 +171,9 @@ def RESET():
         #REset List of data
         files = []
         All_data_in_tableau = []
+        liste_chemin_update=[]
+        FileName= [] 
+        chemin_final = []
         #REset displayed data in Tableau 
         tableau.delete(*tableau.get_children())
 
