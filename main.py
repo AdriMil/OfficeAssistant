@@ -91,6 +91,7 @@ def choosemultifiles():
     global files,PlacementUniqueFleche
     files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
+        Btn_Reset.configure(state=tk.NORMAL); Btn_Convertir.configure(state=tk.NORMAL)
         for file in files:
             liste_chemin.append(file)
             words = file.split('/') 
@@ -164,6 +165,8 @@ def RESET():
         PlacementUniqueFleche = 0
         Btn_FlecheBas.place_forget()
         Btn_FlecheHaut.place_forget()
+        # Reset btn Reset et convertir
+        Btn_Reset.configure(state=tk.DISABLED); Btn_Convertir.configure(state=tk.DISABLED)
         liste_chemin.clear() #RESET de la liste liste_chemin
         Nom_Fichier.clear() #RESET de la liste Nom_Fichier
         Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
@@ -176,7 +179,6 @@ def RESET():
         chemin_final = []
         #REset displayed data in Tableau 
         tableau.delete(*tableau.get_children())
-
 
 def Save_Path():
     global Chemin
@@ -269,10 +271,10 @@ Btn_Convertir = tk.Button(tab1) ; Btn_Quitter = tk.Button(tab1) ;
 Btn_Test = tk.Button(tab1) ; 
 
 Boutons_Controle = [
-    [Btn_SelectFile, "Add file",img_SelectFile, choosemultifiles ],
-    [Btn_Reset, "Reset",img_Reset, RESET],
-    [Btn_Convertir, "Convertir",img_Convert, open_dialog],
-    [Btn_Quitter, "Quitter",img_Exit, root.destroy],
+    [Btn_SelectFile, "Add file",img_SelectFile, choosemultifiles,tk.NORMAL ],
+    [Btn_Reset, "Reset",img_Reset, RESET,tk.DISABLED],
+    [Btn_Convertir, "Convertir",img_Convert, open_dialog,tk.DISABLED],
+    [Btn_Quitter, "Quitter",img_Exit, root.destroy,tk.NORMAL],
     # [Btn_Test, "Test",img_Test, choosemultifiles],
 ]
 
@@ -281,7 +283,7 @@ Position_x_recalculee = CalculPositionInitialeBoutonsDeControl()
 
 for i in range(0,len(Boutons_Controle)):
     Boutons_Controle[i][2] = Boutons_Controle[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
-    Boutons_Controle[i][0].configure( width=Btn_controle_width, height= Btn_controle_height, font=("Helvetica", policeSize),image=Boutons_Controle[i][2], command=Boutons_Controle[i][3], text = Boutons_Controle[i][1],compound=tk.TOP)
+    Boutons_Controle[i][0].configure( width=Btn_controle_width, height= Btn_controle_height, font=("Helvetica", policeSize),image=Boutons_Controle[i][2], command=Boutons_Controle[i][3], text = Boutons_Controle[i][1],compound=tk.TOP,state=Boutons_Controle[i][4] )
     Boutons_Controle[i][0].place(x=Position_x_recalculee, y=Btn_controle_y_init)
     Position_x_recalculee = Position_x_recalculee + Btn_controle_width + Space_Between_Btn
     Boutons_Controle[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
