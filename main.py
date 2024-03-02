@@ -94,6 +94,7 @@ def choosemultifiles():
         Btn_Reset.configure(state=tk.NORMAL); Btn_Convertir.configure(state=tk.NORMAL)
         for file in files:
             liste_chemin.append(file)
+            print("Liste des chemin selectionnés : ", liste_chemin)
             words = file.split('/') 
             Nom_Fichier.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
             tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],file))
@@ -155,30 +156,33 @@ def OperationTerminee(liste_chemin,FileName,chemin_final):
     message = "Fichier pdf créé avec succès\n\nDétails:\n- Nombre d'images : "+ str(len(liste_chemin)) +"\n- Nom du fichier : "+FileName+"\n- Chemin : "+chemin_final 
     messagebox.showinfo("Pdf créé ! ", message)
 def RESET():
-    global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau,Position_x_recalculee_BtnsFleche
-    global liste_chemin_update, chemin_final
-
     reponse = messagebox.askquestion("Confirmation", "Voulez-vous faire un reset des images selectionnées ?")
     if reponse == 'yes':
+        DeleteAlldata()
 
+
+def DeleteAlldata():
+    global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau,Position_x_recalculee_BtnsFleche
+    global liste_chemin_update, chemin_final
         # Reset Arrows button
-        PlacementUniqueFleche = 0
-        Btn_FlecheBas.place_forget()
-        Btn_FlecheHaut.place_forget()
-        # Reset btn Reset et convertir
-        Btn_Reset.configure(state=tk.DISABLED); Btn_Convertir.configure(state=tk.DISABLED)
-        liste_chemin.clear() #RESET de la liste liste_chemin
-        Nom_Fichier.clear() #RESET de la liste Nom_Fichier
-        Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
+    PlacementUniqueFleche = 0
+    for btn in Boutons_Fleche:
+        btn[0].place_forget()
 
-        #REset List of data
-        files = []
-        All_data_in_tableau = []
-        liste_chemin_update=[]
-        FileName= [] 
-        chemin_final = []
-        #REset displayed data in Tableau 
-        tableau.delete(*tableau.get_children())
+    # Reset btn Reset et convertir
+    Btn_Reset.configure(state=tk.DISABLED); Btn_Convertir.configure(state=tk.DISABLED)
+    liste_chemin.clear() #RESET de la liste liste_chemin
+    Nom_Fichier.clear() #RESET de la liste Nom_Fichier
+    Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
+
+    #REset List of data
+    files = []
+    All_data_in_tableau = []
+    liste_chemin_update=[]
+    FileName= [] 
+    chemin_final = []
+    #REset displayed data in Tableau 
+    tableau.delete(*tableau.get_children())
 
 def Save_Path():
     global Chemin
@@ -202,10 +206,10 @@ def mettre_a_jour_tableau():
     GetFilesPAthList()
     
 def GetFilesPAthList():
-    global All_data_in_tableau,liste_chemin_update
+    global All_data_in_tableau,liste_chemin_update,liste_chemin
     liste_chemin_update=[]
     liste_chemin_update = [element[2] for element in All_data_in_tableau]
-
+    liste_chemin = liste_chemin_update
 
 
 def ButtonFlecheDown():
@@ -221,6 +225,15 @@ def ButtonFlecheUp():
         ChangePlaceUp(All_data_in_tableau,index_from_selected_ligne)
         mettre_a_jour_tableau()
         index_from_selected_ligne -= 1
+
+def SupprimerLigne():
+    global index_from_selected_ligne,All_data_in_tableau
+    print("L'index de la ligne est ", index_from_selected_ligne )
+    DeleteSelectedLine(All_data_in_tableau,index_from_selected_ligne-1)
+    mettre_a_jour_tableau()
+    GetFilesPAthList()
+    if (len(All_data_in_tableau)==0):
+        DeleteAlldata()
 
 root = tk.Tk()             #Creation de la fenetre
 
@@ -305,12 +318,15 @@ tableau.place(x=50, y=220, width=600, height=250)
 
 img_Fleche_Haut = PhotoImage(file=resource_path("Pictures/img_Fleche_Haut.png"))
 img_Fleche_Bas = PhotoImage(file=resource_path("Pictures/img_Fleche_Bas.png"))
+img_SupprimerLigne = PhotoImage(file=resource_path("Pictures/Reset.png"))
 
-Btn_FlecheHaut = tk.Button(tab1) ; Btn_FlecheBas = tk.Button(tab1) ; 
+Btn_FlecheHaut = tk.Button(tab1) ; Btn_FlecheBas = tk.Button(tab1) ;  Btn_SupprimerLigne = tk.Button(tab1)
 
 Boutons_Fleche = [
     [Btn_FlecheHaut, "Monter",img_Fleche_Haut, ButtonFlecheUp ],
+    [Btn_SupprimerLigne, "Supprimer",img_SupprimerLigne, SupprimerLigne],
     [Btn_FlecheBas, "Descendre",img_Fleche_Bas, ButtonFlecheDown],
+
 ]
 
 # Boucle placement des bouttons
