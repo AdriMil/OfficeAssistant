@@ -11,9 +11,6 @@ def ChangePlaceUp(All_data_in_tableau,index):
         All_data_in_tableau[index-1][0] = All_data_in_tableau[index-2][0]
         All_data_in_tableau[index-2][0] = Sauvegarde_Numero_temporaire
 
-
-
-
 def ChangePlaceDown(All_data_in_tableau,index):
     if(index!=len(All_data_in_tableau)):
         Sauvegarde_temporaire_element = All_data_in_tableau[index-1]
@@ -24,4 +21,9 @@ def ChangePlaceDown(All_data_in_tableau,index):
         All_data_in_tableau[index-1][0] = All_data_in_tableau[index][0]
         All_data_in_tableau[index][0] = Sauvegarde_Numero_temporaire
 
+def DeleteSelectedLine(All_data_in_tableau, index):
+    All_data_in_tableau.pop(index)
+    print(All_data_in_tableau)
+    for i in range(0,len(All_data_in_tableau)):
+        All_data_in_tableau[i][0] = i + 1
 
