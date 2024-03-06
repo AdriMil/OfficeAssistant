@@ -370,7 +370,7 @@ Boutons_Fleche = [
 # Boucle placement des bouttons
 Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche()
 
-# root.iconbitmap(resource_path("Pictures/IconeOfficeAssistanticoneV2.ico"))
+root.iconbitmap(resource_path("Pictures/OfficeAssistanticone.ico"))
 
 # Associer la fonction afficher_contenu_ligne à l'événement de clic sur une ligne
 tableau.bind('<ButtonRelease-1>', afficher_contenu_ligne)
