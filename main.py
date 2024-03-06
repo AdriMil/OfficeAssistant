@@ -31,6 +31,7 @@ files = None
 PlacementUniqueFleche = 0 #Permet de ne placer qu'une fois les boutons fleches
 All_data_in_tableau = []
 liste_chemin_update=[]
+index_from_selected_ligne = 0 # Select first line when files are imported for 1st time 
 
 #Gestion chemin fichier #Format adapté pour pyinstaller :
 def resource_path(relative_path):
@@ -88,7 +89,7 @@ def PlaceFlecheButtons():
         Boutons_Fleche[i].append(Btn_fleche_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
 def choosemultifiles():
-    global files,PlacementUniqueFleche
+    global files,PlacementUniqueFleche, index_from_selected_ligne
     files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
         Btn_Reset.configure(state=tk.NORMAL); Btn_Convertir.configure(state=tk.NORMAL)
@@ -341,7 +342,7 @@ style = ttk.Style()
 style.map('Treeview', background=[('selected', '#eb0000')])
 #tableau
 tableau = ttk.Treeview(tab1, columns=('Position', 'Fichier','Chemin'))
-tableau.heading('Position', text='Numéro')
+tableau.heading('Position', text='Position')
 tableau.column("Position", minwidth=80, width=65, stretch=NO)
 tableau.heading('Fichier', text='Nom du fichier')
 tableau.column("Fichier", minwidth=120, width=200, stretch=NO)
