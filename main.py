@@ -90,7 +90,7 @@ def PlaceFlecheButtons():
 
 def choosemultifiles():
     global files,PlacementUniqueFleche, index_from_selected_ligne
-    files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images png", "*.png"), ("Images jpeg", "*.jpg"),("Images HEIC", "*.heic")))
+    files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
         Btn_Reset.configure(state=tk.NORMAL); Btn_Convertir.configure(state=tk.NORMAL)
         for file in files:
@@ -133,8 +133,6 @@ def Convertir_pdf(FileName):
     if (liste_chemin_update == []):
         GetFilesPAthList()
 
-
-    print("liste chemin udpate : ", liste_chemin_update)
     Save_Path()
     chemin_final = Chemin
     if(chemin_final==''):               #Verif si un chemin final est indiqué
@@ -280,7 +278,6 @@ tabControl = ttk.Notebook(root)
 tab1 = ttk.Frame(tabControl)
 tab2 = ttk.Frame(tabControl)
 tabControl.add(tab1, text ='Pdf Creator')
-tabControl.add(tab2, text ='In Progress')
 tabControl.pack(expand= 1, fill ="both")
 
 gui(root) # Selection du fichier csv
