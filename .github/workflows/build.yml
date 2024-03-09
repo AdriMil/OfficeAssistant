@@ -18,14 +18,14 @@ jobs:
 
     - name: Extract branch name
       shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_BRANCHE_NAME
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: GetTagValue
       run: |
     
-        if [[ $GITHUB_BRANCHE_NAME =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-          IFS='.' read -ra VERSION_PARTS <<< "$GITHUB_BRANCHE_NAME"
+        if [[ $GITHUB_OUTPUT =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          IFS='.' read -ra VERSION_PARTS <<< "$GITHUB_OUTPUT"
           MAJOR_VERSION=${VERSION_PARTS[0]}
           MINOR_VERSION=${VERSION_PARTS[1]}
           PATCH_VERSION=${VERSION_PARTS[2]}
