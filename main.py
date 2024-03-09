@@ -19,7 +19,6 @@ import sys
 #Commande pour créér un .exe : pyinstaller main.spec
 
 #-------------------INIT-----------#
-
 Chemin=''
 liste_chemin=[]
 Nom_Fichier = []
@@ -126,7 +125,8 @@ def open_dialog():
 
 def gui(root):
     frame = tk.Frame(root)
-    root.title("Office Assistant")
+    version = 'v1.1.1'
+    root.title("Office Assistant " + version )
 
 def Convertir_pdf(FileName):
     global liste_chemin_update
@@ -281,7 +281,6 @@ tabControl.add(tab1, text ='Pdf Creator')
 tabControl.pack(expand= 1, fill ="both")
 
 gui(root) # Selection du fichier csv
-
 #-----------BOUTON SAVE-----------------#
 
 #------------VARIABLE_SPACE-------------#
