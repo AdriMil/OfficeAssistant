@@ -14,34 +14,20 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: 3.11  # Change this to the Python version you are using
-    - run: pip install -r requirements.txt pyinstaller
+    # - run: pip install -r requirements.txt pyinstaller
 
     - name: Extraire les numéros de version
       id: extract-versions
       run: |
         BRANCH_NAME=${GITHUB_REF#refs/heads/}
-        if [[ $BRANCH_NAME =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
-          MAJOR_VERSION=${BASH_REMATCH[1]}
-          MINOR_VERSION=${BASH_REMATCH[2]}
-          PATCH_VERSION=${BASH_REMATCH[3]}
-          echo "Branche : $BRANCH_NAME"
-          echo "Numéros de version détectés : $MAJOR_VERSION, $MINOR_VERSION, $PATCH_VERSION"
-          VERSION="V${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "Version reformulée : $VERSION"
-        else
-          echo "La branche ne suit pas le format de version attendu."
-          VERSION="0.0.0"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "Version reformulée : $VERSION"
-          exit 1
-        fi
 
-    - name: .exe creation
-      run: pyinstaller action.spec
-   
-    - name: Archive Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: TrainingAssistant
-        path: dist/TrainingAssistant  # Replace with the actual name used in pyinstaller.spec
+        if [ "$(echo $BRANCH_NAME | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$')" ]; then
+            MAJOR_VERSION=$(echo $BRANCH_NAME | cut -d '.' -f 1)
+            MINOR_VERSION=$(echo $BRANCH_NAME | cut -d '.' -f 2)
+            PATCH_VERSION=$(echo $BRANCH_NAME | cut -d '.' -f 3)
+            echo "Branche : $BRANCH_NAME"
+            echo "Numéros de version détectés : $MAJOR_VERSION, $MINOR_VERSION, $PATCH_VERSION"
+        else
+            echo "La branche ne suit pas le format de version attendu."
+            exit 1
+        fi
