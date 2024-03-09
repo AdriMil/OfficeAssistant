@@ -38,7 +38,7 @@ jobs:
           echo "Extracted Version: ${{ env.EXTRACTED_VERSION }}"
 
       - name: Build
-        run: pyinstaller action.spec
+        run: pyinstaller main.spec
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v2
