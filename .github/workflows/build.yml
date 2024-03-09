@@ -9,6 +9,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11  # Change this to the Python version you are using
+      - run: pip install pyinstaller
+
+
       - name: Set env
         shell: pwsh
         run: |
@@ -30,3 +36,12 @@ jobs:
       - name: Test
         run: |
           echo "Extracted Version: ${{ env.EXTRACTED_VERSION }}"
+
+      - name: Build
+        run: pyinstaller action.spec
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: OfficeAssistant
+          path: dist/OfficeAssistant  # Replace with the actual name used in pyinstaller.spec
