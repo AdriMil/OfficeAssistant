@@ -5,7 +5,7 @@ on:
       - "*RC*"
 
 jobs:
-  test:
+  Build:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,7 +13,6 @@ jobs:
         with:
           python-version: 3.11  # Change this to the Python version you are using
       - run: pip install -r requirements.txt
-
 
       - name: Set env
         shell: pwsh
@@ -30,12 +29,8 @@ jobs:
             $extractedVersion = $matches[1]
             echo "EXTRACTED_VERSION=$extractedVersion" >> $env:GITHUB_ENV
           } else {
-            echo "EXTRACTED_VERSION=000000000000" >> $env:GITHUB_ENV
+            echo "EXTRACTED_VERSION=0.0.0" >> $env:GITHUB_ENV
           }
-
-      - name: Test
-        run: |
-          echo "Extracted Version: ${{ env.EXTRACTED_VERSION }}"
 
       - name: Build
         run: pyinstaller action.spec
