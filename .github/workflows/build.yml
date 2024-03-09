@@ -25,7 +25,7 @@ jobs:
             $extractedVersion = $matches[1]
             echo "EXTRACTED_VERSION=$extractedVersion" >> $env:GITHUB_ENV
           } else {
-            echo "Version not found in the branch name."
+            echo "EXTRACTED_VERSION=000000000000" >> $env:GITHUB_ENV
           }
 
       - name: Test
