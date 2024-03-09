@@ -16,13 +16,14 @@ jobs:
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $env:GITHUB_ENV
     
       - name: Extract Version
+        id: extract_version
         run: |
           $versionRegex = '^.*?(\d+\.\d+\.\d+).*$'
           $matches = $env:RELEASE_VERSION -match $versionRegex
 
           if ($matches) {
             $extractedVersion = $matches[1]
-            echo "::set-env name=EXTRACTED_VERSION::$extractedVersion"
+            echo "EXTRACTED_VERSION=$extractedVersion" >> $env:GITHUB_ENV
           } else {
             echo "Version not found in the branch name."
           }
