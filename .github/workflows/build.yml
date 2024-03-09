@@ -44,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: OfficeAssistant
-          path: dist/OfficeAssistant  # Replace with the actual name used in pyinstaller.spec
+          path: dist/OfficeAssistant.exe  # Replace with the actual name used in pyinstaller.spec
