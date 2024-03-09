@@ -47,7 +47,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name=('OfficeAssistant V'+current_version),
+    name=('OfficeAssistant '+current_version),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
