@@ -1,6 +1,32 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
+import re
 
+#Get version from TagVersion
+version = os.environ.get("VERSION")
+if (version is None):
+    version = "VersionError"
 
+# Lire le contenu de main.py
+with open('main.py', 'r') as main_file:
+    main_content = main_file.read()
+
+# Utilisation de regex pour capturer le contenu entre les guillemets simples
+pattern = re.compile(r"version = '([^']+)'")
+
+# Recherche de la correspondance
+match = pattern.search(main_content)
+
+if match:
+    current_version = match.group(0)
+    main_content = pattern.sub(f"version = '{version}'", main_content)
+    print(f"Version actuelle: {current_version}")
+else:
+    print("Aucune correspondance trouvée.")
+
+# Écrire le contenu modifié dans main.py
+with open('main.py', 'w') as main_file:
+    main_file.write(main_content)
 a = Analysis(
     ['main.py'],
     pathex=['C:\\Users\\Adrie\\Documents\\Programmation_Git\\OfficeAssistant'],
@@ -21,7 +47,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='OfficeAssistant',
+    name=('OfficeAssistant'+version),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -36,3 +62,5 @@ exe = EXE(
     entitlements_file=None,
     icon=['Pictures/OfficeAssistanticone.ico'],
 )
+
+
