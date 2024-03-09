@@ -3,7 +3,7 @@ import os
 import re
 
 #Get version from TagVersion
-version = os.environ.get("VERSION")
+version = os.environ.get("EXTRACTED_VERSION")
 if (version is None):
     version = "VersionError"
 
@@ -47,7 +47,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name=('OfficeAssistant'+version),
+    name=('OfficeAssistant'),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
