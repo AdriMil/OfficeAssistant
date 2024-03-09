@@ -22,7 +22,7 @@ jobs:
           $matches = $env:RELEASE_VERSION -match $versionRegex
 
           if ($matches) {
-            $extractedVersion = $matches[1]
+            $extractedVersion = $matches[0]
             echo "EXTRACTED_VERSION=$extractedVersion" >> $env:GITHUB_ENV
           } else {
             echo "EXTRACTED_VERSION=000000000000" >> $env:GITHUB_ENV
