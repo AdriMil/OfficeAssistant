@@ -1,10 +1,8 @@
 name: Build Executable
-
 on:
   push:
     branches:
       - "*RC*"
-
 
 jobs:
   test:
@@ -19,6 +17,14 @@ jobs:
     
       - name: Test
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
+          $versionRegex = '^.*?(\d+\.\d+\.\d+).*$'
+          $matches = $env:RELEASE_VERSION -match $versionRegex
+
+          if ($matches) {
+            $extractedVersion = $matches[1]
+            echo "Extracted Version: $extractedVersion"
+          } else {
+            echo "Version not found in the branch name."
+          }
+
 
