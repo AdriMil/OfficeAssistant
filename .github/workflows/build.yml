@@ -23,7 +23,7 @@ jobs:
         echo "Branche : $BRANCH_NAME"
         
         case "$BRANCH_NAME" in
-            [0-9]*.[0-9]*.[0-9]*)
+            [0-9]*\.[0-9]*\.[0-9]*)
                 IFS='.' read -ra VERSION_PARTS <<< "$BRANCH_NAME"
                 MAJOR_VERSION=${VERSION_PARTS[0]}
                 MINOR_VERSION=${VERSION_PARTS[1]}
@@ -35,3 +35,4 @@ jobs:
                 exit 1
                 ;;
         esac
+        
