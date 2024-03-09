@@ -43,5 +43,5 @@ jobs:
       - name: Archive Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: OfficeAssistant
+          name: OfficeAssistant V${{ env.EXTRACTED_VERSION }}
           path: dist/OfficeAssistant V${{ env.EXTRACTED_VERSION }}.exe  # Replace with the actual name used in pyinstaller.spec
