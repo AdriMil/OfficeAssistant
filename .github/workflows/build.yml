@@ -1,47 +1,47 @@
 name: Build Executable
-
 on:
   push:
     branches:
       - "*RC*"
 
 jobs:
-  build:
+  test:
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.11  # Change this to the Python version you are using
-    - run: pip install -r requirements.txt pyinstaller
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11  # Change this to the Python version you are using
+      - run: pip install -r requirements.txt
 
-    - name: Extraire les numéros de version
-      id: extract-versions
-      run: |
-        BRANCH_NAME=${GITHUB_REF#refs/heads/}
-        if [[ $BRANCH_NAME =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
-          MAJOR_VERSION=${BASH_REMATCH[1]}
-          MINOR_VERSION=${BASH_REMATCH[2]}
-          PATCH_VERSION=${BASH_REMATCH[3]}
-          echo "Branche : $BRANCH_NAME"
-          echo "Numéros de version détectés : $MAJOR_VERSION, $MINOR_VERSION, $PATCH_VERSION"
-          VERSION="V${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "Version reformulée : $VERSION"
-        else
-          echo "La branche ne suit pas le format de version attendu."
-          VERSION="0.0.0"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "Version reformulée : $VERSION"
-          exit 1
-        fi
 
-    - name: .exe creation
-      run: pyinstaller action.spec
-   
-    - name: Archive Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: TrainingAssistant
-        path: dist/TrainingAssistant  # Replace with the actual name used in pyinstaller.spec
+      - name: Set env
+        shell: pwsh
+        run: |
+          $RELEASE_VERSION = $env:GITHUB_REF
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $env:GITHUB_ENV
+    
+      - name: Extract Version
+        id: extract_version
+        run: |
+          $versionRegex = '^.*?(\d+\.\d+\.\d+).*$'
+
+          if ($env:RELEASE_VERSION -match $versionRegex) {
+            $extractedVersion = $matches[1]
+            echo "EXTRACTED_VERSION=$extractedVersion" >> $env:GITHUB_ENV
+          } else {
+            echo "EXTRACTED_VERSION=000000000000" >> $env:GITHUB_ENV
+          }
+
+      - name: Test
+        run: |
+          echo "Extracted Version: ${{ env.EXTRACTED_VERSION }}"
+
+      - name: Build
+        run: pyinstaller action.spec
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: OfficeAssistant V${{ env.EXTRACTED_VERSION }}
+          path: dist/OfficeAssistant V${{ env.EXTRACTED_VERSION }}.exe  # Replace with the actual name used in pyinstaller.spec

@@ -1,1 +1,4 @@
 matplotlib==3.8.2
+Pillow==10.1.0
+pillow_heif==0.15.0
+pyinstaller==6.4.0
