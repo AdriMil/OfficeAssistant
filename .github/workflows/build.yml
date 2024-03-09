@@ -19,10 +19,9 @@ jobs:
         id: extract_version
         run: |
           $versionRegex = '^.*?(\d+\.\d+\.\d+).*$'
-          $matches = $env:RELEASE_VERSION -match $versionRegex
 
-          if ($matches) {
-            $extractedVersion = $matches[0]
+          if ($env:RELEASE_VERSION -match $versionRegex) {
+            $extractedVersion = $matches[1]
             echo "EXTRACTED_VERSION=$extractedVersion" >> $env:GITHUB_ENV
           } else {
             echo "EXTRACTED_VERSION=000000000000" >> $env:GITHUB_ENV
