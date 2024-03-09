@@ -62,5 +62,3 @@ exe = EXE(
     entitlements_file=None,
     icon=['Pictures/OfficeAssistanticone.ico'],
 )
-
-
