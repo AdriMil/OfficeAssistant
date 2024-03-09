@@ -125,8 +125,8 @@ def open_dialog():
 
 def gui(root):
     frame = tk.Frame(root)
-    version = 'v1.1.1'
-    root.title("Office Assistant " + version )
+    version = 'v10.50.105'
+    root.title("Office Assistant V " + version )
 
 def Convertir_pdf(FileName):
     global liste_chemin_update

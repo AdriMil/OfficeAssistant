@@ -18,7 +18,7 @@ pattern = re.compile(r"version = '([^']+)'")
 match = pattern.search(main_content)
 
 if match:
-    current_version = match.group(0)
+    current_version = match.group(1)
     main_content = pattern.sub(f"version = '{version}'", main_content)
     print(f"Version actuelle: {current_version}")
 else:
@@ -47,7 +47,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name=('OfficeAssistant'),
+    name=('OfficeAssistant V'+version),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
