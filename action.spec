@@ -5,7 +5,7 @@ import re
 #Get version from TagVersion
 version = os.environ.get("EXTRACTED_VERSION")
 if (version is None):
-    version = "VersionError"
+    version = "v0.0.0"
 
 # Lire le contenu de main.py
 with open('main.py', 'r') as main_file:
@@ -47,7 +47,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name=('OfficeAssistant '+current_version),
+    name=('OfficeAssistant '+version),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
