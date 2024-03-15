@@ -5,3 +5,5 @@ dist
 PS
 tests
 .scannerwork
+.sonar*
+report*
