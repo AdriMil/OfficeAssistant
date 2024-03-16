@@ -3,3 +3,5 @@ test.py
 build
 dist
 PS
+tests
+.scannerwork
