@@ -1,5 +1,3 @@
-#Ce programme fonctionne trsè bien, il permet de convertir un/des PNG en PDF
-
 #-------------Pour_IG--------------------#
 from tkinter import filedialog
 from tkinter import *
@@ -8,10 +6,10 @@ from tkinter import simpledialog
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image
+from pillow_heif import register_heif_opener
 
-from PicturesConversion import process_images
+# from PicturesConversion import process_images
 from UpdatePosition import *
-
 
 #-------------POur PYINSTALLER--------------------#
 import os
@@ -22,7 +20,6 @@ import sys
 Chemin=''
 liste_chemin=[]
 Nom_Fichier = []
-chemin_init="C:\\Users\Adrie\Desktop\Convertir PNG EN PDF Python"
 chemin_final=''
 Images_Multiple=[]
 IMG_Mult=[]
@@ -89,7 +86,7 @@ def PlaceFlecheButtons():
 
 def choosemultifiles():
     global files,PlacementUniqueFleche, index_from_selected_ligne
-    files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
+    files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
         Btn_Reset.configure(state=tk.NORMAL); Btn_Convertir.configure(state=tk.NORMAL)
         for file in files:
@@ -100,7 +97,6 @@ def choosemultifiles():
             tableau.insert( '', 'end',values=(len(liste_chemin),words[-1],file))
             All_data_in_tableau.append([len(liste_chemin),words[-1],file]) #Give list of all data in tab -> will use do modify file order
 
-
         if (PlacementUniqueFleche == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons fleches
             PlaceFlecheButtons()
             PlacementUniqueFleche = 1
@@ -108,8 +104,6 @@ def choosemultifiles():
 
     else:
         Erreur_Annulation()
-
-
 
 def open_dialog():
     user_input = simpledialog.askstring("Nommez votre fichier ", "Nom du fichier :")
@@ -141,6 +135,8 @@ def Convertir_pdf(FileName):
         Erreur_Selection_img()
 
     else:                               #Si plusieurs images à convertir
+        # TraitementConversion.place(x=Tableau_x_position + 1, y=Tableau_y_position + 24, width=Tableau_width, height=Tableau_Height)
+        DisplayProcessing()
         process_images(liste_chemin_update, FileName, chemin_final)
         OperationTerminee(liste_chemin_update,FileName,chemin_final)
 
@@ -157,7 +153,6 @@ def RESET():
     reponse = messagebox.askquestion("Confirmation", "Voulez-vous faire un reset des images selectionnées ?")
     if reponse == 'yes':
         DeleteAlldata()
-
 
 def DeleteAlldata():
     global Btn_FlecheBas,Btn_FlecheHaut,PlacementUniqueFleche,files,All_data_in_tableau,Position_x_recalculee_BtnsFleche
@@ -210,7 +205,6 @@ def GetFilesPAthList():
     liste_chemin_update = [element[2] for element in All_data_in_tableau]
     liste_chemin = liste_chemin_update
 
-
 def ButtonFlecheDown():
     global index_from_selected_ligne,All_data_in_tableau
     if (index_from_selected_ligne is not None):
@@ -229,7 +223,6 @@ def ButtonFlecheUp():
 
 def SupprimerLigne():
     global index_from_selected_ligne,All_data_in_tableau
-    print("Taille de AllDataInTableau : ",len(All_data_in_tableau))
     DeleteSelectedLine(All_data_in_tableau,index_from_selected_ligne-1)
     mettre_a_jour_tableau()
     GetFilesPAthList()
@@ -267,10 +260,66 @@ def DisableButtonIfNecessery():
         Btn_FlecheHaut.configure(state=tk.NORMAL)
         Btn_FlecheBas.configure(state=tk.NORMAL)
 
+def convert_heic_to_pil(heic_path):
+    # Enregistrement du module d'ouverture pour le format HEIC
+    register_heif_opener()
 
+    # Ouverture de l'image HEIC et conversion en mode RGB
+    with Image.open(heic_path) as im:
+        return im.convert("RGB")
+
+def process_images(liste_chemin, FileName, chemin_final):
+    Images_Multiple = []
+    IMG_Mult = []
+    incrementation = 0
+
+    for chemin in liste_chemin:
+        # Vérifier si le fichier est au format .heic
+        _, extension = os.path.splitext(chemin)
+        if extension.lower() == '.heic':
+            # Convertir .heic en image lisible avec PIL
+            img_heic = convert_heic_to_pil(chemin)
+            Images_Multiple.append(img_heic)
+        else:
+            # Pour les autres formats, ouvrir directement avec PIL
+            Images_Multiple.append(Image.open(chemin))
+
+    for img in Images_Multiple:
+        incrementation = incrementation + 1 
+        # Convertir en mode RGB et ajouter à la liste IMG_Mult
+        IMG_Mult.append(img.convert('RGB'))
+        texttodisplay = "Image convertie : {} / {}".format(incrementation, len(Images_Multiple))
+        UpdateProcessing(texttodisplay)
+        
+    # Sauvegarder le fichier PDF
+    UpdateProcessing("Enregistrement du PDF")
+    UpdateProcessing("...")
+    nom = os.path.join(chemin_final, f"{FileName}.pdf")
+    IMG_Mult[0].save(nom, save_all=True, append_images=IMG_Mult[1:])
+    UpdateProcessing("PDF enregistré")
+    HideProcessing()
+
+def DisplayProcessing():
+    global cadre, texte, ascenseur, bouton_cacher
+    
+    cadre = tk.Frame(root,borderwidth=1, relief="solid")
+    cadre.place(x=Tableau_x_position, y=Tableau_y_position, width=Tableau_width, height=Tableau_Height+25)
+    texte = tk.Text(cadre, wrap=tk.WORD)
+    texte.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    ascenseur = ttk.Scrollbar(cadre, orient=tk.VERTICAL, command=texte.yview)
+    ascenseur.pack(side=tk.RIGHT, fill=tk.Y)
+    texte.config(yscrollcommand=ascenseur.set)
+
+def UpdateProcessing(TexteToUpdate):
+        texte.insert(tk.END, "{}\n".format(TexteToUpdate))
+        texte.see(tk.END)  
+        cadre.update()
+
+def HideProcessing():
+    cadre.place_forget()
+    texte.delete(1.0, tk.END)
 
 root = tk.Tk()             #Creation de la fenetre
-
 
 root.resizable(width=False, height=False) #blocage de la taille de la fenetre
 
@@ -309,7 +358,7 @@ img_SelectFile = PhotoImage(file=resource_path("Pictures/AddFile.png"))
 img_Reset = PhotoImage(file=resource_path("Pictures/Reset.png"))
 img_Convert = PhotoImage(file=resource_path("Pictures/ConvertInPdf.png"))
 img_Exit = PhotoImage(file=resource_path("Pictures/Exit.png"))
-img_Test = PhotoImage(file=resource_path("Pictures/Test.png"))
+img_Test = PhotoImage(file=resource_path("Pictures/test.png"))
 
 Btn_SelectFile = tk.Button(tab1) ; Btn_Reset = tk.Button(tab1) ;
 Btn_Convertir = tk.Button(tab1) ; Btn_Quitter = tk.Button(tab1) ;
@@ -320,7 +369,7 @@ Boutons_Controle = [
     [Btn_Reset, "Reset",img_Reset, RESET,tk.DISABLED],
     [Btn_Convertir, "Convertir",img_Convert, open_dialog,tk.DISABLED],
     [Btn_Quitter, "Quitter",img_Exit, root.destroy,tk.NORMAL],
-    # [Btn_Test, "Test",img_Test, choosemultifiles],
+    # [Btn_Test, "Test",img_Test, HideProcessing, tk.NORMAL],
 ]
 
 # Boucle placement des bouttons
@@ -347,6 +396,8 @@ tableau.column("Chemin", minwidth=120, width=400, stretch=NO)
 tableau['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
 tableau.place(x=50, y=220, width=600, height=250)
 
+TraitementConversion = tk.Label(root, text="Bonjour, monde!", borderwidth=1, relief="solid")
+
 #----------------------------------------
 #Nom Bouton, Texte, Image, Fonction
 
@@ -360,7 +411,6 @@ Boutons_Fleche = [
     [Btn_FlecheHaut, "Monter",img_Fleche_Haut, ButtonFlecheUp ],
     [Btn_SupprimerLigne, "Supprimer",img_SupprimerLigne, SupprimerLigne],
     [Btn_FlecheBas, "Descendre",img_Fleche_Bas, ButtonFlecheDown],
-
 ]
 
 # Boucle placement des bouttons
