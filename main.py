@@ -20,7 +20,6 @@ import sys
 Chemin=''
 liste_chemin=[]
 Nom_Fichier = []
-chemin_init="C:\\Users\Adrie\Desktop\Convertir PNG EN PDF Python"
 chemin_final=''
 Images_Multiple=[]
 IMG_Mult=[]
@@ -87,7 +86,7 @@ def PlaceFlecheButtons():
 
 def choosemultifiles():
     global files,PlacementUniqueFleche, index_from_selected_ligne
-    files = filedialog.askopenfilenames(initialdir=chemin_init, title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
+    files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
         Btn_Reset.configure(state=tk.NORMAL); Btn_Convertir.configure(state=tk.NORMAL)
         for file in files:
