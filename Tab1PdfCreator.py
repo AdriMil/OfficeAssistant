@@ -1,23 +1,5 @@
 from imports import *
 
- #------------VARIABLE_SPACE-------------#
-#Tableau :
-Tableau_x_position = 50 ; Tableau_y_position = 220
-Tableau_width = 600 ; Tableau_Height = 250
-
-#Bouton Controle
-Btn_controle_width = 50 ; Btn_controle_height = 50 ; Space_Between_Btn = 10
-Btn_controle_x_init = 0 ; Btn_controle_y_init = Tableau_y_position - Btn_controle_height - 30
-window_height = Tableau_Height + Btn_controle_y_init + Tableau_y_position
-policeSize = 10
-
-#Bouton Fleches
-Btn_fleche_width = 25 ; Btn_fleche_height = 25 ; Space_Between_Btn_fleche = 10
-Btn_fleche_y_init = Tableau_y_position + Tableau_Height + 10
-
-#image Btn Controle
-ImageReducer =  1
-
 #-------------------INIT-----------#
 Chemin=''
 liste_chemin=[]
@@ -37,35 +19,6 @@ def WindowsSizeSendData():
     return window_height,window_width
 #-------------------------------------------------------------
 
-#Gestion chemin fichier #Format adapté pour pyinstaller :
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
-
-#-----------------------------Calcul position boutons
-def CalculPositionInitialeBoutonsDeControl():
-    
-    global Tableau_width,Boutons_Controle, Btn_controle_width, Btn_controle_height,Space_Between_Btn,Btn_controle_x_init, Tableau_x_position,window_width, Tableau_Height,Boutons_Controle
-    #Tous les boutons vont être collés et centré sur le tableau
-    NbBtn = len(Boutons_Controle)
-    EspacePrisParLesBoutons = NbBtn * (Btn_controle_width+Space_Between_Btn)
-    freeSpace = Tableau_width - (EspacePrisParLesBoutons)
-    if(freeSpace>0):
-        Btn_controle_x_init = Tableau_x_position + (freeSpace / 2)
-
-        window_width = Tableau_width + Tableau_x_position *2
-
-    else:
-        debord = EspacePrisParLesBoutons - Tableau_width
-        Btn_controle_x_init = Tableau_x_position - (debord / 2)
-        window_width = Tableau_width + debord
-
-    return Btn_controle_x_init
 
 def CalculPositionInitialeBoutonsFleche():
     global Tableau_width,Boutons_Fleche, Btn_fleche_width,Space_Between_Btn_fleche,Position_x_recalculee_BtnsFleche, Tableau_x_position,window_width, Tableau_Height
@@ -352,12 +305,16 @@ def Tab1PdfCreator(master,root):
     ]
 
     # Boucle placement des bouttons
-    Position_x_recalculee = CalculPositionInitialeBoutonsDeControl()
+    Position_x_recalculee,Position_y_recalculee = CalculPositionInitialeBoutonsDeControl(Boutons_Controle,Tab1Tableau,offset=30)
 
     for i in range(0,len(Boutons_Controle)):
         Boutons_Controle[i][2] = Boutons_Controle[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
         Boutons_Controle[i][0].configure( width=Btn_controle_width, height= Btn_controle_height, font=("Helvetica", policeSize),image=Boutons_Controle[i][2], command=Boutons_Controle[i][3], text = Boutons_Controle[i][1],compound=tk.TOP,state=Boutons_Controle[i][4] )
-        Boutons_Controle[i][0].place(x=Position_x_recalculee, y=Btn_controle_y_init)
+        Boutons_Controle[i][0].place(x=Position_x_recalculee, y=Position_y_recalculee)
+        print("--------------------------------------------")
+        print(type(Position_x_recalculee))
+        print(type(Btn_controle_width))
+        print(type(Space_Between_Btn))
         Position_x_recalculee = Position_x_recalculee + Btn_controle_width + Space_Between_Btn
         Boutons_Controle[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_Controle[i].append(Btn_controle_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
@@ -373,7 +330,7 @@ def Tab1PdfCreator(master,root):
     tableau.heading('Chemin', text='Chemin')
     tableau.column("Chemin", minwidth=120, width=400, stretch=NO)
     tableau['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
-    tableau.place(x=50, y=220, width=600, height=250)
+    tableau.place(x=Tableau_x_position, y=Tableau_y_position, width=Tableau_width, height=Tableau_Height)
 
     TraitementConversion = tk.Label(tab1, text="", borderwidth=1, relief="solid")
 

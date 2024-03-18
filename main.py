@@ -13,7 +13,7 @@ root.resizable(width=False, height=False) #blocage de la taille de la fenetre
 
 tabControl = ttk.Notebook(root)
 tab1 = Tab1PdfCreator(tabControl,root)
-tab2 = Tab2PictureOffuscation(tabControl)
+tab2 = Tab2PictureOffuscation(tabControl,root)
 tabControl.add(tab1, text='Pdf Creator')
 tabControl.add(tab2, text='Picture Offuscation')
 tabControl.pack(expand=1, fill="both")
