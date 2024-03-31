@@ -2,24 +2,73 @@ from imports import *
 from PIL import Image
 from PIL import ImageTk  
 
+img = None
+
 def test():
     print("test")
 
+def on_canvas_configure(event):
+    canvas.configure(scrollregion=canvas.bbox("all"))
 # def click_on_canvas(event):
 #     choosefile()
 
 def reset():
-    global tab2SelectedImg,Btn_SelectFileTab2,Btn_ResetTab2
+    global img, photo_image, resized_image
+    img = None
+    photo_image = None
+    resized_image = None
+
     Btn_SelectFileTab2.config(state="normal")
     Btn_ResetTab2.config(state="disabled")
     canvas.delete("all")
 
+    hide_scrollbars()
+
+    
+def ZoomMoletteUp(event):
+    global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
+
+    if img is not None:
+        print("Molette de la souris vers le bas")
+
+        # Redimensionner l'image
+        img = img.resize((largeur_img * 2, hauteur_img * 2))
+        largeur_img, hauteur_img = img.size
+
+        # Convertir l'image redimensionnée en PhotoImage
+        photo_image = ImageTk.PhotoImage(img)
+
+        # Mettre à jour l'image dans le canevas
+        canvas.itemconfig(MAJ_image, image=photo_image)
+        ScrollBarLenghCalculation()
+        
+
+def ZoomMoletteDown(event):
+    global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
+
+    if img is not None:
+        print("Molette de la souris vers le bas")
+
+        # Redimensionner l'image
+        img = img.resize((largeur_img // 2, hauteur_img // 2))
+        largeur_img, hauteur_img = img.size
+
+        # Convertir l'image redimensionnée en PhotoImage
+        photo_image = ImageTk.PhotoImage(img)
+
+        # Mettre à jour l'image dans le canevas
+        canvas.itemconfig(MAJ_image, image=photo_image)
+        ScrollBarLenghCalculation()
+
+
 
 def Affiche_IMG_selectionnee(result):
     global MAJ_image, canvas, photo_image  # Assurez-vous d'avoir déclaré la variable photo_image comme globale
-
+    global img,photo_image,resized_image, largeur_img, hauteur_img
     # Load an image from the file path
     img = Image.open(result)
+
+    largeur_img, hauteur_img = img.size
 
     # Resize the image
     Largeur_Img_IHM = 400
@@ -27,12 +76,54 @@ def Affiche_IMG_selectionnee(result):
     resized_image = img.resize((Largeur_Img_IHM, Hauteur_Img_IHM))
 
     # Convert the resized image to a PhotoImage object
-    photo_image = ImageTk.PhotoImage(resized_image)
+    photo_image = ImageTk.PhotoImage(img)
 
     # Add the image to the Canvas
     MAJ_image = canvas.create_image(0, 0, anchor="nw", image=photo_image)
+    ScrollBarLenghCalculation()
+        
+def ScrollBar():
+    global x_scroll,y_scroll
+        # Add horizontal scrollbar
+    x_scroll = tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
+    canvas.configure(xscrollcommand=x_scroll.set)
 
+    # Add vertical scrollbar
+    y_scroll = tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
+    canvas.configure(yscrollcommand=y_scroll.set)
 
+def ScrollBarLenghCalculation():
+    canvas.config(scrollregion=canvas.bbox(tk.ALL))
+
+def hide_scrollbars():
+    x_scroll.pack_forget()
+    y_scroll.pack_forget()
+
+def show_scrollbars():
+    x_scroll.pack(side="bottom", fill="x")
+    y_scroll.pack(side="right", fill="y")
+
+def deplacement_horizontal(event):
+    global last_x, last_y
+    last_x = event.x_root
+    last_y = event.y_root
+
+def deplacement_souris(event):
+    global last_x, last_y
+    x = event.x_root
+    y = event.y_root
+    delta_x = x - last_x
+    delta_y = y - last_y
+    if delta_x > 0:
+        canvas.xview_scroll(-1, "units")  # Défilement vers la gauche
+    elif delta_x < 0:
+        canvas.xview_scroll(1, "units")   # Défilement vers la droite
+    if delta_y > 0:
+        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
+    elif delta_y < 0:
+        canvas.yview_scroll(1, "units")   # Défilement vers le bas
+    last_x = x
+    last_y = y
     
 
 def choosefile():
@@ -63,7 +154,8 @@ def choosefile():
         
         Affiche_IMG_selectionnee(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
-        
+        ScrollBarLenghCalculation()
+        show_scrollbars()
 
 
 def Tab2PictureOffuscation(master,root):
@@ -91,6 +183,7 @@ def Tab2PictureOffuscation(master,root):
     # canvas.bind("<Button-1>", click_on_canvas)
     txt = canvas.create_text(300, 200, text="Selectionnez une image", font="Arial 16 italic", fill="blue")
 
+    ScrollBar()
     Boutons_ControleTab2 = [
         [Btn_SelectFileTab2, "Add file",img_SelectFileTab2, choosefile,tk.NORMAL ],
         [Btn_ValiderTab2, "Valider",img_ValiderTab2, test,tk.DISABLED],
@@ -118,5 +211,10 @@ def Tab2PictureOffuscation(master,root):
         Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
+    root.bind("<MouseWheel>", lambda event: ZoomMoletteUp(event) if event.delta > 0 else ZoomMoletteDown(event))
+    # Associer la fonction à l'événement de clic de la molette de la souris
+    canvas.bind("<Button-2>", deplacement_horizontal)
+    # Associer la fonction à l'événement de déplacement de la souris
+    canvas.bind("<B2-Motion>", deplacement_souris)
     return tab2
     
