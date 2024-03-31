@@ -116,10 +116,10 @@ def Affiche_IMG_selectionnee(result):
     Largeur_Img_IHM = 400
     Hauteur_Img_IHM = 400
     resized_image= img.resize((Largeur_Img_IHM,Hauteur_Img_IHM))
-    new_image= ImageTk.PhotoImage(resized_image)
+    new_image= ImageTk.PhotoImage(img)
     # Add image to the Canvas Items
-    MAJ_image = canvas.create_image(0,0, anchor=NW, image=new_image)
-    canvas.itemconfig(MAJ_image)
+    MAJ_image = canvas.create_image(0,0, anchor="nw", image=new_image)
+    # canvas.itemconfig(MAJ_image)
     
     
 def Fond_Transparent():
@@ -224,48 +224,44 @@ def clic_droit(event):
     SaveCoordonees.append([x, y])
     print(SaveCoordonees)
 
-root = tk.Tk()             #Creation de la fenetre
-root.geometry("700x650")   # Taille de la fenetre
+def on_canvas_configure(event):
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
-root.resizable(width=False, height=False) #blocage de la taille de la fenetre
-
-gui(root) # Selection du fichier csv
-
-#-----------BOUTONS-----------------#
-
-Bouton_Selec_image = tk.Button(root, text="Selectionner fichier", command=choosefile)
-Bouton_Selec_image.place(x=50, y=160, width=600, height=50)
-
-Bouton_Quitter = Button(root, text="Quitter", command=root.destroy)
-Bouton_Quitter.place(x=475, y=575, width=100, height=50)
-
-Bouton_Validation = tk.Button(root, text="Valider", command=Fond_Transparent)
-Bouton_Validation.place(x=475, y=350, width=200, height=200)
-
-#Bouton Paramètre
-# Creating a photoimage object to use image
-# Image_Param = PhotoImage(file = r"Param.png")
-# Bouton_Paramètre= Button(root,image = Image_Param,compound = TOP, command=root.destroy)
-# Bouton_Paramètre.place(x=580, y=575, width=100, height=50)
-
-#-----------Canvas explication -----------------#
-#placement centré des consignes
-largeur_fenetre = 750/2
-
-#-----------CANVAS COULEUR SELECTIONEE-----------------#
-Couleur_select = Canvas(root, width = 200, height = 100) 
-Couleur_select.place(x=475, y=220)
+import tkinter as tk
+from tkinter import Button, Canvas
 
 
-#-----------CANVAS------------#
-canvas = Canvas(root, width = 400, height = 400,highlightthickness=1, highlightbackground="black")  
-canvas.place(x=50, y=220)
-#Text de base dans le canvas
+
+root = tk.Tk() # Création de la fenêtre
+root.geometry("700x650") # Taille de la fenêtre
+root.resizable(width=False, height=False) # Blocage de la taille de la fenêtre
+
+# CANVAS
+canvas = tk.Canvas(root, width=400, height=400, highlightthickness=1, highlightbackground="black")  
+canvas.pack(side="left", fill="both", expand=True)
 txt = canvas.create_text(200, 200, text="Selectionnez une image", font="Arial 16 italic", fill="blue")
 canvas.bind("<Button-1>", click_on_canvas)
-
-
-
+x_scrollbar = tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
+x_scrollbar.pack(side="bottom", fill="x")
+y_scrollbar = tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
+y_scrollbar.pack(side="right", fill="y")
+canvas.config(xscrollcommand=x_scrollbar.set, yscrollcommand=y_scrollbar.set)
+canvas.bind("<Configure>", on_canvas_configure)
 canvas.bind('<Motion>', motion)
 canvas.bind("<Button-3>", clic_droit)
+
+# BOUTONS
+Bouton_Selec_image = tk.Button(root, text="Selectionner fichier", command=choosefile)
+Bouton_Selec_image.pack(side="top", fill="x")
+
+Bouton_Quitter = Button(root, text="Quitter", command=root.destroy)
+Bouton_Quitter.pack(side="top", fill="x")
+
+Bouton_Validation = tk.Button(root, text="Valider", command=Fond_Transparent)
+Bouton_Validation.pack(side="top", fill="x")
+
+# CANVAS COULEUR SELECTIONEE
+Couleur_select = Canvas(root, width=10, height=10) 
+Couleur_select.pack(side="bottom", fill="x")
+
 root.mainloop()

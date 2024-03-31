@@ -24,8 +24,8 @@ Tableau_width = 600 ; Tableau_Height = 250
 Tab1Tableau = [Tableau_x_position,Tableau_y_position,Tableau_width,Tableau_Height]
 
 #Fenetre d'affichage Tab2
-Tab2DisplayWindow_x_position = 50 ; Tab2DisplayWindow_y_position = 220
-Tab2DisplayWindow_width = 600 ; Tab2DisplayWindow_Height = 250
+Tab2DisplayWindow_x_position = 50 ; Tab2DisplayWindow_y_position = 100
+Tab2DisplayWindow_width = 600 ; Tab2DisplayWindow_Height = 400
 Tab2Canvas = [Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height]
 
 
