@@ -28,7 +28,54 @@ def reset():
 
     Boutons_Zoom[0][0].configure(state=tk.DISABLED)
     Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+    Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
+def Save():
+    # global img,c1,c2,c3, SaveCoordonees
+    global img
+    if (img is None):
+        messagebox.showinfo("Erreur", "Selectionnez une image")
+    # elif(c1==None and c2==None and c3==None):
+    #     messagebox.showinfo("Erreur", "Selectionnez une couleur à rendre transparente en cliquant sur l'image")
+    else :
+        global Chemin_fichier,words,chemin_init,Nom_Fichier,Nom_Fichier_final
+    
+        # img = Image.open(Chemin_fichier)
+        largeur, hauteur = img.size
+        print(largeur, hauteur)
+        rgba = img.convert("RGBA")
+        datas = rgba.getdata()
+        newData = []
+
+        # Largeur de la bande verte
+        largeur_bande = 2
+        couleur_verte = (0, 255, 0, 255)
+
+
+        #         # Coordonnées du coin supérieur gauche du carré
+        # x1, y1 = SaveCoordonees[-2]
+        # # Coordonnées du coin inférieur droit du carré
+        # x2, y2 = SaveCoordonees[-1]
+
+        # print("x1: ",x1," y1: ",y1)
+        # print("x2: ",x2," y2: ",y2)
+
+        # # Parcourir les pixels de l'image
+        # for y in range(hauteur):
+        #     for x in range(largeur):
+        #         # Vérifier si le pixel est à l'intérieur du carré
+        #         if x1 <= x <= x2 and y1 <= y <= y2:
+        #             newData.append(couleur_verte)  # Ajouter la couleur verte
+        #         else:
+        #             # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
+        #             pixel = img.getpixel((x, y))
+        #             newData.append(pixel)
+
+        # Créer une nouvelle image avec les nouvelles données
+        img.putdata(newData)
+
+        # Sauvegarder l'image
+        img.save(Nom_Fichier_final+".png", "PNG")
 
 def Zoom(op):
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
@@ -65,8 +112,12 @@ def Affiche_IMG_selectionnee(result):
     largeur_img, hauteur_img = img.size
 
     Reduction_ratio = (largeur_img//Tab2DisplayWindow_width)
-    Best_Width_Picture = largeur_img // Reduction_ratio
-    Best_Height_Picture = hauteur_img // Reduction_ratio
+    if Reduction_ratio==0:
+        Best_Width_Picture = largeur_img 
+        Best_Height_Picture = hauteur_img
+    else:
+        Best_Width_Picture = largeur_img // Reduction_ratio
+        Best_Height_Picture = hauteur_img // Reduction_ratio
     resized_image = img.resize((Best_Width_Picture, Best_Height_Picture))
 
     # Convert the resized image to a PhotoImage object
@@ -129,6 +180,7 @@ def on_mousewheel(event):
 def choosefile():
     global canvas, txt,tab2SelectedImg,Btn_ResetTab2,Btn_SelectFileTab2
     global PlacementUniqueZoom #Know if zoom btns have already been positionned
+    global Chemin_fichier,Nom_Fichier_final # use for save function
     result = filedialog.askopenfilename()
     if(result==''):
         print("pas d'image selectionnées")
@@ -149,7 +201,7 @@ def choosefile():
         Nom_Fichiersplit = result.split('.')
         Nom_Fichier_sans_ext = Nom_Fichiersplit[0]
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
-        Nom_Fichier_final= Nom_Fichier_sans_ext + " - Transparent"
+        Nom_Fichier_final= Nom_Fichier_sans_ext + " - Obfuscated"
     #-------Chemin de sauv identique sans prendre le nom du fichier    
         Nom_Chemin = Chemin_fichier[:-len(Nom_Fichier)]  #On prend tt sauf le nom du fichier
         
@@ -160,12 +212,11 @@ def choosefile():
 
         Boutons_Zoom[0][0].configure(state=tk.NORMAL)
         Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+        Boutons_ControleTab2[1][0].configure(state=tk.NORMAL)
 
         if (PlacementUniqueZoom == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
                 PlaceBtnsZoom()
                 PlacementUniqueZoom = 1
-
-
 
 def CalculPositionInitialeBoutonsZoom():
     global Position_x_recalculee_BtnsZoom
@@ -191,13 +242,12 @@ def PlaceBtnsZoom():
         Boutons_Zoom[i].append(Position_x_recalculee_BtnsZoom) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_Zoom[i].append(Btn_zoom_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
-
-
 def Tab2PictureOffuscation(master,root):
     global canvas, txt
     global Btn_ResetTab2,Btn_SelectFileTab2
     global tab2
     global Boutons_Zoom,Position_x_recalculee_BtnsZoom
+    global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
     tab2 = ttk.Frame(master)
 
     canvas = tk.Canvas(tab2, bg="white")
@@ -222,7 +272,7 @@ def Tab2PictureOffuscation(master,root):
     ScrollBar()
     Boutons_ControleTab2 = [
         [Btn_SelectFileTab2, "Add file",img_SelectFileTab2, choosefile,tk.NORMAL ],
-        [Btn_ValiderTab2, "Valider",img_ValiderTab2, test,tk.DISABLED],
+        [Btn_ValiderTab2, "Valider",img_ValiderTab2, Save,tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
         [Btn_ResetTab2, "Reset",img_Reset, reset,tk.DISABLED],
         [Btn_QuitterTab2, "Quitter",img_ExitTab2, root.destroy,tk.NORMAL],
