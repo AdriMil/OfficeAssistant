@@ -39,6 +39,10 @@ policeSize = 10
 Btn_fleche_width = 25 ; Btn_fleche_height = 25 ; Space_Between_Btn_fleche = 10
 Btn_fleche_y_init = Tableau_y_position + Tableau_Height + 10
 
+#Bouton Zoom Tab 2 PAramètres
+Btn_zoom_width = 25 ; Btn_zoom_height = 25 ; Space_Between_Btn_zoom = 10
+Btn_zoom_y_init = Tab2DisplayWindow_y_position + Tab2DisplayWindow_Height + 10
+
 #image Btn Controle
 ImageReducer =  1
 

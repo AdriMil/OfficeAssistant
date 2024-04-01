@@ -3,6 +3,8 @@ from PIL import Image
 from PIL import ImageTk  
 
 img = None
+PlacementUniqueZoom = 0 #
+Position_x_recalculee_BtnsZoom = 0 ;
 
 def test():
     print("test")
@@ -24,8 +26,11 @@ def reset():
 
     hide_scrollbars()
 
+    Boutons_Zoom[0][0].configure(state=tk.DISABLED)
+    Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+
     
-def ZoomMoletteUp(event):
+def ZoomMoletteUp():
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
 
     if img is not None:
@@ -43,7 +48,7 @@ def ZoomMoletteUp(event):
         ScrollBarLenghCalculation()
         
 
-def ZoomMoletteDown(event):
+def ZoomMoletteDown():
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
 
     if img is not None:
@@ -124,10 +129,17 @@ def deplacement_souris(event):
         canvas.yview_scroll(1, "units")   # Défilement vers le bas
     last_x = x
     last_y = y
+
+def on_mousewheel(event):
+    if event.delta > 0:
+        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
+    else:
+        canvas.yview_scroll(1, "units")   # Défilement vers le bas
     
 
 def choosefile():
     global canvas, txt,tab2SelectedImg,Btn_ResetTab2,Btn_SelectFileTab2
+    global PlacementUniqueZoom #Know if zoom btns have already been positionned
     result = filedialog.askopenfilename()
     if(result==''):
         print("pas d'image selectionnées")
@@ -157,11 +169,46 @@ def choosefile():
         ScrollBarLenghCalculation()
         show_scrollbars()
 
+        Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+        Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+
+        if (PlacementUniqueZoom == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
+                PlaceBtnsZoom()
+                PlacementUniqueZoom = 1
+
+
+
+def CalculPositionInitialeBoutonsZoom():
+    global Position_x_recalculee_BtnsZoom
+    NbBtn = len(Boutons_Zoom)
+    EspacePrisParLesBoutonsZoom = NbBtn * (Btn_zoom_width+Space_Between_Btn_zoom)
+    freeSpace = Tab2DisplayWindow_width - (EspacePrisParLesBoutonsZoom)
+    if(freeSpace>0):
+        Position_x_recalculee_BtnsZoom = Tab2DisplayWindow_x_position + (freeSpace / 2)
+
+    else:
+        debord = EspacePrisParLesBoutonsZoom - Tab2DisplayWindow_x_position
+        Position_x_recalculee_BtnsZoom = Tab2DisplayWindow_x_position - (debord / 2)
+
+    return Position_x_recalculee_BtnsZoom
+
+def PlaceBtnsZoom():
+    global Position_x_recalculee_BtnsZoom
+    for i in range(0,len(Boutons_Zoom)):
+        Boutons_Zoom[i][2] = Boutons_Zoom[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
+        Boutons_Zoom[i][0].configure( width=Btn_zoom_width, height= Btn_zoom_height,image=Boutons_Zoom[i][2], command=Boutons_Zoom[i][3])
+        Boutons_Zoom[i][0].place(x=Position_x_recalculee_BtnsZoom, y=Btn_zoom_y_init)
+        Position_x_recalculee_BtnsZoom = Position_x_recalculee_BtnsZoom + Btn_zoom_width + Space_Between_Btn_zoom
+        Boutons_Zoom[i].append(Position_x_recalculee_BtnsZoom) #Sauvegarde de la valeur x du bouton à la fin de la liste
+        Boutons_Zoom[i].append(Btn_zoom_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
+
+
 
 def Tab2PictureOffuscation(master,root):
     global canvas, txt
     global Btn_ResetTab2,Btn_SelectFileTab2
     global tab2
+    global Boutons_Zoom,Position_x_recalculee_BtnsZoom
     tab2 = ttk.Frame(master)
 
     canvas = tk.Canvas(tab2, bg="white")
@@ -190,6 +237,7 @@ def Tab2PictureOffuscation(master,root):
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
         [Btn_ResetTab2, "Reset",img_Reset, reset,tk.DISABLED],
         [Btn_QuitterTab2, "Quitter",img_ExitTab2, root.destroy,tk.NORMAL],
+               
         
         # [Btn_TestTab2, "Test",img_Test, HideProcessing, tk.NORMAL],
     ]
@@ -211,7 +259,23 @@ def Tab2PictureOffuscation(master,root):
         Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
-    root.bind("<MouseWheel>", lambda event: ZoomMoletteUp(event) if event.delta > 0 else ZoomMoletteDown(event))
+
+    
+    img_Zoom_Plus = PhotoImage(file=resource_path("Pictures/zoomPlus.png"))
+    img_Zoom_Moins = PhotoImage(file=resource_path("Pictures/zoomMoins.png"))
+    Btn_ZoomPlus = tk.Button(tab2) ; Btn_ZoomMoins = tk.Button(tab2) 
+
+    Boutons_Zoom = [
+        [Btn_ZoomPlus, "Zoomer",img_Zoom_Plus, ZoomMoletteUp ],
+        [Btn_ZoomMoins, "Dézoomer",img_Zoom_Moins, ZoomMoletteDown],
+    ]
+
+    Position_x_recalculee_BtnsZoom = CalculPositionInitialeBoutonsZoom()
+    print("Position_x_recalculee_BtnsZoom :", Position_x_recalculee_BtnsZoom)
+
+    # root.bind("<MouseWheel>", lambda event: ZoomMoletteUp(event) if event.delta > 0 else ZoomMoletteDown(event))
+
+    canvas.bind("<MouseWheel>", on_mousewheel)
     # Associer la fonction à l'événement de clic de la molette de la souris
     canvas.bind("<Button-2>", deplacement_horizontal)
     # Associer la fonction à l'événement de déplacement de la souris
