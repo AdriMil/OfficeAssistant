@@ -129,6 +129,12 @@ def deplacement_souris(event):
         canvas.yview_scroll(1, "units")   # Défilement vers le bas
     last_x = x
     last_y = y
+
+def on_mousewheel(event):
+    if event.delta > 0:
+        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
+    else:
+        canvas.yview_scroll(1, "units")   # Défilement vers le bas
     
 
 def choosefile():
@@ -268,6 +274,8 @@ def Tab2PictureOffuscation(master,root):
     print("Position_x_recalculee_BtnsZoom :", Position_x_recalculee_BtnsZoom)
 
     # root.bind("<MouseWheel>", lambda event: ZoomMoletteUp(event) if event.delta > 0 else ZoomMoletteDown(event))
+
+    canvas.bind("<MouseWheel>", on_mousewheel)
     # Associer la fonction à l'événement de clic de la molette de la souris
     canvas.bind("<Button-2>", deplacement_horizontal)
     # Associer la fonction à l'événement de déplacement de la souris
