@@ -29,34 +29,23 @@ def reset():
     Boutons_Zoom[0][0].configure(state=tk.DISABLED)
     Boutons_Zoom[1][0].configure(state=tk.DISABLED)
 
-    
-def ZoomMoletteUp():
+
+def Zoom(op):
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
-
+    global Best_Height_Picture,Best_Width_Picture #share new size of picture
     if img is not None:
-        print("Molette de la souris vers le bas")
+        if(op == "//"):
+            Best_Width_Picture = Best_Width_Picture // 2 
+            Best_Height_Picture = Best_Height_Picture // 2
 
-        # Redimensionner l'image
-        img = img.resize((largeur_img * 2, hauteur_img * 2))
-        largeur_img, hauteur_img = img.size
-
-        # Convertir l'image redimensionnée en PhotoImage
-        photo_image = ImageTk.PhotoImage(img)
-
-        # Mettre à jour l'image dans le canevas
-        canvas.itemconfig(MAJ_image, image=photo_image)
-        ScrollBarLenghCalculation()
+        elif(op=="*"):
+            Best_Width_Picture = Best_Width_Picture * 2 
+            Best_Height_Picture = Best_Height_Picture * 2 
         
-
-def ZoomMoletteDown():
-    global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
-
-    if img is not None:
-        print("Molette de la souris vers le bas")
-
         # Redimensionner l'image
-        img = img.resize((largeur_img // 2, hauteur_img // 2))
+        img = img.resize((Best_Width_Picture, Best_Height_Picture))
         largeur_img, hauteur_img = img.size
+        print("largeur_img: ", largeur_img,"hauteur_img: ", hauteur_img)
 
         # Convertir l'image redimensionnée en PhotoImage
         photo_image = ImageTk.PhotoImage(img)
@@ -64,24 +53,24 @@ def ZoomMoletteDown():
         # Mettre à jour l'image dans le canevas
         canvas.itemconfig(MAJ_image, image=photo_image)
         ScrollBarLenghCalculation()
-
 
 
 def Affiche_IMG_selectionnee(result):
     global MAJ_image, canvas, photo_image  # Assurez-vous d'avoir déclaré la variable photo_image comme globale
     global img,photo_image,resized_image, largeur_img, hauteur_img
+    global Best_Width_Picture,Best_Height_Picture # Share init size of the picture we are displaying. Values will be use by zooms functions
     # Load an image from the file path
     img = Image.open(result)
 
     largeur_img, hauteur_img = img.size
 
-    # Resize the image
-    Largeur_Img_IHM = 400
-    Hauteur_Img_IHM = 400
-    resized_image = img.resize((Largeur_Img_IHM, Hauteur_Img_IHM))
+    Reduction_ratio = (largeur_img//Tab2DisplayWindow_width)
+    Best_Width_Picture = largeur_img // Reduction_ratio
+    Best_Height_Picture = hauteur_img // Reduction_ratio
+    resized_image = img.resize((Best_Width_Picture, Best_Height_Picture))
 
     # Convert the resized image to a PhotoImage object
-    photo_image = ImageTk.PhotoImage(img)
+    photo_image = ImageTk.PhotoImage(resized_image)
 
     # Add the image to the Canvas
     MAJ_image = canvas.create_image(0, 0, anchor="nw", image=photo_image)
@@ -266,8 +255,8 @@ def Tab2PictureOffuscation(master,root):
     Btn_ZoomPlus = tk.Button(tab2) ; Btn_ZoomMoins = tk.Button(tab2) 
 
     Boutons_Zoom = [
-        [Btn_ZoomPlus, "Zoomer",img_Zoom_Plus, ZoomMoletteUp ],
-        [Btn_ZoomMoins, "Dézoomer",img_Zoom_Moins, ZoomMoletteDown],
+        [Btn_ZoomPlus, "Zoomer",img_Zoom_Plus, lambda: Zoom("*") ],
+        [Btn_ZoomMoins, "Dézoomer",img_Zoom_Moins, lambda: Zoom("//")],
     ]
 
     Position_x_recalculee_BtnsZoom = CalculPositionInitialeBoutonsZoom()
