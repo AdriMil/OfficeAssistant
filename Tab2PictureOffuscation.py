@@ -4,7 +4,10 @@ from PIL import ImageTk
 
 img = None
 PlacementUniqueZoom = 0 #
-Position_x_recalculee_BtnsZoom = 0 ;
+Position_x_recalculee_BtnsZoom = 0 
+c1=c2=c3=None # Used for pixel coloration
+SaveCoordonees = []
+Zoomincrementation = 0
 
 def test():
     print("test")
@@ -30,6 +33,38 @@ def reset():
     Boutons_Zoom[1][0].configure(state=tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
+def clic_droit(event):
+    global SaveCoordonees
+    x = event.x
+    y = event.y
+    # Convertir les coordonnées du canevas en coordonnées relatives à l'image
+    x_image = canvas.canvasx(x)
+    y_image = canvas.canvasy(y)
+
+    SaveCoordonees.append([x_image, y_image])
+    print("Clic droit à la position (x={}, y={})".format(x_image, y_image))
+    x2, y2 = CalculateRealPixelPosition(*SaveCoordonees[-1])
+
+    print(SaveCoordonees)
+
+def CalculateRealPixelPosition(x,y):
+    if(Zoomincrementation==0):
+        x = x *(Reduction_ratio)
+        y = y *(Reduction_ratio)
+    elif(Zoomincrementation<0):
+        x = x *(Reduction_ratio+(2**(-Zoomincrementation)))
+        y = y *(Reduction_ratio+(2**(-Zoomincrementation)))
+    else:
+        x = x *(Reduction_ratio/Zoomincrementation)
+        y = y *(Reduction_ratio/Zoomincrementation)  
+
+
+    # print("ancien x: ",x,"ancien y: ",y)
+    print("nouveau x: ",x,"nouveua y: ",y)
+    return x,y
+
+
+
 def Save():
     # global img,c1,c2,c3, SaveCoordonees
     global img
@@ -40,10 +75,10 @@ def Save():
     else :
         global Chemin_fichier,words,chemin_init,Nom_Fichier,Nom_Fichier_final
     
-        # img = Image.open(Chemin_fichier)
-        largeur, hauteur = img.size
+        imgForSaving = Image.open(Chemin_fichier)
+        largeur, hauteur = imgForSaving.size
         print(largeur, hauteur)
-        rgba = img.convert("RGBA")
+        rgba = imgForSaving.convert("RGBA")
         datas = rgba.getdata()
         newData = []
 
@@ -52,50 +87,58 @@ def Save():
         couleur_verte = (0, 255, 0, 255)
 
 
-        #         # Coordonnées du coin supérieur gauche du carré
+                # Coordonnées du coin supérieur gauche du carré
         # x1, y1 = SaveCoordonees[-2]
-        # # Coordonnées du coin inférieur droit du carré
+        x1, y1 = CalculateRealPixelPosition(*SaveCoordonees[-2])
+        # Coordonnées du coin inférieur droit du carré
         # x2, y2 = SaveCoordonees[-1]
+        x2, y2 = CalculateRealPixelPosition(*SaveCoordonees[-1])
+        print("x1: ",x1," y1: ",y1)
+        print("x2: ",x2," y2: ",y2)
 
-        # print("x1: ",x1," y1: ",y1)
-        # print("x2: ",x2," y2: ",y2)
-
-        # # Parcourir les pixels de l'image
-        # for y in range(hauteur):
-        #     for x in range(largeur):
-        #         # Vérifier si le pixel est à l'intérieur du carré
-        #         if x1 <= x <= x2 and y1 <= y <= y2:
-        #             newData.append(couleur_verte)  # Ajouter la couleur verte
-        #         else:
-        #             # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
-        #             pixel = img.getpixel((x, y))
-        #             newData.append(pixel)
+        # Parcourir les pixels de l'image
+        for y in range(hauteur):
+            for x in range(largeur):
+                # Vérifier si le pixel est à l'intérieur du carré
+                if x1 <= x <= x2 and y1 <= y <= y2:
+                    newData.append(couleur_verte)  # Ajouter la couleur verte
+                else:
+                    # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
+                    pixel = imgForSaving.getpixel((x, y))
+                    newData.append(pixel)
 
         # Créer une nouvelle image avec les nouvelles données
-        img.putdata(newData)
-
+        imgForSaving.putdata(newData)
         # Sauvegarder l'image
-        img.save(Nom_Fichier_final+".png", "PNG")
+        imgForSaving.save(Nom_Fichier_final+".png", "PNG")
 
 def Zoom(op):
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
     global Best_Height_Picture,Best_Width_Picture #share new size of picture
+    global Zoomincrementation,ratioZoom #know zoom on picture
+    ratioZoom=2
+    
     if img is not None:
         if(op == "//"):
-            Best_Width_Picture = Best_Width_Picture // 2 
-            Best_Height_Picture = Best_Height_Picture // 2
+            Zoomincrementation = Zoomincrementation  - 2
+            Best_Width_Picture = Best_Width_Picture // ratioZoom 
+            Best_Height_Picture = Best_Height_Picture // ratioZoom
 
         elif(op=="*"):
-            Best_Width_Picture = Best_Width_Picture * 2 
-            Best_Height_Picture = Best_Height_Picture * 2 
+           
+            Zoomincrementation = Zoomincrementation  + 2
+            
+            Best_Width_Picture = Best_Width_Picture * ratioZoom 
+            Best_Height_Picture = Best_Height_Picture * ratioZoom 
         
         # Redimensionner l'image
-        img = img.resize((Best_Width_Picture, Best_Height_Picture))
-        largeur_img, hauteur_img = img.size
+        print("Zoomincrementation: ",Zoomincrementation)
+        Zoomedimg = img.resize((Best_Width_Picture, Best_Height_Picture))
+        largeur_img, hauteur_img = Zoomedimg.size
         print("largeur_img: ", largeur_img,"hauteur_img: ", hauteur_img)
 
         # Convertir l'image redimensionnée en PhotoImage
-        photo_image = ImageTk.PhotoImage(img)
+        photo_image = ImageTk.PhotoImage(Zoomedimg)
 
         # Mettre à jour l'image dans le canevas
         canvas.itemconfig(MAJ_image, image=photo_image)
@@ -106,18 +149,21 @@ def Affiche_IMG_selectionnee(result):
     global MAJ_image, canvas, photo_image  # Assurez-vous d'avoir déclaré la variable photo_image comme globale
     global img,photo_image,resized_image, largeur_img, hauteur_img
     global Best_Width_Picture,Best_Height_Picture # Share init size of the picture we are displaying. Values will be use by zooms functions
+    global Reduction_ratio,Zoomincrementation # use for pixel selection scalling 
     # Load an image from the file path
     img = Image.open(result)
 
     largeur_img, hauteur_img = img.size
 
-    Reduction_ratio = (largeur_img//Tab2DisplayWindow_width)
-    if Reduction_ratio==0:
+    Reduction_ratio = (largeur_img/Tab2DisplayWindow_width)
+    # Zoomincrementation = Reduction_ratio
+    print("Reduction_ratio: ",Reduction_ratio)
+    if int(Reduction_ratio)==0:
         Best_Width_Picture = largeur_img 
         Best_Height_Picture = hauteur_img
     else:
-        Best_Width_Picture = largeur_img // Reduction_ratio
-        Best_Height_Picture = hauteur_img // Reduction_ratio
+        Best_Width_Picture = int(largeur_img // Reduction_ratio)
+        Best_Height_Picture = int(hauteur_img // Reduction_ratio)
     resized_image = img.resize((Best_Width_Picture, Best_Height_Picture))
 
     # Convert the resized image to a PhotoImage object
@@ -319,5 +365,7 @@ def Tab2PictureOffuscation(master,root):
     canvas.bind("<Button-2>", deplacement_horizontal)
     # Associer la fonction à l'événement de déplacement de la souris
     canvas.bind("<B2-Motion>", deplacement_souris)
+
+    canvas.bind("<Button-3>", clic_droit)
     return tab2
     
