@@ -130,7 +130,16 @@ def Zoom(op):
             
             Best_Width_Picture = Best_Width_Picture * ratioZoom 
             Best_Height_Picture = Best_Height_Picture * ratioZoom 
-        
+        if(Zoomincrementation<=-2):
+            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+            Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+        elif(Zoomincrementation>=6):
+            Boutons_Zoom[0][0].configure(state=tk.DISABLED)
+            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+        else:
+            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+
         # Redimensionner l'image
         print("Zoomincrementation: ",Zoomincrementation)
         Zoomedimg = img.resize((Best_Width_Picture, Best_Height_Picture))
