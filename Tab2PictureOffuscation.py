@@ -8,6 +8,7 @@ Position_x_recalculee_BtnsZoom = 0
 c1=c2=c3=None # Used for pixel coloration
 SaveCoordonees = []
 Zoomincrementation = 0
+ZoomLevel = 0 
 
 def test():
     print("test")
@@ -19,6 +20,7 @@ def on_canvas_configure(event):
 
 def reset():
     global img, photo_image, resized_image
+    global ZoomLevel
     img = None
     photo_image = None
     resized_image = None
