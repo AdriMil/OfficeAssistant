@@ -19,7 +19,6 @@ def on_canvas_configure(event):
 
 def reset():
     global img, photo_image, resized_image
-
     img = None
     photo_image = None
     resized_image = None
