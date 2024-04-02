@@ -5,6 +5,7 @@ from PIL import ImageTk
 img = None
 PlacementUniqueZoom = 0 #
 Position_x_recalculee_BtnsZoom = 0 ;
+ZoomLevel = 0 
 
 def test():
     print("test")
@@ -16,6 +17,7 @@ def on_canvas_configure(event):
 
 def reset():
     global img, photo_image, resized_image
+    global ZoomLevel
     img = None
     photo_image = None
     resized_image = None
@@ -29,6 +31,8 @@ def reset():
     Boutons_Zoom[0][0].configure(state=tk.DISABLED)
     Boutons_Zoom[1][0].configure(state=tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
+
+    ZoomLevel = 0 
 
 def Save():
     # global img,c1,c2,c3, SaveCoordonees
@@ -80,16 +84,31 @@ def Save():
 def Zoom(op):
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
     global Best_Height_Picture,Best_Width_Picture #share new size of picture
+    global ZoomLevel
     if img is not None:
         if(op == "//"):
             Best_Width_Picture = Best_Width_Picture // 2 
             Best_Height_Picture = Best_Height_Picture // 2
+            ZoomLevel = ZoomLevel - 1
+            
 
         elif(op=="*"):
             Best_Width_Picture = Best_Width_Picture * 2 
             Best_Height_Picture = Best_Height_Picture * 2 
+            ZoomLevel = ZoomLevel + 1 
         
         # Redimensionner l'image
+        print(ZoomLevel)
+        if(ZoomLevel<=-1):
+            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+            Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+        elif(ZoomLevel>=3):
+            Boutons_Zoom[0][0].configure(state=tk.DISABLED)
+            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+        else:
+            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+            
         img = img.resize((Best_Width_Picture, Best_Height_Picture))
         largeur_img, hauteur_img = img.size
         print("largeur_img: ", largeur_img,"hauteur_img: ", hauteur_img)
