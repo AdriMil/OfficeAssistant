@@ -8,6 +8,8 @@ Position_x_recalculee_BtnsZoom = 0
 c1=c2=c3=None # Used for pixel coloration
 SaveCoordonees = []
 Zoomincrementation = 0
+Position_x_recalculee_BtnsZoom = 0 ;
+ZoomLevel = 0 
 
 def test():
     print("test")
@@ -20,6 +22,7 @@ def on_canvas_configure(event):
 def reset():
     global img, photo_image, resized_image
 
+    global ZoomLevel
     img = None
     photo_image = None
     resized_image = None
@@ -65,6 +68,7 @@ def CalculateRealPixelPosition(x,y):
     return x,y
 
 
+    ZoomLevel = 0 
 
 def Save():
     # global img,c1,c2,c3, SaveCoordonees
@@ -145,6 +149,33 @@ def Zoom(op):
         print("Zoomincrementation: ",Zoomincrementation)
         Zoomedimg = img.resize((Best_Width_Picture, Best_Height_Picture))
         largeur_img, hauteur_img = Zoomedimg.size
+    global ZoomLevel
+    if img is not None:
+        if(op == "//"):
+            Best_Width_Picture = Best_Width_Picture // 2 
+            Best_Height_Picture = Best_Height_Picture // 2
+            ZoomLevel = ZoomLevel - 1
+            
+
+        elif(op=="*"):
+            Best_Width_Picture = Best_Width_Picture * 2 
+            Best_Height_Picture = Best_Height_Picture * 2 
+            ZoomLevel = ZoomLevel + 1 
+        
+        # Redimensionner l'image
+        print(ZoomLevel)
+        if(ZoomLevel<=-1):
+            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+            Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+        elif(ZoomLevel>=3):
+            Boutons_Zoom[0][0].configure(state=tk.DISABLED)
+            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+        else:
+            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
+            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+            
+        img = img.resize((Best_Width_Picture, Best_Height_Picture))
+        largeur_img, hauteur_img = img.size
         print("largeur_img: ", largeur_img,"hauteur_img: ", hauteur_img)
 
         # Convertir l'image redimensionnée en PhotoImage
