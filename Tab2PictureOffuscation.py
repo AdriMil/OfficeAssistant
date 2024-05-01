@@ -42,42 +42,34 @@ def reset():
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
 def clic_droit(event):
-    global SaveCoordonees,truc
+    global SaveCoordonees,SelectedCoordonatesListe
+
+    #Get x and y clic coordonnates
     x = event.x
     y = event.y
     # Convertir les coordonnées du canevas en coordonnées relatives à l'image
     x_image = canvas.canvasx(x)
     y_image = canvas.canvasy(y)
+    
+    SelectedCoordonatesListe = CalculationPixelsArea(x_image,y_image,Zoomincrementation,PixelsArea)
+    print("pixel Area Fonction 1 :",SelectedCoordonatesListe)
 
     SaveCoordonees.append([x_image, y_image])
     print("Clic droit à la position (x={}, y={})".format(x_image, y_image))
 
     print(SaveCoordonees)
 
-def CalculateRealPixelPosition(x,y):
-    if(Zoomincrementation==0):
-        x = x *(Reduction_ratio)
-        y = y *(Reduction_ratio)
-    elif(Zoomincrementation<0):
-        x = x *(Reduction_ratio+(2**(-Zoomincrementation)))
-        y = y *(Reduction_ratio+(2**(-Zoomincrementation)))
-    else:
-        x = x *(Reduction_ratio/Zoomincrementation)
-        y = y *(Reduction_ratio/Zoomincrementation)  
 
-    # print("ancien x: ",x,"ancien y: ",y)
-    print("nouveau x: ",x,"nouveua y: ",y)
-    return x,y
+def CalculateRealPixelPosition(SelectedCoordonatesListe):
+    x1,y1 = SelectedCoordonatesListe[1][-2] 
+    x1 = x1 *(Reduction_ratio)
+    y1 = y1 *(Reduction_ratio)
 
-def CalculateRealPixelPositionV2(x,y):
-    if(Zoomincrementation==0):
-        x = x *(Reduction_ratio)
-        y = y *(Reduction_ratio)
+    x2,y2 = SelectedCoordonatesListe[1][-1] 
+    x2 = x2 *(Reduction_ratio)
+    y2 = y2 *(Reduction_ratio)
 
-    ZoomLevel = 0 
-    # print("ancien x: ",x,"ancien y: ",y)
-    print("nouveau x: ",x,"nouveua y: ",y)
-    return x,y
+    return x1,y1,x2,y2
 
 def Save():
     # global img,c1,c2,c3, SaveCoordonees
@@ -100,15 +92,7 @@ def Save():
         largeur_bande = 2
         couleur_verte = (0, 255, 0, 255)
 
-                # Coordonnées du coin supérieur gauche du carré
-        # x1, y1 = SaveCoordonees[-2]
-        x1, y1 = CalculateRealPixelPositionV2(*SaveCoordonees[-2])
-        # Coordonnées du coin inférieur droit du carré
-        # x2, y2 = SaveCoordonees[-1]
-        x2, y2 = CalculateRealPixelPositionV2(*SaveCoordonees[-1])
-        print("x1: ",x1," y1: ",y1)
-        print("x2: ",x2," y2: ",y2)
-
+        x1,y1,x2,y2 = CalculateRealPixelPosition(SelectedCoordonatesListe)
         # Parcourir les pixels de l'image
         for y in range(hauteur):
             for x in range(largeur):
@@ -118,7 +102,6 @@ def Save():
                 else:
                     # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
                     pixel = imgForSaving.getpixel((x, y))
-                    
                     newData.append(pixel)
 
         # Créer une nouvelle image avec les nouvelles données
