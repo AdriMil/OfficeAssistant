@@ -58,14 +58,22 @@ def clic_droit(event):
 
 def CalculateRealPixelPosition(SelectedCoordonatesListe):
     x1,y1 = SelectedCoordonatesListe[1][-2] 
-    x1 = x1 *(Reduction_ratio)
-    y1 = y1 *(Reduction_ratio)
+    x1 = int(x1 *(Reduction_ratio))
+    y1 = int(y1 *(Reduction_ratio))
 
     x2,y2 = SelectedCoordonatesListe[1][-1] 
-    x2 = x2 *(Reduction_ratio)
-    y2 = y2 *(Reduction_ratio)
+    x2 = int(x2 *(Reduction_ratio))
+    y2 = int(y2 *(Reduction_ratio))
 
     return x1,y1,x2,y2
+
+
+def change_pixels_to_green(image, x_start, y_start, x_end, y_end):
+    modified_image = image.copy()
+    for x in range(x_start, x_end + 1):
+        for y in range(y_start, y_end + 1):
+            modified_image.putpixel((x, y), (0, 255, 0))  # Met les pixels en vert
+    return modified_image
 
 def Save():
     # global img,c1,c2,c3, SaveCoordonees
@@ -75,7 +83,7 @@ def Save():
     # elif(c1==None and c2==None and c3==None):
     #     messagebox.showinfo("Erreur", "Selectionnez une couleur à rendre transparente en cliquant sur l'image")
     else :
-        global Chemin_fichier,words,chemin_init,Nom_Fichier,Nom_Fichier_final
+        global Chemin_fichier,words,chemin_init,Nom_Fichier,Nom_Fichier_final, photo_image
     
         imgForSaving = Image.open(Chemin_fichier)
         largeur, hauteur = imgForSaving.size
@@ -89,21 +97,25 @@ def Save():
         couleur_verte = (0, 255, 0, 255)
 
         x1,y1,x2,y2 = CalculateRealPixelPosition(SelectedCoordonatesListe)
-        # Parcourir les pixels de l'image
-        for y in range(hauteur):
-            for x in range(largeur):
-                # Vérifier si le pixel est à l'intérieur du carré
-                if x1 <= x <= x2 and y1 <= y <= y2:
-                    newData.append(couleur_verte)  # Ajouter la couleur verte
-                else:
-                    # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
-                    pixel = imgForSaving.getpixel((x, y))
-                    newData.append(pixel)
+        # # Parcourir les pixels de l'image
+        # for y in range(hauteur):
+        #     for x in range(largeur):
+        #         # Vérifier si le pixel est à l'intérieur du carré
+        #         if x1 <= x <= x2 and y1 <= y <= y2:
+        #             newData.append(couleur_verte)  # Ajouter la couleur verte
+        #         else:
+        #             # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
+        #             pixel = imgForSaving.getpixel((x, y))
+        #             newData.append(pixel)
 
         # Créer une nouvelle image avec les nouvelles données
-        imgForSaving.putdata(newData)
-        # Sauvegarder l'image
-        imgForSaving.save(Nom_Fichier_final+".png", "PNG")
+        # imgForSaving.putdata(newData)
+        # # Sauvegarder l'image
+        # imgForSaving.save(Nom_Fichier_final+".png", "PNG")
+
+        modified_image = change_pixels_to_green(img, x1, y1, x2, y2)
+        photo_image = ImageTk.PhotoImage(modified_image)
+        canvas.itemconfig(MAJ_image, image=photo_image)
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
 def Zoom(op):
