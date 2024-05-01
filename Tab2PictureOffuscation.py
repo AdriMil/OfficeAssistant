@@ -2,6 +2,9 @@ from imports import *
 from PIL import Image
 from PIL import ImageTk  
 
+from Tab2Functions import *
+
+
 img = None
 PlacementUniqueZoom = 0 #
 Position_x_recalculee_BtnsZoom = 0 
@@ -10,6 +13,7 @@ SaveCoordonees = []
 Zoomincrementation = 0
 Position_x_recalculee_BtnsZoom = 0 ;
 ZoomLevel = 0 
+PixelsArea = [[], [], [], [],[]] 
 
 def test():
     print("test")
@@ -38,7 +42,7 @@ def reset():
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
 def clic_droit(event):
-    global SaveCoordonees
+    global SaveCoordonees,truc
     x = event.x
     y = event.y
     # Convertir les coordonnées du canevas en coordonnées relatives à l'image
@@ -47,7 +51,6 @@ def clic_droit(event):
 
     SaveCoordonees.append([x_image, y_image])
     print("Clic droit à la position (x={}, y={})".format(x_image, y_image))
-    x2, y2 = CalculateRealPixelPosition(*SaveCoordonees[-1])
 
     print(SaveCoordonees)
 
@@ -62,13 +65,19 @@ def CalculateRealPixelPosition(x,y):
         x = x *(Reduction_ratio/Zoomincrementation)
         y = y *(Reduction_ratio/Zoomincrementation)  
 
-
     # print("ancien x: ",x,"ancien y: ",y)
     print("nouveau x: ",x,"nouveua y: ",y)
     return x,y
 
+def CalculateRealPixelPositionV2(x,y):
+    if(Zoomincrementation==0):
+        x = x *(Reduction_ratio)
+        y = y *(Reduction_ratio)
 
     ZoomLevel = 0 
+    # print("ancien x: ",x,"ancien y: ",y)
+    print("nouveau x: ",x,"nouveua y: ",y)
+    return x,y
 
 def Save():
     # global img,c1,c2,c3, SaveCoordonees
@@ -91,13 +100,12 @@ def Save():
         largeur_bande = 2
         couleur_verte = (0, 255, 0, 255)
 
-
                 # Coordonnées du coin supérieur gauche du carré
         # x1, y1 = SaveCoordonees[-2]
-        x1, y1 = CalculateRealPixelPosition(*SaveCoordonees[-2])
+        x1, y1 = CalculateRealPixelPositionV2(*SaveCoordonees[-2])
         # Coordonnées du coin inférieur droit du carré
         # x2, y2 = SaveCoordonees[-1]
-        x2, y2 = CalculateRealPixelPosition(*SaveCoordonees[-1])
+        x2, y2 = CalculateRealPixelPositionV2(*SaveCoordonees[-1])
         print("x1: ",x1," y1: ",y1)
         print("x2: ",x2," y2: ",y2)
 
@@ -110,6 +118,7 @@ def Save():
                 else:
                     # Si le pixel n'est pas à l'intérieur du carré, ajouter le pixel d'origine
                     pixel = imgForSaving.getpixel((x, y))
+                    
                     newData.append(pixel)
 
         # Créer une nouvelle image avec les nouvelles données
@@ -117,6 +126,7 @@ def Save():
         # Sauvegarder l'image
         imgForSaving.save(Nom_Fichier_final+".png", "PNG")
 
+#Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
 def Zoom(op):
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
     global Best_Height_Picture,Best_Width_Picture #share new size of picture
@@ -194,14 +204,18 @@ def Affiche_IMG_selectionnee(result):
     # Load an image from the file path
     img = Image.open(result)
 
+    #Get selected picture size.
     largeur_img, hauteur_img = img.size
 
+    #Calculate how to ajust the picture size in the UI
     Reduction_ratio = (largeur_img/Tab2DisplayWindow_width)
     # Zoomincrementation = Reduction_ratio
     print("Reduction_ratio: ",Reduction_ratio)
+    #If picture width is already smaller than table width, picture size is not modifed.
     if int(Reduction_ratio)==0:
         Best_Width_Picture = largeur_img 
         Best_Height_Picture = hauteur_img
+    #Else Picture is ajusted
     else:
         Best_Width_Picture = int(largeur_img // Reduction_ratio)
         Best_Height_Picture = int(hauteur_img // Reduction_ratio)
