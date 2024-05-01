@@ -113,8 +113,9 @@ def Save():
         # # Sauvegarder l'image
         # imgForSaving.save(Nom_Fichier_final+".png", "PNG")
 
-        modified_image = change_pixels_to_green(img, x1, y1, x2, y2)
-        photo_image = ImageTk.PhotoImage(modified_image)
+        img = change_pixels_to_green(img, x1, y1, x2, y2)
+        new_img = img.resize((Best_Width_Picture, Best_Height_Picture))
+        photo_image = ImageTk.PhotoImage(new_img)
         canvas.itemconfig(MAJ_image, image=photo_image)
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
@@ -362,8 +363,6 @@ def Tab2PictureOffuscation(master,root):
         Position_x_recalculeeTab2 = Position_x_recalculeeTab2 + Btn_controle_width + Space_Between_Btn
         Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
-
-
     
     img_Zoom_Plus = PhotoImage(file=resource_path("Pictures/zoomPlus.png"))
     img_Zoom_Moins = PhotoImage(file=resource_path("Pictures/zoomMoins.png"))
