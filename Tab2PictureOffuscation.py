@@ -11,13 +11,67 @@ Position_x_recalculee_BtnsZoom = 0
 c1=c2=c3=None # Used for pixel coloration
 SaveCoordonees = []
 Zoomincrementation = 0
-PixelsArea = [[], [], [], [],[]] 
+PixelsArea = [[], [], [], [],[]]
+liste_coordonnees_rectangle = [] 
+
+
+# Liste pour stocker les identifiants de tous les rectangles
+rectangles = []
+
+# Variable pour stocker l'identifiant du rectangle actuel
+current_rectangle = None
+
+# Variables pour stocker les coordonnées du premier clic
+start_x = None
+start_y = None
 
 def test():
     print("test")
 
-def on_canvas_configure(event):
-    canvas.configure(scrollregion=canvas.bbox("all"))
+# Fonction pour démarrer le rectangle
+def start_rectangle(event):
+    global start_x, start_y, current_rectangle
+    start_x = event.x + canvas.canvasx(0)
+    start_y = event.y + canvas.canvasy(0)
+    current_rectangle = canvas.create_rectangle(start_x, start_y, start_x, start_y, outline="red", fill="red", dash=(2, 2))
+
+# Fonction pour mettre à jour le rectangle en fonction des mouvements de la souris
+def update_rectangle(event):
+    global start_x, start_y, current_rectangle
+    if start_x is not None and start_y is not None:
+        x_image = event.x + canvas.canvasx(0)
+        y_image = event.y + canvas.canvasy(0)
+        canvas.coords(current_rectangle, start_x, start_y, x_image, y_image)
+
+# Fonction pour fixer le rectangle après le deuxième clic
+def end_rectangle(event):
+    global start_x, start_y, rectangles, current_rectangle
+    if start_x is not None and start_y is not None:
+        x_image = event.x + canvas.canvasx(0)
+        y_image = event.y + canvas.canvasy(0)
+        rectangles.append(current_rectangle)
+        liste_coordonnees_rectangle.append([start_x, start_y,x_image,y_image])
+        print(liste_coordonnees_rectangle)
+    start_x = None
+    start_y = None
+
+def resize_image():
+    global img, photo
+    new_width = img.width // 2
+    new_height = img.height // 2
+    img = img.resize((new_width, new_height))
+    photo = ImageTk.PhotoImage(img)
+    canvas.config(width=new_width, height=new_height)
+    canvas.itemconfig(MAJ_image, image=photo)
+    update_rectangles_positions(new_width, new_height)
+
+# Fonction pour recalculer les positions des rectangles après redimensionnement
+def update_rectangles_positions(state_ratio_zoom):
+    for rectangle_id in rectangles:
+        coords = canvas.coords(rectangle_id)
+        new_coords = [coords[i] * state_ratio_zoom for i in range(4)]
+        canvas.coords(rectangle_id, *new_coords)
+
 # def click_on_canvas(event):
 #     choosefile()
 
@@ -123,7 +177,9 @@ def Zoom(op):
     global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
     global Best_Height_Picture,Best_Width_Picture #share new size of picture
     global Zoomincrementation,ratioZoom #know zoom on picture
+
     ratioZoom=2
+    state_ratio_zoom = 1
     
     if img is not None:
         if(op == "//"):
@@ -385,5 +441,12 @@ def Tab2PictureOffuscation(master,root):
     canvas.bind("<B2-Motion>", deplacement_souris)
 
     canvas.bind("<Button-3>", clic_droit)
+   
+    # Liaison des événements de survol de la souris et des clics
+    canvas.bind("<Motion>", update_rectangle)
+    canvas.bind("<Button-1>", start_rectangle)
+    canvas.bind("<ButtonRelease-1>", end_rectangle)
+
+
     return tab2
     
