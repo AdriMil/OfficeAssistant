@@ -41,10 +41,19 @@ def end_rectangle(event):
         x_image = event.x + canvas.canvasx(0)
         y_image = event.y + canvas.canvasy(0)
         rectangles.append(current_rectangle)
+        start_x, start_y,x_image,y_image = FixValues(start_x, start_y,x_image,y_image)
         liste_coordonnees_rectangle.append([start_x, start_y,x_image,y_image])
-        print(liste_coordonnees_rectangle)
+        print((liste_coordonnees_rectangle) if debug==1 else "")
     start_x = None
     start_y = None
+
+#Fix issue if you created your rectangle from bottom to top (wihtout this function rectangle won't appears on save pictures)
+def FixValues(start_x, start_y, x_image, y_image):
+    if start_x > x_image:
+        start_x, x_image = x_image, start_x
+    if start_y > y_image:
+        start_y, y_image = y_image, start_y
+    return start_x, start_y, x_image, y_image
 
 ##-------Not in this milestone Scope, will be used later to calculate rectangle new siez and position depending on zoom
 # def resize_image():
