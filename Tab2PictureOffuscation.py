@@ -2,7 +2,7 @@ from imports import *
 from PIL import Image
 from PIL import ImageTk  
 
-def init_values():
+def InitValues():
     global img, PlacementUniqueZoom, Position_x_recalculee_BtnsZoom, Zoomincrementation, liste_coordonnees_rectangle, rectangles, current_rectangle, start_x, start_y
     img = None
     PlacementUniqueZoom = 0 #
@@ -20,14 +20,14 @@ def test():
     print("test")
 
 # When left clik on mouse,  start rectangle creation
-def start_rectangle(event):
+def StartRectangleDrawing(event):
     global start_x, start_y, current_rectangle
     start_x = event.x + canvas.canvasx(0)
     start_y = event.y + canvas.canvasy(0)
     current_rectangle = canvas.create_rectangle(start_x, start_y, start_x, start_y, outline="red", fill="black")
 
 # Update rectangle position during mouse mouvments
-def update_rectangle(event):
+def UpdateRectangleDrawing(event):
     global start_x, start_y, current_rectangle
     if start_x is not None and start_y is not None:
         x_image = event.x + canvas.canvasx(0)
@@ -35,7 +35,7 @@ def update_rectangle(event):
         canvas.coords(current_rectangle, start_x, start_y, x_image, y_image)
 
 # Finish rectangle build when left click is released
-def end_rectangle(event):
+def FinishRectangleDrawing(event):
     global start_x, start_y, rectangles, current_rectangle,liste_coordonnees_rectangle
     if start_x is not None and start_y is not None:
         x_image = event.x + canvas.canvasx(0)
@@ -64,18 +64,18 @@ def FixValues(start_x, start_y, x_image, y_image):
 #     photo = ImageTk.PhotoImage(img)
 #     canvas.config(width=new_width, height=new_height)
 #     canvas.itemconfig(MAJ_image, image=photo)
-#     update_rectangles_positions(new_width, new_height)
+#     UpdateRectangleDrawings_positions(new_width, new_height)
 
 ##-------Not in this milestone Scope, will be used later to calculate rectangle new siez and position depending on zoom
-# def update_rectangles_positions(state_ratio_zoom):
+# def UpdateRectangleDrawings_positions(state_ratio_zoom):
 #     for rectangle_id in rectangles:
 #         coords = canvas.coords(rectangle_id)
 #         new_coords = [coords[i] * state_ratio_zoom for i in range(4)]
 #         canvas.coords(rectangle_id, *new_coords)
 
-def reset():
+def Reset():
     global img, photo_image, resized_image,Reduction_ratio
-    init_values()
+    InitValues()
     photo_image = None
     resized_image = None
     Reduction_ratio
@@ -84,13 +84,13 @@ def reset():
     Btn_ResetTab2.config(state="disabled")
     canvas.delete("all")
 
-    hide_scrollbars()
+    HideScrollbars()
     #------BUTTON ZOOM +  ARE RESETED
     Boutons_Zoom[0][0].configure(state=tk.DISABLED)
     Boutons_Zoom[1][0].configure(state=tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
-def remplacer_pixels_rectangles(image, liste_coordonnees):
+def ReplacePixelRectangles(image, liste_coordonnees):
     for coordonnees in liste_coordonnees:
         x1, y1, x2, y2 = coordonnees
         
@@ -113,7 +113,7 @@ def Save():
         largeur, hauteur = imgForSaving.size
         print((largeur, hauteur) if debug == 1 else "")
 
-        imgForSaving = remplacer_pixels_rectangles(img, liste_coordonnees_rectangle)
+        imgForSaving = ReplacePixelRectangles(img, liste_coordonnees_rectangle)
         imgForSaving.save(Nom_Fichier_final+".png", "PNG")
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
@@ -160,7 +160,7 @@ def Zoom(op):
         ScrollBarLenghCalculation()
 
 
-def Affiche_IMG_selectionnee(result):
+def DisplaySelectedPicture(result):
     global MAJ_image, canvas, photo_image  # Assurez-vous d'avoir déclaré la variable photo_image comme globale
     global img,photo_image,resized_image, largeur_img, hauteur_img
     global Best_Width_Picture,Best_Height_Picture # Share init size of the picture we are displaying. Values will be use by zooms functions
@@ -206,20 +206,20 @@ def ScrollBar():
 def ScrollBarLenghCalculation():
     canvas.config(scrollregion=canvas.bbox(tk.ALL))
 
-def hide_scrollbars():
+def HideScrollbars():
     x_scroll.pack_forget()
     y_scroll.pack_forget()
 
-def show_scrollbars():
+def ShowScrollbars():
     x_scroll.pack(side="bottom", fill="x")
     y_scroll.pack(side="right", fill="y")
 
-def deplacement_horizontal(event):
+def HorizontalMouvement(event):
     global last_x, last_y
     last_x = event.x_root
     last_y = event.y_root
 
-def deplacement_souris(event):
+def MouseMouvement(event):
     global last_x, last_y
     x = event.x_root
     y = event.y_root
@@ -236,14 +236,14 @@ def deplacement_souris(event):
     last_x = x
     last_y = y
 
-def on_mousewheel(event):
+def MousewheelMouvement(event):
     if event.delta > 0:
         canvas.yview_scroll(-1, "units")  # Défilement vers le haut
     else:
         canvas.yview_scroll(1, "units")   # Défilement vers le bas
     
 
-def choosefile():
+def ChooseFile():
     global canvas, txt,tab2SelectedImg,Btn_ResetTab2,Btn_SelectFileTab2
     global PlacementUniqueZoom #Know if zoom btns have already been positionned
     global Chemin_fichier,Nom_Fichier_final # use for save function
@@ -265,10 +265,10 @@ def choosefile():
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
         Nom_Fichier_final= Nom_Fichier_sans_ext + " - Obfuscated"
 
-        Affiche_IMG_selectionnee(result)
+        DisplaySelectedPicture(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
-        show_scrollbars()
+        ShowScrollbars()
 
         Boutons_Zoom[0][0].configure(state=tk.NORMAL)
         Boutons_Zoom[1][0].configure(state=tk.NORMAL)
@@ -278,10 +278,10 @@ def choosefile():
         Boutons_Zoom[1][0].configure(state=tk.DISABLED)
 
         if (PlacementUniqueZoom == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
-                PlaceBtnsZoom()
+                ZoomButtonsSetPosition()
                 PlacementUniqueZoom = 1
 
-def CalculPositionInitialeBoutonsZoom():
+def ZoomButtonsPositionCalculation():
     global Position_x_recalculee_BtnsZoom
     NbBtn = len(Boutons_Zoom)
     EspacePrisParLesBoutonsZoom = NbBtn * (Btn_zoom_width+Space_Between_Btn_zoom)
@@ -295,7 +295,7 @@ def CalculPositionInitialeBoutonsZoom():
 
     return Position_x_recalculee_BtnsZoom
 
-def PlaceBtnsZoom():
+def ZoomButtonsSetPosition():
     global Position_x_recalculee_BtnsZoom
     for i in range(0,len(Boutons_Zoom)):
         Boutons_Zoom[i][2] = Boutons_Zoom[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
@@ -305,8 +305,8 @@ def PlaceBtnsZoom():
         Boutons_Zoom[i].append(Position_x_recalculee_BtnsZoom) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_Zoom[i].append(Btn_zoom_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
-def Tab2PictureOffuscation(master,root):
-    init_values()
+def PictureOffuscationTab(master,root):
+    InitValues()
     global canvas, txt
     global Btn_ResetTab2,Btn_SelectFileTab2
     global tab2
@@ -334,10 +334,10 @@ def Tab2PictureOffuscation(master,root):
 
     ScrollBar()
     Boutons_ControleTab2 = [
-        [Btn_SelectFileTab2, "Add file",img_SelectFileTab2, choosefile,tk.NORMAL ],
+        [Btn_SelectFileTab2, "Add file",img_SelectFileTab2, ChooseFile,tk.NORMAL ],
         [Btn_ValiderTab2, "Valider",img_ValiderTab2, Save,tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Btn_ResetTab2, "Reset",img_Reset, reset,tk.DISABLED],
+        [Btn_ResetTab2, "Reset",img_Reset, Reset,tk.DISABLED],
         [Btn_QuitterTab2, "Quitter",img_ExitTab2, root.destroy,tk.NORMAL],        
         # [Btn_TestTab2, "Test",img_Test, HideProcessing, tk.NORMAL],
     ]
@@ -368,15 +368,15 @@ def Tab2PictureOffuscation(master,root):
         [Btn_ZoomMoins, "Dézoomer",img_Zoom_Moins, lambda: Zoom("//")],
     ]
 
-    Position_x_recalculee_BtnsZoom = CalculPositionInitialeBoutonsZoom()
+    Position_x_recalculee_BtnsZoom = ZoomButtonsPositionCalculation()
     print(("Position_x_recalculee_BtnsZoom :", Position_x_recalculee_BtnsZoom) if debug == 1 else "")
 
-    canvas.bind("<MouseWheel>", on_mousewheel)
-    canvas.bind("<Button-2>", deplacement_horizontal)
-    canvas.bind("<B2-Motion>", deplacement_souris)
-    canvas.bind("<Motion>", update_rectangle)
-    canvas.bind("<Button-1>", start_rectangle)
-    canvas.bind("<ButtonRelease-1>", end_rectangle)
+    canvas.bind("<MouseWheel>", MousewheelMouvement)
+    canvas.bind("<Button-2>", HorizontalMouvement)
+    canvas.bind("<B2-Motion>", MouseMouvement)
+    canvas.bind("<Motion>", UpdateRectangleDrawing)
+    canvas.bind("<Button-1>", StartRectangleDrawing)
+    canvas.bind("<ButtonRelease-1>", FinishRectangleDrawing)
 
     return tab2
     
