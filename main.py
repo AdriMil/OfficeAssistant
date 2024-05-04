@@ -19,9 +19,9 @@ tabControl.add(tab2, text='Picture Offuscation')
 tabControl.pack(expand=1, fill="both")
 MyUserInterface(root)
 
-window_height,window_width =  WindowsSizeSendData()
+Window_Height,Window_Width =  WindowsSizeSendData()
 
-root.iconbitmap(resource_path("Pictures/OfficeAssistanticone.ico"))
+root.iconbitmap(Ressource_Path("Pictures/OfficeAssistanticone.ico"))
 
-root.geometry(str(window_width) + "x" + str(window_height))  # Taille de la fenetre
+root.geometry(str(Window_Width) + "x" + str(Window_Height))  # Taille de la fenetre
 root.mainloop()

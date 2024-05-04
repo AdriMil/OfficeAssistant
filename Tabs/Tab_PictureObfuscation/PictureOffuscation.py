@@ -311,7 +311,7 @@ def ChooseFile():
 def ZoomButtonsPositionCalculation():
     global Position_x_recalculee_BtnsZoom
     NbBtn = len(Boutons_Zoom)
-    EspacePrisParLesBoutonsZoom = NbBtn * (Btn_zoom_width+Space_Between_Btn_zoom)
+    EspacePrisParLesBoutonsZoom = NbBtn * (Zoom_Buttons_Width+Space_Between_Zoom_Buttons)
     freeSpace = Tab2DisplayWindow_width - (EspacePrisParLesBoutonsZoom)
     if(freeSpace>0):
         Position_x_recalculee_BtnsZoom = Tab2DisplayWindow_x_position + (freeSpace / 2)
@@ -325,12 +325,12 @@ def ZoomButtonsPositionCalculation():
 def ZoomButtonsSetPosition():
     global Position_x_recalculee_BtnsZoom
     for i in range(0,len(Boutons_Zoom)):
-        Boutons_Zoom[i][2] = Boutons_Zoom[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
-        Boutons_Zoom[i][0].configure( width=Btn_zoom_width, height= Btn_zoom_height,image=Boutons_Zoom[i][2], command=Boutons_Zoom[i][3])
-        Boutons_Zoom[i][0].place(x=Position_x_recalculee_BtnsZoom, y=Btn_zoom_y_init)
-        Position_x_recalculee_BtnsZoom = Position_x_recalculee_BtnsZoom + Btn_zoom_width + Space_Between_Btn_zoom
+        Boutons_Zoom[i][2] = Boutons_Zoom[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
+        Boutons_Zoom[i][0].configure( width=Zoom_Buttons_Width, height= Zoom_Buttons_Height,image=Boutons_Zoom[i][2], command=Boutons_Zoom[i][3])
+        Boutons_Zoom[i][0].place(x=Position_x_recalculee_BtnsZoom, y=Zoom_Buttons_Init_y_Position)
+        Position_x_recalculee_BtnsZoom = Position_x_recalculee_BtnsZoom + Zoom_Buttons_Width + Space_Between_Zoom_Buttons
         Boutons_Zoom[i].append(Position_x_recalculee_BtnsZoom) #Sauvegarde de la valeur x du bouton à la fin de la liste
-        Boutons_Zoom[i].append(Btn_zoom_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
+        Boutons_Zoom[i].append(Zoom_Buttons_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
 def PictureOffuscationTab(master,root):
     InitValues()
@@ -344,11 +344,11 @@ def PictureOffuscationTab(master,root):
     canvas = tk.Canvas(tab2, bg="white")
     canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
 
-    img_SelectFileTab2 = PhotoImage(file=resource_path("Pictures/AddFile.png"))
-    img_ValiderTab2 = PhotoImage(file=resource_path("Pictures/Valider.png"))
-    img_ExitTab2 = PhotoImage(file=resource_path("Pictures/Exit.png"))
-    img_TestTab2 = PhotoImage(file=resource_path("Pictures/test.png"))
-    img_Reset = PhotoImage(file=resource_path("Pictures/Reset.png"))
+    img_SelectFileTab2 = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    img_ValiderTab2 = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+    img_ExitTab2 = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    img_TestTab2 = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    img_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
     
     Btn_SelectFileTab2 = tk.Button(tab2) ; Btn_ValiderTab2 = tk.Button(tab2) 
     Btn_TestTab2 = tk.Button(tab2) ; Btn_ResetTab2=tk.Button(tab2)
@@ -370,24 +370,24 @@ def PictureOffuscationTab(master,root):
     ]
 
     # Boucle placement des bouttons
-    Position_x_recalculeeTab2,Position_y_recalculeeTab2 = CalculPositionInitialeBoutonsDeControl(Boutons_ControleTab2,Tab2Canvas,offset=30)
+    Position_x_recalculeeTab2,Position_y_recalculeeTab2 = ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Tab2Canvas,offset=30)
     
-#font=("Helvetica", policeSize),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
+#font=("Helvetica", Police_Size),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
     Btn_QuitterTab2.config(width=25, height= 25,command=test, image=img_ExitTab2)
     Btn_QuitterTab2.image = img_ExitTab2
     Btn_QuitterTab2.place(x=50, y=50)
 
     for i in range(0,len(Boutons_ControleTab2)):
         Boutons_ControleTab2[i][2] = Boutons_ControleTab2[i][2].subsample(1, 1) #Réduction de la taille de l'image
-        Boutons_ControleTab2[i][0].configure( width=Btn_controle_width, height= Btn_controle_height, font=("Helvetica", policeSize),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
+        Boutons_ControleTab2[i][0].configure( width=Control_Button_Width, height= Control_Button_Height, font=("Helvetica", Police_Size),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
         Boutons_ControleTab2[i][0].image = Boutons_ControleTab2[i][2]
         Boutons_ControleTab2[i][0].place(x=Position_x_recalculeeTab2, y=Position_y_recalculeeTab2)
-        Position_x_recalculeeTab2 = Position_x_recalculeeTab2 + Btn_controle_width + Space_Between_Btn
+        Position_x_recalculeeTab2 = Position_x_recalculeeTab2 + Control_Button_Width + Space_Between_Button
         Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
     
-    img_Zoom_Plus = PhotoImage(file=resource_path("Pictures/zoomPlus.png"))
-    img_Zoom_Moins = PhotoImage(file=resource_path("Pictures/zoomMoins.png"))
+    img_Zoom_Plus = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
+    img_Zoom_Moins = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
     Btn_ZoomPlus = tk.Button(tab2) ; Btn_ZoomMoins = tk.Button(tab2) 
 
     Boutons_Zoom = [
