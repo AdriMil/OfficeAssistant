@@ -2,7 +2,7 @@ name: Build Executable
 on:
   push:
     branches:
-      - "code-refacto*"
+      - "*code-refacto*"
 
 jobs:
   Build:
