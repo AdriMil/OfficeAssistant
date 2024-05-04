@@ -8,7 +8,7 @@ if (version is None):
     version = "VersionError"
 
 # Lire le contenu de main.py
-with open('main.py', 'r') as main_file:
+with open('../main.py', 'r') as main_file:
     main_content = main_file.read()
 
 # Utilisation de regex pour capturer le contenu entre les guillemets simples
@@ -25,13 +25,13 @@ else:
     print("Aucune correspondance trouvée.")
 
 # Écrire le contenu modifié dans main.py
-with open('main.py', 'w') as main_file:
+with open('../main.py', 'w') as main_file:
     main_file.write(main_content)
 a = Analysis(
     ['main.py'],
     pathex=['C:\\Users\\Adrie\\Documents\\Programmation_Git\\OfficeAssistant'],
     binaries=[],
-    datas=[('Pictures/','Pictures')],
+    datas=[('../Pictures/','Pictures')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -60,5 +60,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['Pictures/OfficeAssistanticone.ico'],
+    icon=['../Pictures/OfficeAssistanticone.ico'],
 )

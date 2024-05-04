@@ -5,7 +5,7 @@ from Tabs.Tab_PictureObfuscation.PictureOffuscation import *
 
 def MyUserInterface(root):
     frame = tk.Frame(root)
-    version = 'VersionError'
+    version = '0.0.0.0'
     root.title("Office Assistant V " + version )
 
 root = tk.Tk()             #Creation de la fenetre
