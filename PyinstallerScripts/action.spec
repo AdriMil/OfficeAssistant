@@ -8,7 +8,7 @@ if (version is None):
     version = "v0.0.0"
 
 # Lire le contenu de main.py
-with open('main.py', 'r') as main_file:
+with open(os.environ['GITHUB_WORKSPACE'] + 'main.py', 'r') as main_file:
     main_content = main_file.read()
 
 # Utilisation de regex pour capturer le contenu entre les guillemets simples
@@ -25,10 +25,10 @@ else:
     print("Aucune correspondance trouvée.")
 
 # Écrire le contenu modifié dans main.py
-with open('../main.py', 'w') as main_file:
+with open(os.environ['GITHUB_WORKSPACE'] + 'main.py', 'w') as main_file:
     main_file.write(main_content)
 a = Analysis(
-    ['../main.py'],
+    ['main.py'],
     pathex=[os.path.join(os.environ['GITHUB_WORKSPACE'], 'OfficeAssistant')],
     binaries=[],
     datas=[(os.path.join(os.environ['GITHUB_WORKSPACE'], 'Pictures'), 'Pictures')],
