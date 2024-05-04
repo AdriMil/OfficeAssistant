@@ -8,7 +8,7 @@ if (version is None):
     version = "v0.0.0"
 
 # Lire le contenu de main.py
-with open('../main.py', 'r') as main_file:
+with open('main.py', 'r') as main_file:
     main_content = main_file.read()
 
 # Utilisation de regex pour capturer le contenu entre les guillemets simples
