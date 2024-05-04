@@ -33,7 +33,7 @@ jobs:
           }
 
       - name: Build
-        run: pyinstaller action.spec
+        run: pyinstaller PyinstallerScripts/action.spec
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v2
