@@ -20,7 +20,7 @@ def WindowsSizeSendData():
 #-------------------------------------------------------------
 
 
-def CalculPositionInitialeBoutonsFleche():
+def ArrowButtons_InitPositionCalculation():
     global Tableau_width,Boutons_Fleche, Btn_fleche_width,Space_Between_Btn_fleche,Position_x_recalculee_BtnsFleche, Tableau_x_position,window_width, Tableau_Height
     NbBtn = len(Boutons_Fleche)
     EspacePrisParLesBoutons = NbBtn * (Btn_fleche_width+Space_Between_Btn_fleche)
@@ -36,7 +36,7 @@ def CalculPositionInitialeBoutonsFleche():
 
     return Position_x_recalculee_BtnsFleche
 
-def PlaceFlecheButtons():
+def ArrowButtons_PlaceOnUi():
     global Boutons_Fleche,ImageReducer,Btn_fleche_width,Btn_fleche_height,policeSize,Position_x_recalculee_BtnsFleche,Btn_fleche_y_init,Space_Between_Btn_fleche
     for i in range(0,len(Boutons_Fleche)):
         Boutons_Fleche[i][2] = Boutons_Fleche[i][2].subsample(ImageReducer, ImageReducer) #Réduction de la taille de l'image
@@ -46,7 +46,7 @@ def PlaceFlecheButtons():
         Boutons_Fleche[i].append(Position_x_recalculee_BtnsFleche) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_Fleche[i].append(Btn_fleche_y_init) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
-def choosemultifiles():
+def ChooseMultiFile():
     global files,PlacementUniqueFleche, index_from_selected_ligne,Btn_Reset,tableau
     files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
     if files:
@@ -60,53 +60,53 @@ def choosemultifiles():
             All_data_in_tableau.append([len(liste_chemin),words[-1],file]) #Give list of all data in tab -> will use do modify file order
 
         if (PlacementUniqueFleche == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons fleches
-            PlaceFlecheButtons()
+            ArrowButtons_PlaceOnUi()
             PlacementUniqueFleche = 1
         DisableButtonIfNecessery()
 
     else:
-        Erreur_Annulation()
+        Error_Cancelation()
 
-def open_dialog():
+def OpenDialogToSavePdf():
     user_input = simpledialog.askstring("Nommez votre fichier ", "Nom du fichier :")
     if user_input is None:
         print("L'utilisateur a cliqué sur Cancel.")
     elif user_input:
         FileName = user_input
-        Convertir_pdf(FileName)
+        ConvertPictureToPdf(FileName)
     else:
         messagebox.showinfo("Erreur", "Donnez un titre au document qui va être créé")
-        open_dialog()
+        OpenDialogToSavePdf()
 
 
-def Convertir_pdf(FileName):
+def ConvertPictureToPdf(FileName):
     global liste_chemin_update
     if (liste_chemin_update == []):
-        GetFilesPAthList()
+        GetFilesPathList()
 
-    Save_Path()
+    SavePath()
     chemin_final = Chemin
     if(chemin_final==''):               #Verif si un chemin final est indiqué
-        Erreur_Chemin_Sauvegadre()
+        Error_BadSavePath()
     elif(len(liste_chemin)==0):         #Verif si au moins une image est selctionnée
-        Erreur_Selection_img()
+        Error_NoPicture()
 
     else:                               #Si plusieurs images à convertir
         # TraitementConversion.place(x=Tableau_x_position + 1, y=Tableau_y_position + 24, width=Tableau_width, height=Tableau_Height)
         DisplayProcessing()
-        process_images(liste_chemin_update, FileName, chemin_final)
-        OperationTerminee(liste_chemin_update,FileName,chemin_final)
+        PicturesProcessing(liste_chemin_update, FileName, chemin_final)
+        Info_ProcessFinished(liste_chemin_update,FileName,chemin_final)
 
-def Erreur_Chemin_Sauvegadre():
+def Error_BadSavePath():
     messagebox.showinfo("Erreur", "Chemin de sauvegarde manquant")
-def Erreur_Selection_img():
+def Error_NoPicture():
     messagebox.showinfo("Erreur", "Pas d'image selectionnée")
-def Erreur_Annulation():
+def Error_Cancelation():
     messagebox.showinfo("Erreur", "Vous avez annulé")
-def OperationTerminee(liste_chemin,FileName,chemin_final):
+def Info_ProcessFinished(liste_chemin,FileName,chemin_final):
     message = "Fichier pdf créé avec succès\n\nDétails:\n- Nombre d'images : "+ str(len(liste_chemin)) +"\n- Nom du fichier : "+FileName+"\n- Chemin : "+chemin_final
     messagebox.showinfo("Pdf créé ! ", message)
-def RESET():
+def Reset():
     reponse = messagebox.askquestion("Confirmation", "Voulez-vous faire un reset des images selectionnées ?")
     if reponse == 'yes':
         DeleteAlldata()
@@ -123,7 +123,7 @@ def DeleteAlldata():
     Btn_Reset.configure(state=tk.DISABLED); Btn_Convertir.configure(state=tk.DISABLED)
     liste_chemin.clear() #RESET de la liste liste_chemin
     Nom_Fichier.clear() #RESET de la liste Nom_Fichier
-    Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
+    Position_x_recalculee_BtnsFleche = ArrowButtons_InitPositionCalculation() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
 
     #REset List of data
     files = []
@@ -134,11 +134,11 @@ def DeleteAlldata():
     #REset displayed data in Tableau
     tableau.delete(*tableau.get_children())
 
-def Save_Path():
+def SavePath():
     global Chemin
     Chemin = filedialog.askdirectory()
 
-def afficher_contenu_ligne(event):
+def DisplaySelectedLineContent(event):
     global files, index_from_selected_ligne
     if files:
         item = tableau.selection()[0]
@@ -146,7 +146,7 @@ def afficher_contenu_ligne(event):
         index_from_selected_ligne = int(contenu_ligne[0])
         DisableButtonIfNecessery()
 
-def mettre_a_jour_tableau():
+def UpdateTable():
     global tableau
     # Effacer toutes les lignes actuelles du tableau
     for row in tableau.get_children():
@@ -154,35 +154,35 @@ def mettre_a_jour_tableau():
     # Réinsérer les données mises à jour
     for data in All_data_in_tableau:
         tableau.insert('', 'end', values=data)
-    GetFilesPAthList()
+    GetFilesPathList()
 
-def GetFilesPAthList():
+def GetFilesPathList():
     global All_data_in_tableau,liste_chemin_update,liste_chemin
     liste_chemin_update=[]
     liste_chemin_update = [element[2] for element in All_data_in_tableau]
     liste_chemin = liste_chemin_update
 
-def ButtonFlecheDown():
+def ButtonArrowDownAction():
     global index_from_selected_ligne,All_data_in_tableau
     if (index_from_selected_ligne is not None):
         ChangePlaceDown(All_data_in_tableau,index_from_selected_ligne)
-        mettre_a_jour_tableau()
+        UpdateTable()
         index_from_selected_ligne += 1
         NextLineToBeAutoSelected("Down")
 
-def ButtonFlecheUp():
+def ButtonArrowUpAction():
     global index_from_selected_ligne,All_data_in_tableau
     if (index_from_selected_ligne is not None):
         ChangePlaceUp(All_data_in_tableau,index_from_selected_ligne)
-        mettre_a_jour_tableau()
+        UpdateTable()
         index_from_selected_ligne -= 1
         NextLineToBeAutoSelected("Up")
 
-def SupprimerLigne():
+def DeleteTableLines():
     global index_from_selected_ligne,All_data_in_tableau
     DeleteSelectedLine(All_data_in_tableau,index_from_selected_ligne-1)
-    mettre_a_jour_tableau()
-    GetFilesPAthList()
+    UpdateTable()
+    GetFilesPathList()
     if (len(All_data_in_tableau)==0):
         DeleteAlldata()
     else:
@@ -217,7 +217,7 @@ def DisableButtonIfNecessery():
         Btn_FlecheHaut.configure(state=tk.NORMAL)
         Btn_FlecheBas.configure(state=tk.NORMAL)
 
-def convert_heic_to_pil(heic_path):
+def ConvertHeicToPillowFormat(heic_path):
     # Enregistrement du module d'ouverture pour le format HEIC
     register_heif_opener()
 
@@ -225,7 +225,7 @@ def convert_heic_to_pil(heic_path):
     with Image.open(heic_path) as im:
         return im.convert("RGB")
 
-def process_images(liste_chemin, FileName, chemin_final):
+def PicturesProcessing(liste_chemin, FileName, chemin_final):
     Images_Multiple = []
     IMG_Mult = []
     incrementation = 0
@@ -235,7 +235,7 @@ def process_images(liste_chemin, FileName, chemin_final):
         _, extension = os.path.splitext(chemin)
         if extension.lower() == '.heic':
             # Convertir .heic en image lisible avec PIL
-            img_heic = convert_heic_to_pil(chemin)
+            img_heic = ConvertHeicToPillowFormat(chemin)
             Images_Multiple.append(img_heic)
         else:
             # Pour les autres formats, ouvrir directement avec PIL
@@ -276,7 +276,7 @@ def HideProcessing():
     cadre.place_forget()
     texte.delete(1.0, tk.END)
 
-def Tab1PdfCreator(master,root):
+def PdfCreatorTab(master,root):
 
     global tab1
     tab1 = ttk.Frame(master)
@@ -297,9 +297,9 @@ def Tab1PdfCreator(master,root):
     Btn_Test = tk.Button(tab1) ;
 
     Boutons_Controle = [
-        [Btn_SelectFile, "Add file",img_SelectFile, choosemultifiles,tk.NORMAL ],
-        [Btn_Reset, "Reset",img_Reset, RESET,tk.DISABLED],
-        [Btn_Convertir, "Convertir",img_Convert, open_dialog,tk.DISABLED],
+        [Btn_SelectFile, "Add file",img_SelectFile, ChooseMultiFile,tk.NORMAL ],
+        [Btn_Reset, "Reset",img_Reset, Reset,tk.DISABLED],
+        [Btn_Convertir, "Convertir",img_Convert, OpenDialogToSavePdf,tk.DISABLED],
         [Btn_Quitter, "Quitter",img_Exit, root.destroy,tk.NORMAL],
         # [Btn_Test, "Test",img_Test, HideProcessing, tk.NORMAL],
     ]
@@ -344,15 +344,15 @@ def Tab1PdfCreator(master,root):
     Btn_FlecheHaut = tk.Button(tab1) ; Btn_FlecheBas = tk.Button(tab1) ;  Btn_SupprimerLigne = tk.Button(tab1)
 
     Boutons_Fleche = [
-        [Btn_FlecheHaut, "Monter",img_Fleche_Haut, ButtonFlecheUp ],
-        [Btn_SupprimerLigne, "Supprimer",img_SupprimerLigne, SupprimerLigne],
-        [Btn_FlecheBas, "Descendre",img_Fleche_Bas, ButtonFlecheDown],
+        [Btn_FlecheHaut, "Monter",img_Fleche_Haut, ButtonArrowUpAction ],
+        [Btn_SupprimerLigne, "Supprimer",img_SupprimerLigne, DeleteTableLines],
+        [Btn_FlecheBas, "Descendre",img_Fleche_Bas, ButtonArrowDownAction],
     ]
 
     # Boucle placement des bouttons
-    Position_x_recalculee_BtnsFleche = CalculPositionInitialeBoutonsFleche()
+    Position_x_recalculee_BtnsFleche = ArrowButtons_InitPositionCalculation()
 
-    # Associer la fonction afficher_contenu_ligne à l'événement de clic sur une ligne
-    tableau.bind('<ButtonRelease-1>', afficher_contenu_ligne)
+    # Associer la fonction DisplaySelectedLineContent à l'événement de clic sur une ligne
+    tableau.bind('<ButtonRelease-1>', DisplaySelectedLineContent)
 
     return tab1
