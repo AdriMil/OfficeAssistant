@@ -28,7 +28,7 @@ else:
 with open('../main.py', 'w') as main_file:
     main_file.write(main_content)
 a = Analysis(
-    ['main.py'],
+    ['../main.py'],
     pathex=['C:\\Users\\Adrie\\Documents\\Programmation_Git\\OfficeAssistant'],
     binaries=[],
     datas=[('../Pictures/','Pictures')],
