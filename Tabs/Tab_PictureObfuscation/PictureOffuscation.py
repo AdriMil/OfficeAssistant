@@ -1,4 +1,4 @@
-from imports import *
+from SharedFunctions.imports import *
 from PIL import Image
 from PIL import ImageTk  
 
