@@ -28,7 +28,7 @@ else:
 with open(os.environ['GITHUB_WORKSPACE'] + '\\main.py', 'w') as main_file:
     main_file.write(main_content)
 a = Analysis(
-    ['main.py'],
+    [os.environ['GITHUB_WORKSPACE'] + '\\main.py'],
     pathex=[os.path.join(os.environ['GITHUB_WORKSPACE'], 'OfficeAssistant')],
     binaries=[],
     datas=[(os.path.join(os.environ['GITHUB_WORKSPACE'], 'Pictures'), 'Pictures')],
