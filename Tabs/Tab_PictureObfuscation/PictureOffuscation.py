@@ -101,13 +101,14 @@ def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
 #         canvas.coords(rectangle_id, *new_coords)
 
 def ResetAllRectangles():
-    global Display_Revert_Button
+    global Rectangles_Coordonates_List,Rectangles_Ids_List,Display_Revert_Button
     if Display_Revert_Button == 1 :
-        Rectangles_Coordonates_List,Rectangles_Ids_List,Display_Revert_Button
         Display_Revert_Button = 0
         for rectangle in Rectangles_Ids_List:
             canvas.delete(rectangle)
         canvas.update()
+        Rectangles_Coordonates_List = []
+        Rectangles_Ids_List = []
         Answer = Info_Reset_Tab2()
         if Answer == "yes":
             Reset()
