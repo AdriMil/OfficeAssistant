@@ -278,8 +278,8 @@ def ChooseFile():
         Zoom_Buttons[1][0].configure(state=tk.DISABLED)
 
         if (Place_Zoom_Buttons_Only_Once == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
-                ZoomButtonsSetPosition()
-                Place_Zoom_Buttons_Only_Once = 1
+            PlaceButtonsAutomaticaly(Zoom_Buttons,Zoom_Buttons_Init_y_Position,Zoom_Buttons_Width,Zoom_Buttons_Height,Space_Between_Zoom_Buttons,Picture_Reducer_Value,x_Position_Recalculated_For_Zoom_Buttons,Police_Size,TextDisplay=0,Init_State=0)
+            Place_Zoom_Buttons_Only_Once = 1
 
 def ZoomButtonsPositionCalculation():
     global x_Position_Recalculated_For_Zoom_Buttons
@@ -294,16 +294,6 @@ def ZoomButtonsPositionCalculation():
         x_Position_Recalculated_For_Zoom_Buttons = Tab2DisplayWindow_x_position - (Extra_Buttons_Space / 2)
 
     return x_Position_Recalculated_For_Zoom_Buttons
-
-def ZoomButtonsSetPosition():
-    global x_Position_Recalculated_For_Zoom_Buttons
-    for i in range(0,len(Zoom_Buttons)):
-        Zoom_Buttons[i][2] = Zoom_Buttons[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
-        Zoom_Buttons[i][0].configure( width=Zoom_Buttons_Width, height= Zoom_Buttons_Height,image=Zoom_Buttons[i][2], command=Zoom_Buttons[i][3])
-        Zoom_Buttons[i][0].place(x=x_Position_Recalculated_For_Zoom_Buttons, y=Zoom_Buttons_Init_y_Position)
-        x_Position_Recalculated_For_Zoom_Buttons = x_Position_Recalculated_For_Zoom_Buttons + Zoom_Buttons_Width + Space_Between_Zoom_Buttons
-        Zoom_Buttons[i].append(x_Position_Recalculated_For_Zoom_Buttons) #Sauvegarde de la valeur x du bouton à la fin de la liste
-        Zoom_Buttons[i].append(Zoom_Buttons_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
 def PictureOffuscationTab(master,root):
     InitValues()
@@ -342,17 +332,8 @@ def PictureOffuscationTab(master,root):
     # Boucle placement des bouttons
     Position_x_recalculeeTab2,Position_y_recalculeeTab2 = ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Tab2Canvas,offset=30)
     
-#font=("Helvetica", Police_Size),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
+    PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Control_Button_Width,Control_Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculeeTab2,Police_Size,TextDisplay=1,Init_State=1)
 
-    for i in range(0,len(Boutons_ControleTab2)):
-        Boutons_ControleTab2[i][2] = Boutons_ControleTab2[i][2].subsample(1, 1) #Réduction de la taille de l'image
-        Boutons_ControleTab2[i][0].configure( width=Control_Button_Width, height= Control_Button_Height, font=("Helvetica", Police_Size),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
-        Boutons_ControleTab2[i][0].image = Boutons_ControleTab2[i][2]
-        Boutons_ControleTab2[i][0].place(x=Position_x_recalculeeTab2, y=Position_y_recalculeeTab2)
-        Position_x_recalculeeTab2 = Position_x_recalculeeTab2 + Control_Button_Width + Space_Between_Button
-        Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
-        Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
-    
     Button_Zoom_More = tk.Button(tab2) ; Button_Zoom_Less = tk.Button(tab2) 
 
     Zoom_Buttons = [

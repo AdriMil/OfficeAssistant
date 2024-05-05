@@ -13,14 +13,11 @@ All_Data_In_Table = []
 Files_Paths_Updated_List=[]
 Selected_Line_Index = 0 # Select first line when Selected_Files are imported for 1st time 
 
-
-
 #----------------SEND VALUES TO MAIN Windows-----------------#
 def WindowsSizeSendData():
     global Window_Height, Window_Width
     return Window_Height,Window_Width
 #-------------------------------------------------------------
-
 
 def ArrowButtons_InitPositionCalculation():
     global Table_Width,Arrows_Buttons, Arrows_Buttons_Width,Space_Between_Arrows_Buttons,x_Position_Recalculated_For_Arrows_Buttons, Table_x_Position,Window_Width, Table_Height
@@ -38,16 +35,6 @@ def ArrowButtons_InitPositionCalculation():
 
     return x_Position_Recalculated_For_Arrows_Buttons
 
-def Arrows_Buttons_Place_On_Ui():
-    global Arrows_Buttons,Picture_Reducer_Value,Arrows_Buttons_Width,Arrows_Buttons_Height,Police_Size,x_Position_Recalculated_For_Arrows_Buttons,Arrows_Buttons_Init_y_Position,Space_Between_Arrows_Buttons
-    for i in range(0,len(Arrows_Buttons)):
-        Arrows_Buttons[i][2] = Arrows_Buttons[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
-        Arrows_Buttons[i][0].configure( width=Arrows_Buttons_Width, height= Arrows_Buttons_Height,image=Arrows_Buttons[i][2], command=Arrows_Buttons[i][3])
-        Arrows_Buttons[i][0].place(x=x_Position_Recalculated_For_Arrows_Buttons, y=Arrows_Buttons_Init_y_Position)
-        x_Position_Recalculated_For_Arrows_Buttons = x_Position_Recalculated_For_Arrows_Buttons + Arrows_Buttons_Width + Space_Between_Arrows_Buttons
-        Arrows_Buttons[i].append(x_Position_Recalculated_For_Arrows_Buttons) #Sauvegarde de la valeur x du bouton à la fin de la liste
-        Arrows_Buttons[i].append(Arrows_Buttons_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
-
 def ChooseMultiFile():
     global Selected_Files,Place_Arrows_Only_Once, Selected_Line_Index,Button_Reset,table
     Selected_Files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
@@ -62,7 +49,7 @@ def ChooseMultiFile():
             All_Data_In_Table.append([len(Path_List),words[-1],file]) #Give list of all data in tab -> will use do modify file order
 
         if (Place_Arrows_Only_Once == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons fleches
-            Arrows_Buttons_Place_On_Ui()
+            PlaceButtonsAutomaticaly(Arrows_Buttons,Arrows_Buttons_Init_y_Position,Arrows_Buttons_Width,Arrows_Buttons_Height,Space_Between_Arrows_Buttons,Picture_Reducer_Value,x_Position_Recalculated_For_Arrows_Buttons,Police_Size,TextDisplay=0,Init_State=0)
             Place_Arrows_Only_Once = 1
         DisableButtonIfNecessery()
 
@@ -80,7 +67,6 @@ def OpenDialogToSavePdf():
         messagebox.showinfo("Erreur", "Donnez un titre au document qui va être créé")
         OpenDialogToSavePdf()
 
-
 def ConvertPictureToPdf(FileName):
     global Path_List_update
     if (Files_Paths_Updated_List == []):
@@ -92,13 +78,11 @@ def ConvertPictureToPdf(FileName):
         Error_BadSavePath()
     elif(len(Path_List)==0):         #Verif si au moins une image est selctionnée
         Error_NoPicture()
-
     else:                               #Si plusieurs images à convertir
         # TraitementConversion.place(x=Table_x_Position + 1, y=Table_y_Position + 24, width=Table_Width, height=Table_Height)
         DisplayProcessing()
         PicturesProcessing(Files_Paths_Updated_List, FileName, Selected_Save_Path)
         Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
-
 
 def Reset():
     User_Answer=INfo_Reset()
@@ -214,7 +198,6 @@ def DisableButtonIfNecessery():
 def ConvertHeicToPillowFormat(heic_path):
     # Enregistrement du module d'ouverture pour le format HEIC
     register_heif_opener()
-
     # Ouverture de l'image HEIC et conversion en mode RGB
     with Image.open(heic_path) as im:
         return im.convert("RGB")
@@ -282,7 +265,6 @@ def PdfCreatorTab(master,root):
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
 
-
     Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
     Button_Convert = tk.Button(tab1) ; Button_Exit = tk.Button(tab1) ;
     Button_Test = tk.Button(tab1) ;
@@ -298,17 +280,8 @@ def PdfCreatorTab(master,root):
     # Boucle placement des bouttons
     Position_x_recalculee,Position_y_recalculee = ControlsButtonsInitPositionCalculation(Boutons_Controle,Tab1Table,offset=30)
 
-    for i in range(0,len(Boutons_Controle)):
-        Boutons_Controle[i][2] = Boutons_Controle[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
-        Boutons_Controle[i][0].configure( width=Control_Button_Width, height= Control_Button_Height, font=("Helvetica", Police_Size),image=Boutons_Controle[i][2], command=Boutons_Controle[i][3], text = Boutons_Controle[i][1],compound=tk.TOP,state=Boutons_Controle[i][4] )
-        Boutons_Controle[i][0].place(x=Position_x_recalculee, y=Position_y_recalculee)
-        print("--------------------------------------------")
-        print(type(Position_x_recalculee))
-        print(type(Control_Button_Width))
-        print(type(Space_Between_Button))
-        Position_x_recalculee = Position_x_recalculee + Control_Button_Width + Space_Between_Button
-        Boutons_Controle[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
-        Boutons_Controle[i].append(Control_Button_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
+    #Function which place buttons
+    PlaceButtonsAutomaticaly(Boutons_Controle,Position_y_recalculee,Control_Button_Width,Control_Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculee,Police_Size,TextDisplay=1,Init_State=1)
 
     style = ttk.Style()
     style.map('Treeview', background=[('selected', '#eb0000')])
