@@ -59,35 +59,6 @@ def Ressource_Path(relative_path):
 
 print(Ressource_Path("Pictures/AddFile.png"))
 
-def IconsDeclaration():
-    
-    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
-    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-    Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
-    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
-    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
-    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
-
-    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
-    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
-
-    Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
-    Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
-    Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-
-    return Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line
-
-def Tab1ButtonsDeclaration(tab1):
-    Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
-    Button_Convert = tk.Button(tab1) ; Button_Exit = tk.Button(tab1) ;
-    Button_Test = tk.Button(tab1) ;
-    return Button_Select_Files, Button_Reset,Button_Convert,Button_Test,Button_Exit
-
-def Tab2ButtonsDeclaration(tab2):
-    Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
-    Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
-    Button_Exit = tk.Button(tab2) 
-    return Button_Select_File, Button_Reset,Button_Validate,Button_Test,Button_Exit
 
 #---------------Calcul de la position des boutons ----------------------#
 def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYourTab,offset):
