@@ -18,8 +18,6 @@ import os
 import sys
 #Commande pour créér un .exe : pyinstaller main.spec
 
-
-
 #------------Design UI VARIABLE SPACE-------------#
 #Tableau Tab1:
 Table_x_Position = 50 ; Table_y_Position = 200
@@ -78,6 +76,19 @@ def IconsDeclaration():
     Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
 
     return Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line
+
+def Tab1ButtonsDeclaration(tab1):
+    Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
+    Button_Convert = tk.Button(tab1) ; Button_Exit = tk.Button(tab1) ;
+    Button_Test = tk.Button(tab1) ;
+    return Button_Select_Files, Button_Reset,Button_Convert,Button_Test,Button_Exit
+
+def Tab2ButtonsDeclaration(tab2):
+    Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
+    Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
+    Button_Exit = tk.Button(tab2) 
+    return Button_Select_File, Button_Reset,Button_Validate,Button_Test,Button_Exit
+
 #---------------Calcul de la position des boutons ----------------------#
 def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYourTab,offset):
     
@@ -111,4 +122,3 @@ def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Butt
         Position_x_recalculee = Position_x_recalculee + Button_Width + Space_Between_Button
         Button_List[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Button_List[i].append(Position_y_recalculee) #Sauvegarde de la valeur y du bouton à la fin de la liste
-
