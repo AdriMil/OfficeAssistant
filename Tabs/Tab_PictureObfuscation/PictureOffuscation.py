@@ -74,7 +74,7 @@ def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
 #         canvas.coords(rectangle_id, *new_coords)
 
 def Reset():
-    global Selected_Picture, Picture_Size, Picture_Resized,Picture_Reduction_Ratio
+    global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     InitValues()
     Picture_Size = None
     Picture_Resized = None
@@ -104,7 +104,6 @@ def ReplacePixelRectangles(image, liste_coordonnees):
     return image
 
 def Save():
-    global Selected_Picture
     if (Selected_Picture is None):
         messagebox.showinfo("Erreur", "Selectionnez une image")
     else :
@@ -118,7 +117,7 @@ def Save():
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
 def Zoom(op):
-    global Selected_Picture, Picture_Width, Picture_Height, canvas, Updated_Picture, Picture_Size
+    global Picture_Width, Picture_Height, canvas, Picture_Size
     global Picture_Best_Height,Picture_Best_Width #share new size of picture
     global Zoom_Incrementation,Picture_Zoom_Ratio #know zoom on picture
 
