@@ -122,3 +122,23 @@ def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Butt
         Position_x_recalculee = Position_x_recalculee + Button_Width + Space_Between_Button
         Button_List[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Button_List[i].append(Position_y_recalculee) #Sauvegarde de la valeur y du bouton à la fin de la liste
+
+#Processing information
+def DisplayProcessing(Display_Window_x_position,Displa_yWindow_y_position,Display_Window_Width,Display_Window_Height,tab):
+    global cadre, texte, ascenseur
+    cadre = tk.Frame(tab,borderwidth=1, relief="solid")
+    cadre.place(x=Display_Window_x_position, y=Displa_yWindow_y_position, width=Display_Window_Width, height=Display_Window_Height)
+    texte = tk.Text(cadre, wrap=tk.WORD)
+    texte.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    ascenseur = ttk.Scrollbar(cadre, orient=tk.VERTICAL, command=texte.yview)
+    ascenseur.pack(side=tk.RIGHT, fill=tk.Y)
+    texte.config(yscrollcommand=ascenseur.set)
+
+def UpdateProcessing(TexteToUpdate):
+        texte.insert(tk.END, "{}\n".format(TexteToUpdate))
+        texte.see(tk.END)  
+        cadre.update()
+
+def HideProcessing():
+    cadre.place_forget()
+    texte.delete(1.0, tk.END)

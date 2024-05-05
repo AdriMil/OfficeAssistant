@@ -12,3 +12,5 @@ def Info_ProcessFinished(liste_chemin,FileName,chemin_final):
 def INfo_Reset():
     reponse = messagebox.askquestion("Confirmation", "Voulez-vous faire un reset des images selectionnées ?")
     return reponse
+def Info_FileSaved():
+    messagebox.showinfo("Info", "Fichier sauvegardé")

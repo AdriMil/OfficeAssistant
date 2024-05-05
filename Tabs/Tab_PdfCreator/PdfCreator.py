@@ -80,9 +80,9 @@ def ConvertPictureToPdf(FileName):
         Error_NoPicture()
     else:                               #Si plusieurs images à convertir
         # TraitementConversion.place(x=Table_x_Position + 1, y=Table_y_Position + 24, width=Table_Width, height=Table_Height)
-        DisplayProcessing()
+        DisplayProcessing(Table_x_Position,Table_y_Position,Table_Width,Table_Height,tab1) #Call process
         PicturesProcessing(Files_Paths_Updated_List, FileName, Selected_Save_Path)
-        Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
+        
 
 def Reset():
     User_Answer=INfo_Reset()
@@ -224,33 +224,15 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
     nom = os.path.join(Selected_Save_Path, f"{FileName}.pdf")
     IMG_Mult[0].save(nom, save_all=True, append_images=IMG_Mult[1:])
     UpdateProcessing("PDF enregistré")
+    Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
     HideProcessing()
-
-def DisplayProcessing():
-    global cadre, texte, ascenseur, tab1
-    cadre = tk.Frame(tab1,borderwidth=1, relief="solid")
-    cadre.place(x=Table_x_Position, y=Table_y_Position, width=Table_Width, height=Table_Height+25)
-    texte = tk.Text(cadre, wrap=tk.WORD)
-    texte.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-    ascenseur = ttk.Scrollbar(cadre, orient=tk.VERTICAL, command=texte.yview)
-    ascenseur.pack(side=tk.RIGHT, fill=tk.Y)
-    texte.config(yscrollcommand=ascenseur.set)
-
-def UpdateProcessing(TexteToUpdate):
-        texte.insert(tk.END, "{}\n".format(TexteToUpdate))
-        texte.see(tk.END)  
-        cadre.update()
-
-def HideProcessing():
-    cadre.place_forget()
-    texte.delete(1.0, tk.END)
 
 def PdfCreatorTab(master,root):
     global tab1
     tab1 = ttk.Frame(master)
     InitValues()
 
-    Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab1 = ttk.Frame(master) to get tkinter instance
+    Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, _, _, _, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab1 = ttk.Frame(master) to get tkinter instance
     
     global Button_Select_Files,Button_Reset,Button_Exit,Button_Convert,Button_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Button_Delete_Selected_Line 
     global TraitementConversion,x_Position_Recalculated_For_Arrows_Buttons

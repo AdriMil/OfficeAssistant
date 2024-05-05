@@ -91,16 +91,23 @@ def Reset():
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
 def ReplacePixelRectangles(image, liste_coordonnees):
+    Current_Rectangle = 0
+    Number_Of_Rectangles = len(liste_coordonnees)
     for coordonnees in liste_coordonnees:
+        Current_Rectangle = Current_Rectangle  + 1
         x1, y1, x2, y2 = coordonnees
         
         #If picture is narrower than canvas, we do not apply recalculation of the Rectangles_Ids_List positions
         if int(Picture_Reduction_Ratio) != 0: x1, y1, x2, y2 = [int(coord * Picture_Reduction_Ratio) for coord in (x1, y1, x2, y2)]
         # Loop de replace pixels under Rectangles_Ids_List
+      
         for x in range(int(x1), int(x2) + 1):
             for y in range(int(y1), int(y2) + 1):
                 # modify pixels by black pixels
                 image.putpixel((x, y), (0, 0, 0))  # Met les pixels en vert
+        Process_Text = (str(Current_Rectangle)+" zones d'offuscation traitées sur " + str(Number_Of_Rectangles) + " zones créés")
+        print((Process_Text) if debug ==1 else "")
+        UpdateProcessing(Process_Text)
     return image
 
 def Save():
@@ -111,9 +118,13 @@ def Save():
         Final_Saved_Picture = Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
         print((largeur, hauteur) if debug == 1 else "")
-
+        DisplayProcessing(Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
+        UpdateProcessing("Enregistrement du fichier ...")
         Final_Saved_Picture.save(Final_File_Name+".png", "PNG")
+        UpdateProcessing("Fichier enregistré !")
+        Info_FileSaved()
+        HideProcessing()
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
 def Zoom(op):
