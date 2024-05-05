@@ -2,10 +2,11 @@ from SharedFunctions.imports import *
 from PIL import Image
 from PIL import ImageTk  
 
+Place_Zoom_Buttons_Only_Once = 0 #Should never reseted
+
 def InitValues():
-    global Selected_Picture, Place_Zoom_Buttons_Only_Once, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location
+    global Selected_Picture, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location,Display_Revert_Button
     Selected_Picture = None
-    Place_Zoom_Buttons_Only_Once = 0 #
     x_Position_Recalculated_For_Zoom_Buttons = 0 
     Zoom_Incrementation = 0
     Rectangles_Coordonates_List = [] 
@@ -13,6 +14,8 @@ def InitValues():
     Current_Rectangle_Id = None # Store current rectangle's id
     First_Clic_x_Location = None #Store first clic x locatoin
     First_Clic_y_Location = None #Store first clic y locatoin
+    Display_Revert_Button = 0
+    
 
 #Allows to displays print to debug
 debug = 1
@@ -36,7 +39,7 @@ def UpdateRectangleDrawing(event):
 
 # Finish rectangle build when left click is released
 def FinishRectangleDrawing(event):
-    global First_Clic_x_Location, First_Clic_y_Location, Rectangles_Ids_List,Rectangles_Coordonates_List
+    global First_Clic_x_Location, First_Clic_y_Location, Rectangles_Ids_List,Rectangles_Coordonates_List,Display_Revert_Button
     if First_Clic_x_Location is not None and First_Clic_y_Location is not None:
         x_image = event.x + canvas.canvasx(0)
         y_image = event.y + canvas.canvasy(0)
@@ -46,6 +49,30 @@ def FinishRectangleDrawing(event):
         print((Rectangles_Coordonates_List) if debug==1 else "")
     First_Clic_x_Location = None
     First_Clic_y_Location = None
+    if(Display_Revert_Button==0):
+        Zoom_Buttons[2][0].configure(state=tk.NORMAL)
+        Display_Revert_Button = 1 ; 
+
+
+def RevertRectangles():
+    global Rectangles_Coordonates_List,Rectangles_Ids_List,Display_Revert_Button
+
+    if Rectangles_Ids_List:
+        # Récupérer l'ID du dernier rectangle
+        last_rectangle_id = Rectangles_Ids_List.pop()
+        if not Rectangles_Ids_List:
+            Zoom_Buttons[2][0].configure(state=tk.DISABLED)
+            Display_Revert_Button = 0 ; 
+        # Supprimer le dernier rectangle du canvas
+        canvas.delete(last_rectangle_id)
+        # Supprimer les coordonnées du dernier rectangle de la liste
+        Rectangles_Coordonates_List.pop()
+        
+
+        # Mettre à jour le canvas
+        canvas.update()
+        
+
 
 #Fix issue if you created your rectangle from bottom to top (wihtout this function rectangle won't appears on save pictures)
 def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
@@ -73,6 +100,20 @@ def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
 #         new_coords = [coords[i] * state_ratio_zoom for i in range(4)]
 #         canvas.coords(rectangle_id, *new_coords)
 
+def ResetAllRectangles():
+    global Display_Revert_Button
+    if Display_Revert_Button == 1 :
+        Rectangles_Coordonates_List,Rectangles_Ids_List,Display_Revert_Button
+        Display_Revert_Button = 0
+        for rectangle in Rectangles_Ids_List:
+            canvas.delete(rectangle)
+        canvas.update()
+        Answer = Info_Reset_Tab2()
+        if Answer == "yes":
+            Reset()
+    else:
+        Reset()
+
 def Reset():
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     InitValues()
@@ -89,6 +130,7 @@ def Reset():
     Zoom_Buttons[0][0].configure(state=tk.DISABLED)
     Zoom_Buttons[1][0].configure(state=tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
+    Zoom_Buttons[2][0].configure(state=tk.DISABLED)
 
 def ReplacePixelRectangles(image, liste_coordonnees):
     Current_Rectangle = 0
@@ -308,14 +350,27 @@ def ZoomButtonsPositionCalculation():
 def PictureOffuscationTab(master,root):
     InitValues()
     global canvas, txt
-    global Button_Reset,Button_Select_File
+    global Button_Reset,Button_Select_File,Button_Revert
     global tab2
     global Zoom_Buttons,x_Position_Recalculated_For_Zoom_Buttons
     global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
     tab2 = ttk.Frame(master)
 
-    Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab2 = ttk.Frame(master) to get tkinter instance
-    Button_Select_File, Button_Reset,Button_Validate,_,Button_Exit = Tab2ButtonsDeclaration(tab2)
+    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+
+    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
+    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
+    Icon_Revert = PhotoImage(file=Ressource_Path("Pictures/Revert.png"))
+
+    Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
+    Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
+    Button_Exit = tk.Button(tab2) 
+    Button_Zoom_More = tk.Button(tab2) ; Button_Zoom_Less = tk.Button(tab2) 
+    Button_Revert = tk.Button(tab2)
 
     canvas = tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
     canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
@@ -327,21 +382,19 @@ def PictureOffuscationTab(master,root):
         [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,tk.NORMAL ],
         [Button_Validate, "Valider",Icon_Validate, Save,tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Button_Reset, "Reset",Icon_Reset, Reset,tk.DISABLED],
+        [Button_Reset, "Reset",Icon_Reset, ResetAllRectangles,tk.DISABLED],
         [Button_Exit, "Quitter",Icon_Exit, root.destroy,tk.NORMAL],        
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
     Position_x_recalculeeTab2,Position_y_recalculeeTab2 = ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Tab2Canvas,offset=30)
-    
     PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Control_Button_Width,Control_Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculeeTab2,Police_Size,TextDisplay=1,Init_State=1)
-
-    Button_Zoom_More = tk.Button(tab2) ; Button_Zoom_Less = tk.Button(tab2) 
 
     Zoom_Buttons = [
         [Button_Zoom_More, "Zoomer",Icon_Zoom_More, lambda: Zoom("*") ],
         [Button_Zoom_Less, "Dézoomer",Icon_Zoom_Less, lambda: Zoom("//")],
+        [Button_Revert, "Revert",Icon_Revert, RevertRectangles],
     ]
 
     x_Position_Recalculated_For_Zoom_Buttons = ZoomButtonsPositionCalculation()

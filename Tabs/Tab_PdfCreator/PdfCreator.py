@@ -232,15 +232,23 @@ def PdfCreatorTab(master,root):
     tab1 = ttk.Frame(master)
     InitValues()
 
-    Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, _, _, _, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab1 = ttk.Frame(master) to get tkinter instance
+    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
+    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
+    Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
+    Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
     
     global Button_Select_Files,Button_Reset,Button_Exit,Button_Convert,Button_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Button_Delete_Selected_Line 
     global TraitementConversion,x_Position_Recalculated_For_Arrows_Buttons
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
 
-
-    Button_Select_Files, Button_Reset,Button_Convert,Button_Test,Button_Exit = Tab1ButtonsDeclaration(tab1)
+    Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
+    Button_Convert = tk.Button(tab1) ; Button_Exit = tk.Button(tab1) ;
+    Button_Test = tk.Button(tab1) ;
 
     Boutons_Controle = [
         [Button_Select_Files, "Add file",Icon_Add_File, ChooseMultiFile,tk.NORMAL ],
