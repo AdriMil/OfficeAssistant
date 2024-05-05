@@ -304,14 +304,7 @@ def PictureOffuscationTab(master,root):
     tab2 = ttk.Frame(master)
 
     Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab2 = ttk.Frame(master) to get tkinter instance
-
-    canvas = tk.Canvas(tab2, bg="white")
-    canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
-
-
-    Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
-    Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
-    Button_Exit = tk.Button(tab2) 
+    Button_Select_File, Button_Reset,Button_Validate,_,Button_Exit = Tab2ButtonsDeclaration(tab2)
 
     canvas = tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
     canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)

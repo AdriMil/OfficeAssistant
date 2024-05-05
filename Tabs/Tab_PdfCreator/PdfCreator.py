@@ -257,9 +257,8 @@ def PdfCreatorTab(master,root):
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
 
-    Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
-    Button_Convert = tk.Button(tab1) ; Button_Exit = tk.Button(tab1) ;
-    Button_Test = tk.Button(tab1) ;
+
+    Button_Select_Files, Button_Reset,Button_Convert,Button_Test,Button_Exit = Tab1ButtonsDeclaration(tab1)
 
     Boutons_Controle = [
         [Button_Select_Files, "Add file",Icon_Add_File, ChooseMultiFile,tk.NORMAL ],
