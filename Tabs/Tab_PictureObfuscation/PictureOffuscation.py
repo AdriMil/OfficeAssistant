@@ -3,16 +3,16 @@ from PIL import Image
 from PIL import ImageTk  
 
 def InitValues():
-    global img, PlacementUniqueZoom, Position_x_recalculee_BtnsZoom, Zoomincrementation, liste_coordonnees_rectangle, rectangles, current_rectangle, start_x, start_y
-    img = None
-    PlacementUniqueZoom = 0 #
-    Position_x_recalculee_BtnsZoom = 0 
-    Zoomincrementation = 0
-    liste_coordonnees_rectangle = [] 
-    rectangles = [] # Store rectangle's id
-    current_rectangle = None # Store current rectangle's id
-    start_x = None #Store first clic x locatoin
-    start_y = None #Store first clic y locatoin
+    global Selected_Picture, Place_Zoom_Buttons_Only_Once, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location
+    Selected_Picture = None
+    Place_Zoom_Buttons_Only_Once = 0 #
+    x_Position_Recalculated_For_Zoom_Buttons = 0 
+    Zoom_Incrementation = 0
+    Rectangles_Coordonates_List = [] 
+    Rectangles_Ids_List = [] # Store rectangle's id
+    Current_Rectangle_Id = None # Store current rectangle's id
+    First_Clic_x_Location = None #Store first clic x locatoin
+    First_Clic_y_Location = None #Store first clic y locatoin
 
 #Allows to displays print to debug
 debug = 1
@@ -21,82 +21,82 @@ def test():
 
 # When left clik on mouse,  start rectangle creation
 def StartRectangleDrawing(event):
-    global start_x, start_y, current_rectangle
-    start_x = event.x + canvas.canvasx(0)
-    start_y = event.y + canvas.canvasy(0)
-    current_rectangle = canvas.create_rectangle(start_x, start_y, start_x, start_y, outline="red", fill="black")
+    global First_Clic_x_Location, First_Clic_y_Location, Current_Rectangle_Id
+    First_Clic_x_Location = event.x + canvas.canvasx(0)
+    First_Clic_y_Location = event.y + canvas.canvasy(0)
+    Current_Rectangle_Id = canvas.create_rectangle(First_Clic_x_Location, First_Clic_y_Location, First_Clic_x_Location, First_Clic_y_Location, outline="red", fill="black")
 
 # Update rectangle position during mouse mouvments
 def UpdateRectangleDrawing(event):
-    global start_x, start_y, current_rectangle
-    if start_x is not None and start_y is not None:
+    global First_Clic_x_Location, First_Clic_y_Location, Current_Rectangle_Id
+    if First_Clic_x_Location is not None and First_Clic_y_Location is not None:
         x_image = event.x + canvas.canvasx(0)
         y_image = event.y + canvas.canvasy(0)
-        canvas.coords(current_rectangle, start_x, start_y, x_image, y_image)
+        canvas.coords(Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location, x_image, y_image)
 
 # Finish rectangle build when left click is released
 def FinishRectangleDrawing(event):
-    global start_x, start_y, rectangles, current_rectangle,liste_coordonnees_rectangle
-    if start_x is not None and start_y is not None:
+    global First_Clic_x_Location, First_Clic_y_Location, Rectangles_Ids_List,Rectangles_Coordonates_List
+    if First_Clic_x_Location is not None and First_Clic_y_Location is not None:
         x_image = event.x + canvas.canvasx(0)
         y_image = event.y + canvas.canvasy(0)
-        rectangles.append(current_rectangle)
-        start_x, start_y,x_image,y_image = FixValues(start_x, start_y,x_image,y_image)
-        liste_coordonnees_rectangle.append([start_x, start_y,x_image,y_image])
-        print((liste_coordonnees_rectangle) if debug==1 else "")
-    start_x = None
-    start_y = None
+        Rectangles_Ids_List.append(Current_Rectangle_Id)
+        First_Clic_x_Location, First_Clic_y_Location,x_image,y_image = FixValues(First_Clic_x_Location, First_Clic_y_Location,x_image,y_image)
+        Rectangles_Coordonates_List.append([First_Clic_x_Location, First_Clic_y_Location,x_image,y_image])
+        print((Rectangles_Coordonates_List) if debug==1 else "")
+    First_Clic_x_Location = None
+    First_Clic_y_Location = None
 
 #Fix issue if you created your rectangle from bottom to top (wihtout this function rectangle won't appears on save pictures)
-def FixValues(start_x, start_y, x_image, y_image):
-    if start_x > x_image:
-        start_x, x_image = x_image, start_x
-    if start_y > y_image:
-        start_y, y_image = y_image, start_y
-    return start_x, start_y, x_image, y_image
+def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
+    if First_Clic_x_Location > x_image:
+        First_Clic_x_Location, x_image = x_image, First_Clic_x_Location
+    if First_Clic_y_Location > y_image:
+        First_Clic_y_Location, y_image = y_image, First_Clic_y_Location
+    return First_Clic_x_Location, First_Clic_y_Location, x_image, y_image
 
 ##-------Not in this milestone Scope, will be used later to calculate rectangle new siez and position depending on zoom
 # def resize_image():
-#     global img, photo
-#     new_width = img.width // 2
-#     new_height = img.height // 2
-#     img = img.resize((new_width, new_height))
-#     photo = ImageTk.PhotoImage(img)
+#     global Selected_Picture, photo
+#     new_width = Selected_Picture.width // 2
+#     new_height = Selected_Picture.height // 2
+#     Selected_Picture = Selected_Picture.resize((new_width, new_height))
+#     photo = ImageTk.PhotoImage(Selected_Picture)
 #     canvas.config(width=new_width, height=new_height)
-#     canvas.itemconfig(MAJ_image, image=photo)
+#     canvas.itemconfig(Updated_Picture, image=photo)
 #     UpdateRectangleDrawings_positions(new_width, new_height)
 
 ##-------Not in this milestone Scope, will be used later to calculate rectangle new siez and position depending on zoom
 # def UpdateRectangleDrawings_positions(state_ratio_zoom):
-#     for rectangle_id in rectangles:
+#     for rectangle_id in Rectangles_Ids_List:
 #         coords = canvas.coords(rectangle_id)
 #         new_coords = [coords[i] * state_ratio_zoom for i in range(4)]
 #         canvas.coords(rectangle_id, *new_coords)
 
 def Reset():
-    global img, photo_image, resized_image,Reduction_ratio
+    global Selected_Picture, Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     InitValues()
-    photo_image = None
-    resized_image = None
-    Reduction_ratio
+    Picture_Size = None
+    Picture_Resized = None
+    Picture_Reduction_Ratio
 
-    Btn_SelectFileTab2.config(state="normal")
-    Btn_ResetTab2.config(state="disabled")
+    Button_Select_File.config(state="normal")
+    Button_Reset.config(state="disabled")
     canvas.delete("all")
 
     HideScrollbars()
     #------BUTTON ZOOM +  ARE RESETED
-    Boutons_Zoom[0][0].configure(state=tk.DISABLED)
-    Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+    Zoom_Buttons[0][0].configure(state=tk.DISABLED)
+    Zoom_Buttons[1][0].configure(state=tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
 def ReplacePixelRectangles(image, liste_coordonnees):
     for coordonnees in liste_coordonnees:
         x1, y1, x2, y2 = coordonnees
         
-        #If picture is narrower than canvas, we do not apply recalculation of the rectangles positions
-        if int(Reduction_ratio) != 0: x1, y1, x2, y2 = [int(coord * Reduction_ratio) for coord in (x1, y1, x2, y2)]
-        # Loop de replace pixels under rectangles
+        #If picture is narrower than canvas, we do not apply recalculation of the Rectangles_Ids_List positions
+        if int(Picture_Reduction_Ratio) != 0: x1, y1, x2, y2 = [int(coord * Picture_Reduction_Ratio) for coord in (x1, y1, x2, y2)]
+        # Loop de replace pixels under Rectangles_Ids_List
         for x in range(int(x1), int(x2) + 1):
             for y in range(int(y1), int(y2) + 1):
                 # modify pixels by black pixels
@@ -104,228 +104,228 @@ def ReplacePixelRectangles(image, liste_coordonnees):
     return image
 
 def Save():
-    global img
-    if (img is None):
+    global Selected_Picture
+    if (Selected_Picture is None):
         messagebox.showinfo("Erreur", "Selectionnez une image")
     else :
-        global Chemin_fichier,Nom_Fichier_final, photo_image
-        imgForSaving = Image.open(Chemin_fichier)
-        largeur, hauteur = imgForSaving.size
+        global File_Path,Final_File_Name, Picture_Size
+        Final_Saved_Picture = Image.open(File_Path)
+        largeur, hauteur = Final_Saved_Picture.size
         print((largeur, hauteur) if debug == 1 else "")
 
-        imgForSaving = ReplacePixelRectangles(img, liste_coordonnees_rectangle)
-        imgForSaving.save(Nom_Fichier_final+".png", "PNG")
+        Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
+        Final_Saved_Picture.save(Final_File_Name+".png", "PNG")
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
 def Zoom(op):
-    global img, largeur_img, hauteur_img, canvas, MAJ_image, photo_image
-    global Best_Height_Picture,Best_Width_Picture #share new size of picture
-    global Zoomincrementation,ratioZoom #know zoom on picture
+    global Selected_Picture, Picture_Width, Picture_Height, canvas, Updated_Picture, Picture_Size
+    global Picture_Best_Height,Picture_Best_Width #share new size of picture
+    global Zoom_Incrementation,Picture_Zoom_Ratio #know zoom on picture
 
-    ratioZoom=2
+    Picture_Zoom_Ratio=2
     
-    if img is not None:
+    if Selected_Picture is not None:
         if(op == "//"):
-            Zoomincrementation = Zoomincrementation  - 2
-            Best_Width_Picture = Best_Width_Picture // ratioZoom 
-            Best_Height_Picture = Best_Height_Picture // ratioZoom
+            Zoom_Incrementation = Zoom_Incrementation  - 2
+            Picture_Best_Width = Picture_Best_Width // Picture_Zoom_Ratio 
+            Picture_Best_Height = Picture_Best_Height // Picture_Zoom_Ratio
 
         elif(op=="*"):
            
-            Zoomincrementation = Zoomincrementation  + 2
+            Zoom_Incrementation = Zoom_Incrementation  + 2
             
-            Best_Width_Picture = Best_Width_Picture * ratioZoom 
-            Best_Height_Picture = Best_Height_Picture * ratioZoom 
-        if(Zoomincrementation<=-2):
-            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
-            Boutons_Zoom[1][0].configure(state=tk.DISABLED)
-        elif(Zoomincrementation>=6):
-            Boutons_Zoom[0][0].configure(state=tk.DISABLED)
-            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+            Picture_Best_Width = Picture_Best_Width * Picture_Zoom_Ratio 
+            Picture_Best_Height = Picture_Best_Height * Picture_Zoom_Ratio 
+        if(Zoom_Incrementation<=-2):
+            Zoom_Buttons[0][0].configure(state=tk.NORMAL)
+            Zoom_Buttons[1][0].configure(state=tk.DISABLED)
+        elif(Zoom_Incrementation>=6):
+            Zoom_Buttons[0][0].configure(state=tk.DISABLED)
+            Zoom_Buttons[1][0].configure(state=tk.NORMAL)
         else:
-            Boutons_Zoom[0][0].configure(state=tk.NORMAL)
-            Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+            Zoom_Buttons[0][0].configure(state=tk.NORMAL)
+            Zoom_Buttons[1][0].configure(state=tk.NORMAL)
 
         # Redimensionner l'image
-        print("Zoomincrementation: ",Zoomincrementation)
-        Zoomedimg = img.resize((Best_Width_Picture, Best_Height_Picture))
-        largeur_img, hauteur_img = Zoomedimg.size
-        print("largeur_img: ", largeur_img,"hauteur_img: ", hauteur_img)
+        print("Zoom_Incrementation: ",Zoom_Incrementation)
+        Picture_Zoomed = Selected_Picture.resize((Picture_Best_Width, Picture_Best_Height))
+        Picture_Width, Picture_Height = Picture_Zoomed.size
+        print("Picture_Width: ", Picture_Width,"Picture_Height: ", Picture_Height)
 
         # Convertir l'image redimensionnée en PhotoImage
-        photo_image = ImageTk.PhotoImage(Zoomedimg)
+        Picture_Size = ImageTk.PhotoImage(Picture_Zoomed)
 
         # Mettre à jour l'image dans le canevas
-        canvas.itemconfig(MAJ_image, image=photo_image)
+        canvas.itemconfig(Updated_Picture, image=Picture_Size)
         ScrollBarLenghCalculation()
 
 
 def DisplaySelectedPicture(result):
-    global MAJ_image, canvas, photo_image  # Assurez-vous d'avoir déclaré la variable photo_image comme globale
-    global img,photo_image,resized_image, largeur_img, hauteur_img
-    global Best_Width_Picture,Best_Height_Picture # Share init size of the picture we are displaying. Values will be use by zooms functions
-    global Reduction_ratio,Zoomincrementation # use for pixel selection scalling 
+    global Updated_Picture, canvas, Picture_Size  # Assurez-vous d'avoir déclaré la variable Picture_Size comme globale
+    global Selected_Picture,Picture_Size,Picture_Resized, Picture_Width, Picture_Height
+    global Picture_Best_Width,Picture_Best_Height # Share init size of the picture we are displaying. Values will be use by zooms functions
+    global Picture_Reduction_Ratio,Zoom_Incrementation # use for pixel selection scalling 
     # Load an image from the file path
-    img = Image.open(result)
+    Selected_Picture = Image.open(result)
 
     #Get selected picture size.
-    largeur_img, hauteur_img = img.size
+    Picture_Width, Picture_Height = Selected_Picture.size
 
     #Calculate how to ajust the picture size in the UI
-    Reduction_ratio = (largeur_img/Tab2DisplayWindow_width)
-    # Zoomincrementation = Reduction_ratio
-    print(("Reduction_ratio brut : ",Reduction_ratio) if debug ==1 else "")
-    print(("Reduction_ratio int() : ",int(Reduction_ratio)) if debug ==1 else "")
+    Picture_Reduction_Ratio = (Picture_Width/Tab2DisplayWindow_width)
+    # Zoom_Incrementation = Picture_Reduction_Ratio
+    print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if debug ==1 else "")
+    print(("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio)) if debug ==1 else "")
     #If picture width is already smaller than table width, picture size is not modifed.
-    if int(Reduction_ratio)==0:
-        Best_Width_Picture = largeur_img 
-        Best_Height_Picture = hauteur_img
+    if int(Picture_Reduction_Ratio)==0:
+        Picture_Best_Width = Picture_Width 
+        Picture_Best_Height = Picture_Height
     #Else Picture is ajusted
     else:
-        Best_Width_Picture = int(largeur_img // Reduction_ratio)
-        Best_Height_Picture = int(hauteur_img // Reduction_ratio)
-    resized_image = img.resize((Best_Width_Picture, Best_Height_Picture))
+        Picture_Best_Width = int(Picture_Width // Picture_Reduction_Ratio)
+        Picture_Best_Height = int(Picture_Height // Picture_Reduction_Ratio)
+    Picture_Resized = Selected_Picture.resize((Picture_Best_Width, Picture_Best_Height))
 
     # Convert the resized image to a PhotoImage object
-    photo_image = ImageTk.PhotoImage(resized_image)
+    Picture_Size = ImageTk.PhotoImage(Picture_Resized)
 
     # Add the image to the Canvas
-    MAJ_image = canvas.create_image(0, 0, anchor="nw", image=photo_image)
+    Updated_Picture = canvas.create_image(0, 0, anchor="nw", image=Picture_Size)
     ScrollBarLenghCalculation()
         
 def ScrollBar():
-    global x_scroll,y_scroll
+    global Scrollbar_x_Direction,Scrollbar_y_Direction
         # Add horizontal scrollbar
-    x_scroll = tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
-    canvas.configure(xscrollcommand=x_scroll.set)
+    Scrollbar_x_Direction = tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
+    canvas.configure(xscrollcommand=Scrollbar_x_Direction.set)
 
     # Add vertical scrollbar
-    y_scroll = tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
-    canvas.configure(yscrollcommand=y_scroll.set)
+    Scrollbar_y_Direction = tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
+    canvas.configure(yscrollcommand=Scrollbar_y_Direction.set)
 
 def ScrollBarLenghCalculation():
     canvas.config(scrollregion=canvas.bbox(tk.ALL))
 
 def HideScrollbars():
-    x_scroll.pack_forget()
-    y_scroll.pack_forget()
+    Scrollbar_x_Direction.pack_forget()
+    Scrollbar_y_Direction.pack_forget()
 
 def ShowScrollbars():
-    x_scroll.pack(side="bottom", fill="x")
-    y_scroll.pack(side="right", fill="y")
+    Scrollbar_x_Direction.pack(side="bottom", fill="x")
+    Scrollbar_y_Direction.pack(side="right", fill="y")
 
 def HorizontalMouvement(event):
-    global last_x, last_y
-    last_x = event.x_root
-    last_y = event.y_root
+    global Last_x_Mouse_Position, Last_y_Mouse_Position
+    Last_x_Mouse_Position = event.x_root
+    Last_y_Mouse_Position = event.y_root
 
 def MouseMouvement(event):
-    global last_x, last_y
+    global Last_x_Mouse_Position, Last_y_Mouse_Position
     x = event.x_root
     y = event.y_root
-    delta_x = x - last_x
-    delta_y = y - last_y
+    delta_x = x - Last_x_Mouse_Position
+    delta_y = y - Last_y_Mouse_Position
     if delta_x > 0:
-        canvas.xview_scroll(-1, "units")  # Défilement vers la gauche
+        canvas.Scroll_On_x_Direction(-1, "units")  # Défilement vers la gauche
     elif delta_x < 0:
-        canvas.xview_scroll(1, "units")   # Défilement vers la droite
+        canvas.Scroll_On_x_Direction(1, "units")   # Défilement vers la droite
     if delta_y > 0:
-        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
+        canvas.Scroll_On_y_Direction(-1, "units")  # Défilement vers le haut
     elif delta_y < 0:
-        canvas.yview_scroll(1, "units")   # Défilement vers le bas
-    last_x = x
-    last_y = y
+        canvas.Scroll_On_y_Direction(1, "units")   # Défilement vers le bas
+    Last_x_Mouse_Position = x
+    Last_y_Mouse_Position = y
 
 def MousewheelMouvement(event):
     if event.delta > 0:
-        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
+        canvas.Scroll_On_y_Direction(-1, "units")  # Défilement vers le haut
     else:
-        canvas.yview_scroll(1, "units")   # Défilement vers le bas
+        canvas.Scroll_On_y_Direction(1, "units")   # Défilement vers le bas
     
 
 def ChooseFile():
-    global canvas, txt,tab2SelectedImg,Btn_ResetTab2,Btn_SelectFileTab2
-    global PlacementUniqueZoom #Know if zoom btns have already been positionned
-    global Chemin_fichier,Nom_Fichier_final # use for save function
+    global canvas, txt,tab2SelectedImg,Button_Reset,Button_Select_File
+    global Place_Zoom_Buttons_Only_Once #Know if zoom btns have already been positionned
+    global File_Path,Final_File_Name # use for save function
     result = filedialog.askopenfilename()
     if(result==''):
         print("pas d'image selectionnées")
         tab2SelectedImg = 0 
-        Btn_ResetTab2.config(state="disabled")
+        Button_Reset.config(state="disabled")
     
     else : 
-        Btn_ResetTab2.config(state="normal")
-        Btn_SelectFileTab2.config(state="disabled")
+        Button_Reset.config(state="normal")
+        Button_Select_File.config(state="disabled")
         tab2SelectedImg = 1 
-        Chemin_fichier=result
+        File_Path=result
 
     #-------Selection du nom sans extension .png ou .jpg
-        Nom_Fichiersplit = result.split('.')
-        Nom_Fichier_sans_ext = Nom_Fichiersplit[0]
+        File_Name_Splited = result.split('.')
+        File_Name_Without_Format = File_Name_Splited[0]
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
-        Nom_Fichier_final= Nom_Fichier_sans_ext + " - Obfuscated"
+        Final_File_Name= File_Name_Without_Format + " - Obfuscated"
 
         DisplaySelectedPicture(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
         ShowScrollbars()
 
-        Boutons_Zoom[0][0].configure(state=tk.NORMAL)
-        Boutons_Zoom[1][0].configure(state=tk.NORMAL)
+        Zoom_Buttons[0][0].configure(state=tk.NORMAL)
+        Zoom_Buttons[1][0].configure(state=tk.NORMAL)
         Boutons_ControleTab2[1][0].configure(state=tk.NORMAL)
         #Disable zoom For current Milestone
-        Boutons_Zoom[0][0].configure(state=tk.DISABLED)
-        Boutons_Zoom[1][0].configure(state=tk.DISABLED)
+        Zoom_Buttons[0][0].configure(state=tk.DISABLED)
+        Zoom_Buttons[1][0].configure(state=tk.DISABLED)
 
-        if (PlacementUniqueZoom == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
+        if (Place_Zoom_Buttons_Only_Once == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
                 ZoomButtonsSetPosition()
-                PlacementUniqueZoom = 1
+                Place_Zoom_Buttons_Only_Once = 1
 
 def ZoomButtonsPositionCalculation():
-    global Position_x_recalculee_BtnsZoom
-    NbBtn = len(Boutons_Zoom)
-    EspacePrisParLesBoutonsZoom = NbBtn * (Zoom_Buttons_Width+Space_Between_Zoom_Buttons)
-    freeSpace = Tab2DisplayWindow_width - (EspacePrisParLesBoutonsZoom)
-    if(freeSpace>0):
-        Position_x_recalculee_BtnsZoom = Tab2DisplayWindow_x_position + (freeSpace / 2)
+    global x_Position_Recalculated_For_Zoom_Buttons
+    Number_Of_Buttons = len(Zoom_Buttons)
+    Space_Took_By_Zoom_Buttons = Number_Of_Buttons * (Zoom_Buttons_Width+Space_Between_Zoom_Buttons)
+    Free_Space = Tab2DisplayWindow_width - (Space_Took_By_Zoom_Buttons)
+    if(Free_Space>0):
+        x_Position_Recalculated_For_Zoom_Buttons = Tab2DisplayWindow_x_position + (Free_Space / 2)
 
     else:
-        debord = EspacePrisParLesBoutonsZoom - Tab2DisplayWindow_x_position
-        Position_x_recalculee_BtnsZoom = Tab2DisplayWindow_x_position - (debord / 2)
+        Extra_Buttons_Space = Space_Took_By_Zoom_Buttons - Tab2DisplayWindow_x_position
+        x_Position_Recalculated_For_Zoom_Buttons = Tab2DisplayWindow_x_position - (Extra_Buttons_Space / 2)
 
-    return Position_x_recalculee_BtnsZoom
+    return x_Position_Recalculated_For_Zoom_Buttons
 
 def ZoomButtonsSetPosition():
-    global Position_x_recalculee_BtnsZoom
-    for i in range(0,len(Boutons_Zoom)):
-        Boutons_Zoom[i][2] = Boutons_Zoom[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
-        Boutons_Zoom[i][0].configure( width=Zoom_Buttons_Width, height= Zoom_Buttons_Height,image=Boutons_Zoom[i][2], command=Boutons_Zoom[i][3])
-        Boutons_Zoom[i][0].place(x=Position_x_recalculee_BtnsZoom, y=Zoom_Buttons_Init_y_Position)
-        Position_x_recalculee_BtnsZoom = Position_x_recalculee_BtnsZoom + Zoom_Buttons_Width + Space_Between_Zoom_Buttons
-        Boutons_Zoom[i].append(Position_x_recalculee_BtnsZoom) #Sauvegarde de la valeur x du bouton à la fin de la liste
-        Boutons_Zoom[i].append(Zoom_Buttons_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
+    global x_Position_Recalculated_For_Zoom_Buttons
+    for i in range(0,len(Zoom_Buttons)):
+        Zoom_Buttons[i][2] = Zoom_Buttons[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
+        Zoom_Buttons[i][0].configure( width=Zoom_Buttons_Width, height= Zoom_Buttons_Height,image=Zoom_Buttons[i][2], command=Zoom_Buttons[i][3])
+        Zoom_Buttons[i][0].place(x=x_Position_Recalculated_For_Zoom_Buttons, y=Zoom_Buttons_Init_y_Position)
+        x_Position_Recalculated_For_Zoom_Buttons = x_Position_Recalculated_For_Zoom_Buttons + Zoom_Buttons_Width + Space_Between_Zoom_Buttons
+        Zoom_Buttons[i].append(x_Position_Recalculated_For_Zoom_Buttons) #Sauvegarde de la valeur x du bouton à la fin de la liste
+        Zoom_Buttons[i].append(Zoom_Buttons_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
 def PictureOffuscationTab(master,root):
     InitValues()
     global canvas, txt
-    global Btn_ResetTab2,Btn_SelectFileTab2
+    global Button_Reset,Button_Select_File
     global tab2
-    global Boutons_Zoom,Position_x_recalculee_BtnsZoom
+    global Zoom_Buttons,x_Position_Recalculated_For_Zoom_Buttons
     global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
     tab2 = ttk.Frame(master)
 
     canvas = tk.Canvas(tab2, bg="white")
     canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
 
-    img_SelectFileTab2 = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
-    img_ValiderTab2 = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
-    img_ExitTab2 = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
-    img_TestTab2 = PhotoImage(file=Ressource_Path("Pictures/test.png"))
-    img_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
     
-    Btn_SelectFileTab2 = tk.Button(tab2) ; Btn_ValiderTab2 = tk.Button(tab2) 
-    Btn_TestTab2 = tk.Button(tab2) ; Btn_ResetTab2=tk.Button(tab2)
-    Btn_QuitterTab2 = tk.Button(tab2) 
+    Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
+    Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
+    Button_Exit = tk.Button(tab2) 
 
     canvas = tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
     canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
@@ -334,21 +334,18 @@ def PictureOffuscationTab(master,root):
 
     ScrollBar()
     Boutons_ControleTab2 = [
-        [Btn_SelectFileTab2, "Add file",img_SelectFileTab2, ChooseFile,tk.NORMAL ],
-        [Btn_ValiderTab2, "Valider",img_ValiderTab2, Save,tk.DISABLED],
+        [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,tk.NORMAL ],
+        [Button_Validate, "Valider",Icon_Validate, Save,tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Btn_ResetTab2, "Reset",img_Reset, Reset,tk.DISABLED],
-        [Btn_QuitterTab2, "Quitter",img_ExitTab2, root.destroy,tk.NORMAL],        
-        # [Btn_TestTab2, "Test",img_Test, HideProcessing, tk.NORMAL],
+        [Button_Reset, "Reset",Icon_Reset, Reset,tk.DISABLED],
+        [Button_Exit, "Quitter",Icon_Exit, root.destroy,tk.NORMAL],        
+        # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
     Position_x_recalculeeTab2,Position_y_recalculeeTab2 = ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Tab2Canvas,offset=30)
     
 #font=("Helvetica", Police_Size),image=Boutons_ControleTab2[i][2], command=Boutons_ControleTab2[i][3], text = Boutons_ControleTab2[i][1],compound=tk.TOP,state=Boutons_ControleTab2[i][4] )
-    Btn_QuitterTab2.config(width=25, height= 25,command=test, image=img_ExitTab2)
-    Btn_QuitterTab2.image = img_ExitTab2
-    Btn_QuitterTab2.place(x=50, y=50)
 
     for i in range(0,len(Boutons_ControleTab2)):
         Boutons_ControleTab2[i][2] = Boutons_ControleTab2[i][2].subsample(1, 1) #Réduction de la taille de l'image
@@ -359,17 +356,17 @@ def PictureOffuscationTab(master,root):
         Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
     
-    img_Zoom_Plus = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
-    img_Zoom_Moins = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
-    Btn_ZoomPlus = tk.Button(tab2) ; Btn_ZoomMoins = tk.Button(tab2) 
+    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
+    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
+    Button_Zoom_More = tk.Button(tab2) ; Button_Zoom_Less = tk.Button(tab2) 
 
-    Boutons_Zoom = [
-        [Btn_ZoomPlus, "Zoomer",img_Zoom_Plus, lambda: Zoom("*") ],
-        [Btn_ZoomMoins, "Dézoomer",img_Zoom_Moins, lambda: Zoom("//")],
+    Zoom_Buttons = [
+        [Button_Zoom_More, "Zoomer",Icon_Zoom_More, lambda: Zoom("*") ],
+        [Button_Zoom_Less, "Dézoomer",Icon_Zoom_Less, lambda: Zoom("//")],
     ]
 
-    Position_x_recalculee_BtnsZoom = ZoomButtonsPositionCalculation()
-    print(("Position_x_recalculee_BtnsZoom :", Position_x_recalculee_BtnsZoom) if debug == 1 else "")
+    x_Position_Recalculated_For_Zoom_Buttons = ZoomButtonsPositionCalculation()
+    print(("x_Position_Recalculated_For_Zoom_Buttons :", x_Position_Recalculated_For_Zoom_Buttons) if debug == 1 else "")
 
     canvas.bind("<MouseWheel>", MousewheelMouvement)
     canvas.bind("<Button-2>", HorizontalMouvement)

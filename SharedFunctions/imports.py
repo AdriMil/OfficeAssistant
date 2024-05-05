@@ -66,18 +66,18 @@ def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYour
     
     global  Control_Button_Width, Control_Button_Height,Space_Between_Button,Control_Button_Init_x_Position,Control_Button_Init_y_Position,Window_Width
     #Tous les boutons vont être collés et centré sur le tableau
-    NbBtn = len(Liste_Boutons_De_Control)
-    EspacePrisParLesBoutons = NbBtn * (Control_Button_Width+Space_Between_Button)
-    freeSpace = TableForYourTab[2] - (EspacePrisParLesBoutons)
-    if(freeSpace>0):
-        Control_Button_Init_x_Position = TableForYourTab[0] + (freeSpace / 2)
+    Number_Of_Buttons = len(Liste_Boutons_De_Control)
+    Buttons_Total_Lenght = Number_Of_Buttons * (Control_Button_Width+Space_Between_Button)
+    Free_Space = TableForYourTab[2] - (Buttons_Total_Lenght)
+    if(Free_Space>0):
+        Control_Button_Init_x_Position = TableForYourTab[0] + (Free_Space / 2)
 
         Window_Width = TableForYourTab[2] + TableForYourTab[0] *2
 
     else:
-        debord = EspacePrisParLesBoutons - TableForYourTab[2]
-        Control_Button_Init_x_Position = TableForYourTab[0] - (debord / 2)
-        Window_Width = TableForYourTab[2] + debord
+        Extra_Buttons_Space = Buttons_Total_Lenght - TableForYourTab[2]
+        Control_Button_Init_x_Position = TableForYourTab[0] - (Extra_Buttons_Space / 2)
+        Window_Width = TableForYourTab[2] + Extra_Buttons_Space
 
     # Calcul de Control_Button_Init_y_Position
     Control_Button_Init_y_Position = TableForYourTab[1] - Control_Button_Height - offset

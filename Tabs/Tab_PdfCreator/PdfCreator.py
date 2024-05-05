@@ -24,15 +24,15 @@ def ArrowButtons_InitPositionCalculation():
     global Table_Width,Arrows_Buttons, Arrows_Buttons_Width,Space_Between_Arrows_Buttons,x_Position_Recalculated_For_Arrows_Buttons, Table_x_Position,Window_Width, Table_Height
     Buttons_Number = len(Arrows_Buttons)
     Spaces_Used_By_Buttons = Buttons_Number * (Arrows_Buttons_Width+Space_Between_Arrows_Buttons)
-    freeSpace = Table_Width - (Spaces_Used_By_Buttons)
-    if(freeSpace>0):
-        x_Position_Recalculated_For_Arrows_Buttons = Table_x_Position + (freeSpace / 2)
+    Free_Space = Table_Width - (Spaces_Used_By_Buttons)
+    if(Free_Space>0):
+        x_Position_Recalculated_For_Arrows_Buttons = Table_x_Position + (Free_Space / 2)
         Window_Width = Table_Width + Table_x_Position *2
 
     else:
-        debord = Spaces_Used_By_Buttons - Table_Width
-        x_Position_Recalculated_For_Arrows_Buttons = Table_x_Position - (debord / 2)
-        Window_Width = Table_Width + debord
+        Extra_Buttons_Space = Spaces_Used_By_Buttons - Table_Width
+        x_Position_Recalculated_For_Arrows_Buttons = Table_x_Position - (Extra_Buttons_Space / 2)
+        Window_Width = Table_Width + Extra_Buttons_Space
 
     return x_Position_Recalculated_For_Arrows_Buttons
 
@@ -47,10 +47,10 @@ def Arrows_Buttons_Place_On_Ui():
         Arrows_Buttons[i].append(Arrows_Buttons_Init_y_Position) #Sauvegarde de la valeur y du bouton à la fin de la liste
 
 def ChooseMultiFile():
-    global Selected_Files,Place_Arrows_Only_Once, Selected_Line_Index,Reset_Button,table
+    global Selected_Files,Place_Arrows_Only_Once, Selected_Line_Index,Button_Reset,table
     Selected_Files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
     if Selected_Files:
-        Reset_Button.configure(state=tk.NORMAL); Convert_Button.configure(state=tk.NORMAL)
+        Button_Reset.configure(state=tk.NORMAL); Button_Convert.configure(state=tk.NORMAL)
         for file in Selected_Files:
             Path_List.append(file)
             # print("Liste des chemin selectionnés : ", Path_List)
@@ -112,7 +112,7 @@ def DeleteAlldata():
         btn[0].place_forget()
 
     # Reset btn Reset et convertir
-    Reset_Button.configure(state=tk.DISABLED); Convert_Button.configure(state=tk.DISABLED)
+    Button_Reset.configure(state=tk.DISABLED); Button_Convert.configure(state=tk.DISABLED)
     Path_List.clear() #RESET de la liste Path_List
     File_Name.clear() #RESET de la liste File_Name
     x_Position_Recalculated_For_Arrows_Buttons = ArrowButtons_InitPositionCalculation() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
@@ -170,7 +170,7 @@ def ButtonArrowUpAction():
         Selected_Line_Index -= 1
         NextLineToBeAutoSelected("Up")
 
-def DeleteTableLines():
+def DeleteSelectedLineFromTable():
     global Selected_Line_Index,All_Data_In_Table
     DeleteSelectedLine(All_Data_In_Table,Selected_Line_Index-1)
     UpdateTable()
@@ -233,10 +233,10 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
             # Pour les autres formats, ouvrir directement avec PIL
             Many_Selected_Pictures_List.append(Image.open(chemin))
 
-    for img in Many_Selected_Pictures_List:
+    for Selected_Picture in Many_Selected_Pictures_List:
         incrementation = incrementation + 1 
         # Convertir en mode RGB et ajouter à la liste IMG_Mult
-        IMG_Mult.append(img.convert('RGB'))
+        IMG_Mult.append(Selected_Picture.convert('RGB'))
         texttodisplay = "Image convertie : {} / {}".format(incrementation, len(Many_Selected_Pictures_List))
         UpdateProcessing(texttodisplay)
         
@@ -273,27 +273,28 @@ def PdfCreatorTab(master,root):
     global tab1
     tab1 = ttk.Frame(master)
     
-    global Btn_SelectFile,Reset_Button,Btn_Quitter,Convert_Button,Btn_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Btn_SupprimerLigne 
+    global Button_Select_Files,Button_Reset,Button_Exit,Button_Convert,Button_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Button_Delete_Selected_Line 
     global TraitementConversion,x_Position_Recalculated_For_Arrows_Buttons
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
 
-    img_SelectFile = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
-    img_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-    img_Convert = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
-    img_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
-    img_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
+    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
 
-    Btn_SelectFile = tk.Button(tab1) ; Reset_Button = tk.Button(tab1) ;
-    Convert_Button = tk.Button(tab1) ; Btn_Quitter = tk.Button(tab1) ;
-    Btn_Test = tk.Button(tab1) ;
+
+    Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
+    Button_Convert = tk.Button(tab1) ; Button_Exit = tk.Button(tab1) ;
+    Button_Test = tk.Button(tab1) ;
 
     Boutons_Controle = [
-        [Btn_SelectFile, "Add file",img_SelectFile, ChooseMultiFile,tk.NORMAL ],
-        [Reset_Button, "Reset",img_Reset, Reset,tk.DISABLED],
-        [Convert_Button, "Convertir",img_Convert, OpenDialogToSavePdf,tk.DISABLED],
-        [Btn_Quitter, "Quitter",img_Exit, root.destroy,tk.NORMAL],
-        # [Btn_Test, "Test",img_Test, HideProcessing, tk.NORMAL],
+        [Button_Select_Files, "Add file",Icon_Add_File, ChooseMultiFile,tk.NORMAL ],
+        [Button_Reset, "Reset",Icon_Reset, Reset,tk.DISABLED],
+        [Button_Convert, "Convertir",Icon_Convert_To_Pdf, OpenDialogToSavePdf,tk.DISABLED],
+        [Button_Exit, "Quitter",Icon_Exit, root.destroy,tk.NORMAL],
+        # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
@@ -329,16 +330,16 @@ def PdfCreatorTab(master,root):
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
 
-    img_Fleche_Haut = PhotoImage(file=Ressource_Path("Pictures/img_Fleche_Haut.png"))
-    img_Fleche_Bas = PhotoImage(file=Ressource_Path("Pictures/img_Fleche_Bas.png"))
-    img_SupprimerLigne = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
+    Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
+    Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
 
-    Button_Arrow_Up = tk.Button(tab1) ; Button_Arrow_Dow = tk.Button(tab1) ;  Btn_SupprimerLigne = tk.Button(tab1)
+    Button_Arrow_Up = tk.Button(tab1) ; Button_Arrow_Dow = tk.Button(tab1) ;  Button_Delete_Selected_Line = tk.Button(tab1)
 
     Arrows_Buttons = [
-        [Button_Arrow_Up, "Monter",img_Fleche_Haut, ButtonArrowUpAction ],
-        [Btn_SupprimerLigne, "Supprimer",img_SupprimerLigne, DeleteTableLines],
-        [Button_Arrow_Dow, "Descendre",img_Fleche_Bas, ButtonArrowDownAction],
+        [Button_Arrow_Up, "Monter",Icon_Arrow_Up, ButtonArrowUpAction ],
+        [Button_Delete_Selected_Line, "Supprimer",Icon_Delete_Selected_Line, DeleteSelectedLineFromTable],
+        [Button_Arrow_Dow, "Descendre",Icon_Arrow_Down, ButtonArrowDownAction],
     ]
 
     # Boucle placement des bouttons
