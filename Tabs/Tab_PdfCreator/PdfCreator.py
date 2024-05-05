@@ -82,7 +82,7 @@ def ConvertPictureToPdf(FileName):
         # TraitementConversion.place(x=Table_x_Position + 1, y=Table_y_Position + 24, width=Table_Width, height=Table_Height)
         DisplayProcessing()
         PicturesProcessing(Files_Paths_Updated_List, FileName, Selected_Save_Path)
-        Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
+        
 
 def Reset():
     User_Answer=INfo_Reset()
@@ -224,6 +224,7 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
     nom = os.path.join(Selected_Save_Path, f"{FileName}.pdf")
     IMG_Mult[0].save(nom, save_all=True, append_images=IMG_Mult[1:])
     UpdateProcessing("PDF enregistré")
+    Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
     HideProcessing()
 
 def DisplayProcessing():
