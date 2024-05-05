@@ -314,15 +314,12 @@ def PictureOffuscationTab(master,root):
     global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
     tab2 = ttk.Frame(master)
 
+    Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab2 = ttk.Frame(master) to get tkinter instance
+
     canvas = tk.Canvas(tab2, bg="white")
     canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
 
-    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
-    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
-    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
-    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
-    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-    
+
     Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
     Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
     Button_Exit = tk.Button(tab2) 
@@ -356,8 +353,6 @@ def PictureOffuscationTab(master,root):
         Boutons_ControleTab2[i].append(Position_x_recalculeeTab2) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Boutons_ControleTab2[i].append(Position_y_recalculeeTab2) #Sauvegarde de la valeur y du bouton à la fin de la liste
     
-    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
-    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
     Button_Zoom_More = tk.Button(tab2) ; Button_Zoom_Less = tk.Button(tab2) 
 
     Zoom_Buttons = [

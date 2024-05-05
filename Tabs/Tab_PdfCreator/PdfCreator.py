@@ -13,6 +13,8 @@ All_Data_In_Table = []
 Files_Paths_Updated_List=[]
 Selected_Line_Index = 0 # Select first line when Selected_Files are imported for 1st time 
 
+
+
 #----------------SEND VALUES TO MAIN Windows-----------------#
 def WindowsSizeSendData():
     global Window_Height, Window_Width
@@ -272,17 +274,13 @@ def PdfCreatorTab(master,root):
 
     global tab1
     tab1 = ttk.Frame(master)
+
+    Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab1 = ttk.Frame(master) to get tkinter instance
     
     global Button_Select_Files,Button_Reset,Button_Exit,Button_Convert,Button_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Button_Delete_Selected_Line 
     global TraitementConversion,x_Position_Recalculated_For_Arrows_Buttons
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
-
-    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
-    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-    Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
-    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
-    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
 
 
     Button_Select_Files = tk.Button(tab1) ; Button_Reset = tk.Button(tab1) ;
@@ -329,11 +327,6 @@ def PdfCreatorTab(master,root):
 
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
-
-    Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
-    Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
-    Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-
     Button_Arrow_Up = tk.Button(tab1) ; Button_Arrow_Dow = tk.Button(tab1) ;  Button_Delete_Selected_Line = tk.Button(tab1)
 
     Arrows_Buttons = [
