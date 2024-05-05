@@ -2,10 +2,11 @@ from SharedFunctions.imports import *
 from PIL import Image
 from PIL import ImageTk  
 
+Place_Zoom_Buttons_Only_Once = 0 #Should never reseted
+
 def InitValues():
-    global Selected_Picture, Place_Zoom_Buttons_Only_Once, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location,Display_Revert_Button
+    global Selected_Picture, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location,Display_Revert_Button
     Selected_Picture = None
-    Place_Zoom_Buttons_Only_Once = 0 #
     x_Position_Recalculated_For_Zoom_Buttons = 0 
     Zoom_Incrementation = 0
     Rectangles_Coordonates_List = [] 
@@ -62,10 +63,8 @@ def RevertRectangles():
         if not Rectangles_Ids_List:
             Zoom_Buttons[2][0].configure(state=tk.DISABLED)
             Display_Revert_Button = 0 ; 
-
         # Supprimer le dernier rectangle du canvas
         canvas.delete(last_rectangle_id)
-
         # Supprimer les coordonnées du dernier rectangle de la liste
         Rectangles_Coordonates_List.pop()
         
@@ -100,6 +99,20 @@ def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
 #         coords = canvas.coords(rectangle_id)
 #         new_coords = [coords[i] * state_ratio_zoom for i in range(4)]
 #         canvas.coords(rectangle_id, *new_coords)
+
+def ResetAllRectangles():
+    global Display_Revert_Button
+    if Display_Revert_Button == 1 :
+        Rectangles_Coordonates_List,Rectangles_Ids_List,Display_Revert_Button
+        Display_Revert_Button = 0
+        for rectangle in Rectangles_Ids_List:
+            canvas.delete(rectangle)
+        canvas.update()
+        Answer = Info_Reset_Tab2()
+        if Answer == "yes":
+            Reset()
+    else:
+        Reset()
 
 def Reset():
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
@@ -369,7 +382,7 @@ def PictureOffuscationTab(master,root):
         [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,tk.NORMAL ],
         [Button_Validate, "Valider",Icon_Validate, Save,tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Button_Reset, "Reset",Icon_Reset, Reset,tk.DISABLED],
+        [Button_Reset, "Reset",Icon_Reset, ResetAllRectangles,tk.DISABLED],
         [Button_Exit, "Quitter",Icon_Exit, root.destroy,tk.NORMAL],        
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
