@@ -5,10 +5,10 @@ import re
 #Get version from TagVersion
 version = os.environ.get("EXTRACTED_VERSION")
 if (version is None):
-    version = "VersionError"
+    version = "v0.0.0"
 
 # Lire le contenu de main.py
-with open('main.py', 'r') as main_file:
+with open(os.environ['GITHUB_WORKSPACE'] + '\\main.py', 'r') as main_file:
     main_content = main_file.read()
 
 # Utilisation de regex pour capturer le contenu entre les guillemets simples
@@ -25,13 +25,13 @@ else:
     print("Aucune correspondance trouvée.")
 
 # Écrire le contenu modifié dans main.py
-with open('main.py', 'w') as main_file:
+with open(os.environ['GITHUB_WORKSPACE'] + '\\main.py', 'w') as main_file:
     main_file.write(main_content)
 a = Analysis(
-    ['main.py'],
-    pathex=['C:\\Users\\Adrie\\Documents\\Programmation_Git\\OfficeAssistant'],
+    [os.environ['GITHUB_WORKSPACE'] + '\\main.py'],
+    pathex=[os.path.join(os.environ['GITHUB_WORKSPACE'], 'OfficeAssistant')],
     binaries=[],
-    datas=[('Pictures/','Pictures')],
+    datas=[(os.path.join(os.environ['GITHUB_WORKSPACE'], 'Pictures'), 'Pictures')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -60,5 +60,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['Pictures/OfficeAssistanticone.ico'],
+    icon=os.path.join(os.environ['GITHUB_WORKSPACE'], 'Pictures', 'OfficeAssistanticone.ico'),
 )

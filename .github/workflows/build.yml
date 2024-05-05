@@ -12,7 +12,7 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.11  # Change this to the Python version you are using
-      - run: pip install -r requirements.txt
+      - run: pip install -r SharedFunctions/requirements.txt
 
       - name: Set env
         shell: pwsh
@@ -33,7 +33,7 @@ jobs:
           }
 
       - name: Build
-        run: pyinstaller action.spec
+        run: pyinstaller PyinstallerScripts/action.spec
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v2
