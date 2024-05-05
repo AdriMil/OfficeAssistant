@@ -13,7 +13,7 @@ from Tabs.Tab_PdfCreator.UpdatePosition import *
 #MessageBox import
 from SharedFunctions.MessageBox import *
 
-#-------------POur PYINSTALLER--------------------#
+#-------------Pour PYINSTALLER--------------------#
 import os
 import sys
 #Commande pour créér un .exe : pyinstaller main.spec
@@ -31,7 +31,6 @@ Tab2DisplayWindow_x_position = 50 ; Tab2DisplayWindow_y_position = 100
 Tab2DisplayWindow_width = 600 ; Tab2DisplayWindow_Height = 400
 Tab2Canvas = [Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height]
 
-
 #Bouton Controle Paramètre
 Control_Button_Width = 50 ; Control_Button_Height = 50 ; Space_Between_Button = 10
 Control_Button_Init_x_Position = 0 ; Control_Button_Init_y_Position = Table_y_Position - Control_Button_Height - 30
@@ -48,7 +47,6 @@ Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_
 
 #image Btn Controle
 Picture_Reducer_Value =  1
-
 
 
 #Gestion chemin fichier #Format adapté pour pyinstaller :
@@ -102,3 +100,15 @@ def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYour
     Control_Button_Init_y_Position = TableForYourTab[1] - Control_Button_Height - offset
 
     return Control_Button_Init_x_Position,Control_Button_Init_y_Position
+
+def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculee,Police_Size,TextDisplay,Init_State):
+    for i in range(0,len(Button_List)):
+        Button_List[i][2] = Button_List[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
+        Button_List[i][0].configure( width=Button_Width, height= Button_Height, font=("Helvetica", Police_Size),image=Button_List[i][2], command=Button_List[i][3] )
+        Button_List[i][0].place(x=Position_x_recalculee, y=Position_y_recalculee)
+        if(TextDisplay==1):Button_List[i][0].configure(text = Button_List[i][1],compound=tk.TOP)
+        if(Init_State==1):Button_List[i][0].configure(state=Button_List[i][4])
+        Position_x_recalculee = Position_x_recalculee + Button_Width + Space_Between_Button
+        Button_List[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
+        Button_List[i].append(Position_y_recalculee) #Sauvegarde de la valeur y du bouton à la fin de la liste
+
