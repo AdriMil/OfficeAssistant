@@ -90,26 +90,6 @@ def Reset():
     Zoom_Buttons[1][0].configure(state=tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
 
-
-def DisplayProcessing(Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height,table):
-    global cadre, texte, ascenseur
-    cadre = tk.Frame(table,borderwidth=1, relief="solid")
-    cadre.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position, width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height+25)
-    texte = tk.Text(cadre, wrap=tk.WORD)
-    texte.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-    ascenseur = ttk.Scrollbar(cadre, orient=tk.VERTICAL, command=texte.yview)
-    ascenseur.pack(side=tk.RIGHT, fill=tk.Y)
-    texte.config(yscrollcommand=ascenseur.set)
-
-def UpdateProcessing(TexteToUpdate):
-        texte.insert(tk.END, "{}\n".format(TexteToUpdate))
-        texte.see(tk.END)  
-        cadre.update()
-
-def HideProcessing():
-    cadre.place_forget()
-    texte.delete(1.0, tk.END)
-
 def ReplacePixelRectangles(image, liste_coordonnees):
     Current_Rectangle = 0
     Number_Of_Rectangles = len(liste_coordonnees)
@@ -140,8 +120,9 @@ def Save():
         print((largeur, hauteur) if debug == 1 else "")
         DisplayProcessing(Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
+        UpdateProcessing("Enregistrement du fichier ...")
         Final_Saved_Picture.save(Final_File_Name+".png", "PNG")
-        UpdateProcessing("Fichier Enregistré")
+        UpdateProcessing("Fichier enregistré !")
         Info_FileSaved()
         HideProcessing()
 
