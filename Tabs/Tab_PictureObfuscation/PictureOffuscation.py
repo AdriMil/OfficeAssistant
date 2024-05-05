@@ -226,21 +226,21 @@ def MouseMouvement(event):
     delta_x = x - Last_x_Mouse_Position
     delta_y = y - Last_y_Mouse_Position
     if delta_x > 0:
-        canvas.Scroll_On_x_Direction(-1, "units")  # Défilement vers la gauche
+        canvas.xview_scroll(-1, "units")  # Défilement vers la gauche
     elif delta_x < 0:
-        canvas.Scroll_On_x_Direction(1, "units")   # Défilement vers la droite
+        canvas.xview_scroll(1, "units")   # Défilement vers la droite
     if delta_y > 0:
-        canvas.Scroll_On_y_Direction(-1, "units")  # Défilement vers le haut
+        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
     elif delta_y < 0:
-        canvas.Scroll_On_y_Direction(1, "units")   # Défilement vers le bas
+        canvas.yview_scroll(1, "units")   # Défilement vers le bas
     Last_x_Mouse_Position = x
     Last_y_Mouse_Position = y
 
 def MousewheelMouvement(event):
     if event.delta > 0:
-        canvas.Scroll_On_y_Direction(-1, "units")  # Défilement vers le haut
+        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
     else:
-        canvas.Scroll_On_y_Direction(1, "units")   # Défilement vers le bas
+        canvas.yview_scroll(1, "units")   # Défilement vers le bas
     
 
 def ChooseFile():
