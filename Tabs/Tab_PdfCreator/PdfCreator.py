@@ -22,7 +22,7 @@ def WindowsSizeSendData():
 #-------------------------------------------------------------
 
 def ArrowButtons_InitPositionCalculation():
-    global Table_Width,Arrows_Buttons, Arrows_Buttons_Width,Space_Between_Arrows_Buttons,x_Position_Recalculated_For_Arrows_Buttons, Table_x_Position,Window_Width, Table_Height
+    global Table_Width,x_Position_Recalculated_For_Arrows_Buttons,Window_Width
     Buttons_Number = len(Arrows_Buttons)
     Spaces_Used_By_Buttons = Buttons_Number * (Arrows_Buttons_Width+Space_Between_Arrows_Buttons)
     Free_Space = Table_Width - (Spaces_Used_By_Buttons)
@@ -38,7 +38,7 @@ def ArrowButtons_InitPositionCalculation():
     return x_Position_Recalculated_For_Arrows_Buttons
 
 def ChooseMultiFile():
-    global Selected_Files,Place_Arrows_Only_Once, Selected_Line_Index,Button_Reset,table
+    global Selected_Files,Place_Arrows_Only_Once,Button_Reset,table
     Selected_Files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
     if Selected_Files:
         Button_Reset.configure(state=tk.NORMAL); Button_Convert.configure(state=tk.NORMAL)
@@ -70,10 +70,8 @@ def OpenDialogToSavePdf():
         OpenDialogToSavePdf()
 
 def ConvertPictureToPdf(FileName):
-    global Path_List_update
     if (Files_Paths_Updated_List == []):
         GetFilesPathList()
-
     SavePath()
     Selected_Save_Path = Chemin
     if(Selected_Save_Path==''):               #Verif si un chemin final est indiqué
@@ -92,8 +90,7 @@ def Reset():
         DeleteAlldata()
 
 def DeleteAlldata():
-    global Place_Arrows_Only_Once,Selected_Files,All_Data_In_Table,x_Position_Recalculated_For_Arrows_Buttons
-    global Files_Paths_Updated_List, Selected_Save_Path
+    global Place_Arrows_Only_Once,x_Position_Recalculated_For_Arrows_Buttons
     InitValues()
         # Reset Arrows button
     Place_Arrows_Only_Once = 0
@@ -115,7 +112,7 @@ def SavePath():
     Chemin = filedialog.askdirectory()
 
 def DisplaySelectedLineContent(event):
-    global Selected_Files, Selected_Line_Index
+    global Selected_Line_Index
     if Selected_Files:
         item = table.selection()[0]
         Line_Content = table.item(item, 'values')
@@ -133,13 +130,13 @@ def UpdateTable():
     GetFilesPathList()
 
 def GetFilesPathList():
-    global All_Data_In_Table,Files_Paths_Updated_List,Path_List
+    global Files_Paths_Updated_List,Path_List
     Files_Paths_Updated_List=[]
     Files_Paths_Updated_List = [element[2] for element in All_Data_In_Table]
     Path_List = Files_Paths_Updated_List
 
 def ButtonArrowDownAction():
-    global Selected_Line_Index,All_Data_In_Table
+    global Selected_Line_Index
     if (Selected_Line_Index is not None):
         ChangePlaceDown(All_Data_In_Table,Selected_Line_Index)
         UpdateTable()
@@ -147,7 +144,7 @@ def ButtonArrowDownAction():
         NextLineToBeAutoSelected("Down")
 
 def ButtonArrowUpAction():
-    global Selected_Line_Index,All_Data_In_Table
+    global Selected_Line_Index
     if (Selected_Line_Index is not None):
         ChangePlaceUp(All_Data_In_Table,Selected_Line_Index)
         UpdateTable()
@@ -155,7 +152,6 @@ def ButtonArrowUpAction():
         NextLineToBeAutoSelected("Up")
 
 def DeleteSelectedLineFromTable():
-    global Selected_Line_Index,All_Data_In_Table
     DeleteSelectedLine(All_Data_In_Table,Selected_Line_Index-1)
     UpdateTable()
     GetFilesPathList()
@@ -166,7 +162,7 @@ def DeleteSelectedLineFromTable():
         exit
 
 def NextLineToBeAutoSelected(action):
-    global Selected_Line_Index,All_Data_In_Table
+    global Selected_Line_Index
     if (action == 'Delete'):
         if(Selected_Line_Index==((All_Data_In_Table[-1][0])+1)): #If select line is the last of table
             table.selection_set(table.get_children()[-1]) #Autoselection of new last line after line deletion
@@ -179,7 +175,6 @@ def NextLineToBeAutoSelected(action):
     DisableButtonIfNecessery()
 
 def DisableButtonIfNecessery():
-    global Selected_Line_Index
     if((Selected_Line_Index==All_Data_In_Table[0][0]) and (Selected_Line_Index==All_Data_In_Table[-1][0])):
         Button_Arrow_Dow.configure(state=tk.DISABLED)
         Button_Arrow_Up.configure(state=tk.DISABLED)
@@ -232,8 +227,7 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
     HideProcessing()
 
 def DisplayProcessing():
-    global cadre, texte, ascenseur, bouton_cacher, tab1
-    
+    global cadre, texte, ascenseur, tab1
     cadre = tk.Frame(tab1,borderwidth=1, relief="solid")
     cadre.place(x=Table_x_Position, y=Table_y_Position, width=Table_Width, height=Table_Height+25)
     texte = tk.Text(cadre, wrap=tk.WORD)
@@ -252,7 +246,6 @@ def HideProcessing():
     texte.delete(1.0, tk.END)
 
 def PdfCreatorTab(master,root):
-
     global tab1
     tab1 = ttk.Frame(master)
     InitValues()
@@ -286,12 +279,10 @@ def PdfCreatorTab(master,root):
     style.map('Treeview', background=[('selected', '#eb0000')])
     #tableau
     table = ttk.Treeview(tab1, columns=('Position', 'Fichier','Chemin'))
-    table.heading('Position', text='Position')
-    table.column("Position", minwidth=80, width=65, stretch=NO)
-    table.heading('Fichier', text='Nom du fichier')
-    table.column("Fichier", minwidth=120, width=200, stretch=NO)
-    table.heading('Chemin', text='Chemin')
-    table.column("Chemin", minwidth=120, width=400, stretch=NO)
+    headers = [("Position", "Position", 80, 65), ("Fichier", "Nom du fichier", 120, 200), ("Chemin", "Chemin", 120, 400)]
+    for header in headers:
+        table.heading(header[0], text=header[1])
+        table.column(header[0], minwidth=header[2], width=header[3], stretch=NO)
     table['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
     table.place(x=Table_x_Position, y=Table_y_Position, width=Table_Width, height=Table_Height)
 
