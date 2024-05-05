@@ -1,17 +1,19 @@
 from SharedFunctions.imports import *
 
 #-------------------INIT-----------#
-Chemin=''
-Path_List=[]
-File_Name = []
-Selected_Save_Path=''
-Many_Selected_Pictures_List=[]
-IMG_Mult=[]
-Selected_Files = None
-Place_Arrows_Only_Once = 0 #Permet de ne placer qu'une fois les boutons fleches
-All_Data_In_Table = []
-Files_Paths_Updated_List=[]
-Selected_Line_Index = 0 # Select first line when Selected_Files are imported for 1st time 
+def InitValues():
+    global Chemin,Path_List,File_Name,Selected_Save_Path,Many_Selected_Pictures_List,IMG_Mult,Selected_Files,Place_Arrows_Only_Once,All_Data_In_Table,Files_Paths_Updated_List,Selected_Line_Index
+    Chemin=''
+    Path_List=[]
+    File_Name = []
+    Selected_Save_Path=''
+    Many_Selected_Pictures_List=[]
+    IMG_Mult=[]
+    Selected_Files = None
+    Place_Arrows_Only_Once = 0 #Permet de ne placer qu'une fois les boutons fleches
+    All_Data_In_Table = []
+    Files_Paths_Updated_List=[]
+    Selected_Line_Index = 0 # Select first line when Selected_Files are imported for 1st time 
 
 #----------------SEND VALUES TO MAIN Windows-----------------#
 def WindowsSizeSendData():
@@ -92,6 +94,7 @@ def Reset():
 def DeleteAlldata():
     global Place_Arrows_Only_Once,Selected_Files,All_Data_In_Table,x_Position_Recalculated_For_Arrows_Buttons
     global Files_Paths_Updated_List, Selected_Save_Path
+    InitValues()
         # Reset Arrows button
     Place_Arrows_Only_Once = 0
     for btn in Arrows_Buttons:
@@ -103,14 +106,9 @@ def DeleteAlldata():
     File_Name.clear() #RESET de la liste File_Name
     x_Position_Recalculated_For_Arrows_Buttons = ArrowButtons_InitPositionCalculation() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
 
-    #REset List of data
-    Selected_Files = []
-    All_Data_In_Table = []
-    Files_Paths_Updated_List=[]
-    FileName= []
-    Selected_Save_Path = []
     #REset displayed data in Tableau
     table.delete(*table.get_children())
+    
 
 def SavePath():
     global Chemin
@@ -257,6 +255,7 @@ def PdfCreatorTab(master,root):
 
     global tab1
     tab1 = ttk.Frame(master)
+    InitValues()
 
     Icon_Add_File, Icon_Reset, Icon_Convert_To_Pdf, Icon_Exit, Icon_Test, Icon_Validate, Icon_Zoom_More, Icon_Zoom_Less, Icon_Arrow_Up, Icon_Arrow_Down, Icon_Delete_Selected_Line = IconsDeclaration() #Icons Declaration, cannot be perfomed above, must wait line tab1 = ttk.Frame(master) to get tkinter instance
     
