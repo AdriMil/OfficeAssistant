@@ -1,7 +1,8 @@
-from SharedFunctions.imports import *
+
 #-----------Chargment des onglets-----------------#
 from Tabs.Tab_PdfCreator.PdfCreator import *
 from Tabs.Tab_PictureObfuscation.PictureOffuscation import *
+from SharedFunctions.imports import *
 
 def MyUserInterface(root):
     frame = tk.Frame(root)
