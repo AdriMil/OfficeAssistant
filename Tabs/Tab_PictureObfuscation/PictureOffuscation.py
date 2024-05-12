@@ -212,14 +212,31 @@ def Zoom(op):
         canvas.itemconfig(Updated_Picture, image=Picture_Size)
         ScrollBarLenghCalculation()
 
+# Enregistrement du module d'ouverture pour le format HEIC
+register_heif_opener()
 
-def DisplaySelectedPicture(result):
+# Fonction pour charger et afficher l'image HEIC
+def load_and_display_image(file_path):
+    try:
+        with Image.open(file_path) as image:
+            image = image.convert("RGB")  # Convertir en RGB pour l'affichage correct dans Tkinter
+            Selected_Picture = ImageTk.PhotoImage(image)
+            return Selected_Picture
+    except Exception as e:
+        print("Erreur lors du chargement de l'image:", e)
+
+def DisplaySelectedPicture(result,IsHeic):
     global Updated_Picture, canvas, Picture_Size  # Assurez-vous d'avoir déclaré la variable Picture_Size comme globale
     global Selected_Picture,Picture_Size,Picture_Resized, Picture_Width, Picture_Height
     global Picture_Best_Width,Picture_Best_Height # Share init size of the picture we are displaying. Values will be use by zooms functions
     global Picture_Reduction_Ratio,Zoom_Incrementation # use for pixel selection scalling 
-    # Load an image from the file path
-    Selected_Picture = Image.open(result)
+    
+    if (IsHeic==0):
+        # Load an image from the file path
+        Selected_Picture = Image.open(result)
+    elif(IsHeic == 1):
+        Selected_Picture = load_and_display_image(result)
+
 
     #Get selected picture size.
     Picture_Width, Picture_Height = Selected_Picture.size
@@ -300,7 +317,12 @@ def ChooseFile():
     global canvas, txt,tab2SelectedImg,Button_Reset,Button_Select_File
     global Place_Zoom_Buttons_Only_Once #Know if zoom btns have already been positionned
     global File_Path,Final_File_Name # use for save function
+    IsHeic = 0
     result = filedialog.askopenfilename()
+    print("Mon resulat : ", result)
+    # Vérifier si le fichier est au format .heic
+    _, extension = os.path.splitext(result)
+        
     if(result==''):
         print("pas d'image selectionnées")
         tab2SelectedImg = 0 
@@ -317,8 +339,12 @@ def ChooseFile():
         File_Name_Without_Format = File_Name_Splited[0]
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
         Final_File_Name= File_Name_Without_Format + " - Obfuscated"
-
-        DisplaySelectedPicture(result)
+        if extension.lower() == '.heic':
+            IsHeic == 1
+            print('FORMAT HEIC SELECTIONNE !!!!!')
+        else:
+            IsHeic == 0 
+        DisplaySelectedPicture(result,IsHeic)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
         ShowScrollbars()
