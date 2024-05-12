@@ -188,12 +188,6 @@ def DisableButtonIfNecessery():
         Button_Arrow_Up.configure(state=tk.NORMAL)
         Button_Arrow_Dow.configure(state=tk.NORMAL)
 
-def ConvertHeicToPillowFormat(heic_path):
-    # Enregistrement du module d'ouverture pour le format HEIC
-    register_heif_opener()
-    # Ouverture de l'image HEIC et conversion en mode RGB
-    with Image.open(heic_path) as im:
-        return im.convert("RGB")
 
 def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
     Many_Selected_Pictures_List = []

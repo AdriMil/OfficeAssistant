@@ -6,6 +6,7 @@ Place_Zoom_Buttons_Only_Once = 0 #Should never reseted
 
 def InitValues():
     global Selected_Picture, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location,Display_Revert_Button
+    global Extension,Format
     Selected_Picture = None
     x_Position_Recalculated_For_Zoom_Buttons = 0 
     Zoom_Incrementation = 0
@@ -15,7 +16,7 @@ def InitValues():
     First_Clic_x_Location = None #Store first clic x locatoin
     First_Clic_y_Location = None #Store first clic y locatoin
     Display_Revert_Button = 0
-    
+    Extension,Format = "","" #Used to share between function kind of selected picture
 
 #Allows to displays print to debug
 debug = 1
@@ -53,7 +54,6 @@ def FinishRectangleDrawing(event):
         Zoom_Buttons[2][0].configure(state=tk.NORMAL)
         Display_Revert_Button = 1 ; 
 
-
 def RevertRectangles():
     global Rectangles_Coordonates_List,Rectangles_Ids_List,Display_Revert_Button
 
@@ -72,8 +72,6 @@ def RevertRectangles():
         # Mettre à jour le canvas
         canvas.update()
         
-
-
 #Fix issue if you created your rectangle from bottom to top (wihtout this function rectangle won't appears on save pictures)
 def FixValues(First_Clic_x_Location, First_Clic_y_Location, x_image, y_image):
     if First_Clic_x_Location > x_image:
@@ -153,7 +151,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
         UpdateProcessing(Process_Text)
     return image
 
-def Save():
+def Save(Extension,Format):
     if (Selected_Picture is None):
         messagebox.showinfo("Erreur", "Selectionnez une image")
     else :
@@ -164,7 +162,7 @@ def Save():
         DisplayProcessing(Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
         UpdateProcessing("Enregistrement du fichier ...")
-        Final_Saved_Picture.save(Final_File_Name+".png", "PNG")
+        Final_Saved_Picture.save(Final_File_Name+ Extension, Format)
         UpdateProcessing("Fichier enregistré !")
         Info_FileSaved()
         HideProcessing()
@@ -212,14 +210,31 @@ def Zoom(op):
         canvas.itemconfig(Updated_Picture, image=Picture_Size)
         ScrollBarLenghCalculation()
 
+# Enregistrement du module d'ouverture pour le format HEIC
+register_heif_opener()
 
-def DisplaySelectedPicture(result):
+# Fonction pour charger et afficher l'image HEIC
+def load_and_display_image(file_path):
+    try:
+        with Image.open(file_path) as image:
+            image = image.convert("RGB")  # Convertir en RGB pour l'affichage correct dans Tkinter
+            Selected_Picture = ImageTk.PhotoImage(image)
+            return Selected_Picture
+    except Exception as e:
+        print("Erreur lors du chargement de l'image:", e)
+
+def DisplaySelectedPicture(result,IsHeic):
     global Updated_Picture, canvas, Picture_Size  # Assurez-vous d'avoir déclaré la variable Picture_Size comme globale
     global Selected_Picture,Picture_Size,Picture_Resized, Picture_Width, Picture_Height
     global Picture_Best_Width,Picture_Best_Height # Share init size of the picture we are displaying. Values will be use by zooms functions
     global Picture_Reduction_Ratio,Zoom_Incrementation # use for pixel selection scalling 
-    # Load an image from the file path
-    Selected_Picture = Image.open(result)
+    
+    if (IsHeic==0):
+        # Load an image from the file path
+        Selected_Picture = Image.open(result)
+    elif(IsHeic == 1):
+        Selected_Picture = load_and_display_image(result)
+
 
     #Get selected picture size.
     Picture_Width, Picture_Height = Selected_Picture.size
@@ -300,7 +315,13 @@ def ChooseFile():
     global canvas, txt,tab2SelectedImg,Button_Reset,Button_Select_File
     global Place_Zoom_Buttons_Only_Once #Know if zoom btns have already been positionned
     global File_Path,Final_File_Name # use for save function
+    global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
+    IsHeic = 0
     result = filedialog.askopenfilename()
+    print("Mon resulat : ", result)
+    # Vérifier si le fichier est au format .heic
+    _, extension = os.path.splitext(result)
+        
     if(result==''):
         print("pas d'image selectionnées")
         tab2SelectedImg = 0 
@@ -317,8 +338,16 @@ def ChooseFile():
         File_Name_Without_Format = File_Name_Splited[0]
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
         Final_File_Name= File_Name_Without_Format + " - Obfuscated"
-
-        DisplaySelectedPicture(result)
+        if extension.lower() == '.heic':
+            IsHeic == 1
+            Extension,Format = ".heic" , "png"
+        elif extension.lower() == '.jpg':
+            IsHeic == 0 
+            Extension,Format = ".jpg" , "png"
+        else:
+            IsHeic == 0 
+            Extension,Format = ".png" , "png"
+        DisplaySelectedPicture(result,IsHeic)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
         ShowScrollbars()
@@ -381,7 +410,7 @@ def PictureOffuscationTab(master,root):
     ScrollBar()
     Boutons_ControleTab2 = [
         [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,tk.NORMAL ],
-        [Button_Validate, "Valider",Icon_Validate, Save,tk.DISABLED],
+        [Button_Validate, "Valider",Icon_Validate, lambda: Save(Extension,Format),tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
         [Button_Reset, "Reset",Icon_Reset, ResetAllRectangles,tk.DISABLED],
         [Button_Exit, "Quitter",Icon_Exit, root.destroy,tk.NORMAL],        

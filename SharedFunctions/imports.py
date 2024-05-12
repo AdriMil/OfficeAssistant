@@ -60,6 +60,14 @@ def Ressource_Path(relative_path):
 print(Ressource_Path("Pictures/AddFile.png"))
 
 
+# Work with HEIC Picture
+def ConvertHeicToPillowFormat(heic_path):
+    # Enregistrement du module d'ouverture pour le format HEIC
+    register_heif_opener()
+    # Ouverture de l'image HEIC et conversion en mode RGB
+    with Image.open(heic_path) as im:
+        return im.convert("RGB")
+
 #---------------Calcul de la position des boutons ----------------------#
 def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYourTab,offset):
     
