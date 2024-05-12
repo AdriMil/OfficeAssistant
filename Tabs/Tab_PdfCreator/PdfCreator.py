@@ -39,7 +39,7 @@ def ArrowButtons_InitPositionCalculation():
 
 def ChooseMultiFile():
     global Selected_Files,Place_Arrows_Only_Once,Button_Reset,table
-    Selected_Files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes=(("Images PNG", "*.png"), ("Images JPEG", "*.jpg"),("Images HEIC", "*.heic")))
+    Selected_Files = filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes= filetypes)
     if Selected_Files:
         Button_Reset.configure(state=tk.NORMAL); Button_Convert.configure(state=tk.NORMAL)
         for file in Selected_Files:

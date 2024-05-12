@@ -317,7 +317,7 @@ def ChooseFile():
     global File_Path,Final_File_Name # use for save function
     global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
     IsHeic = 0
-    result = filedialog.askopenfilename()
+    result = filedialog.askopenfilename(title="Sélectionner une image", filetypes= filetypes)
     print("Mon resulat : ", result)
     # Vérifier si le fichier est au format .heic
     _, extension = os.path.splitext(result)
