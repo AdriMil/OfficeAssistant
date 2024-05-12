@@ -46,6 +46,8 @@ Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_
 #image Btn Controle
 Picture_Reducer_Value =  1
 
+#Format for pictures to import
+filetypes = [("Images compatibles", "*.png;*.jpg;*.heic")]
 
 #Gestion chemin fichier #Format adapté pour pyinstaller :
 def Ressource_Path(relative_path):
