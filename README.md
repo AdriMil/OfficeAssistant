@@ -1,6 +1,6 @@
 # Office Assistant
 
-## Tab1 - Pdf Creator
+## Tab1-PdfCreator
 
 ### Goal
 Merge your pictures to create 1 pdf file without load them on internet, all operations are performed localy, without internet. Your data are protected. Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
@@ -18,6 +18,8 @@ You scanned 15 invoices and you want gather them in 1 files. In few clicks load 
     * And select the path where you want save the new pdf
 
 ## Tab2 - Picture Obfuscation
+
+<img src="Documentation/OffusctationExample.png" alt="alt text" width="500">
 
 ### Goal
 Hide parts of a pictures by drawing a rectangles on zone you want keep secret.
@@ -39,10 +41,11 @@ You scanned 1 document you must share to your colleague but your personal adress
 ## Installation
 
 1- From Github last release : 
-![alt text](Documentation/LastRelease.png)
+
+<img src="Documentation/LastRelease.png" alt="alt text" width="500">
 
 2- Download "OfficeAssistant.Vx.y.z.exe" file
-![alt text](Documentation/ExeDownload.png)
+<img src="Documentation/ExeDownload.png" alt="alt text" width="500">
 
 3- Execute the .exe file you downloaded from step before 
 
