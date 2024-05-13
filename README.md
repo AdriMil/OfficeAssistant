@@ -29,10 +29,10 @@ All operations are performed localy, without internet. Your data are protected.
 Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
 
 ### Application exemple
-You scanned 1 document you must share to your colleague but your personal adress is visible. Draw a rectangle above area where your adress is visible and save. You can now send your new obfuscated picture document.
+You scanned 1 document you must share to your colleague but your personal adress is visible. Draw a rectangle above area where your adress is visible and save. You can now send your new obfuscated picture.
 
 ### Notes
-- Differents pictures formats can be added loaded.
+- Differents pictures formats can be loaded.
 - By saving, a new picture is created in the same format as original one and without loss of quality.
 - When saving, the picture is save in the same folder as the original one, with the same name but ending by "- obfuscated"
 - You can delete rectangle one by one by using the "Revert" Arrow from the bottom
