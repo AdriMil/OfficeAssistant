@@ -1,15 +1,17 @@
 # Office Assistant
 
+First project to gain skills in Python, git, project management and as well answer to my need. Code is not perfectly optimized. Some refacto code session need to be performed. I did not spend time on User Interface, i like minimalist aspect.  
+
 ## Tab1-PdfCreator
 
 ### Goal
-Merge your pictures to create 1 pdf file without load them on internet, all operations are performed localy, without internet. Your data are protected. Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
+Merge your pictures to create 1 pdf file without load them on internet, all operations are performed localy. Your data are protected. Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
 
 ### Application exemple
 You scanned 15 invoices and you want gather them in 1 files. In few clicks load all your scanned pictures, modify pictures order and create a pdf ! 
 
 ### Notes
-- Differents picutures formats can be added at the same time.
+- Differents pictures formats can be added at the same time.
 - Order of loaded pictures can be easily modify thanks Up and Down arrows.
 - Loaded pictures can be delete one by one using the bottom Trash button. 
 - Loaded pictures can be delete in 1 clic with Trash button.
