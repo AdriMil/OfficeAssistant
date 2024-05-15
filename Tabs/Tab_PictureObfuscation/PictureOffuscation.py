@@ -1,4 +1,4 @@
-from SharedFunctions.imports import *
+import SharedFunctions.imports as Import
 from PIL import Image
 from PIL import ImageTk  
 
@@ -51,7 +51,7 @@ def FinishRectangleDrawing(event):
     First_Clic_x_Location = None
     First_Clic_y_Location = None
     if(Display_Revert_Button==0):
-        Zoom_Buttons[2][0].configure(state=tk.NORMAL)
+        Zoom_Buttons[2][0].configure(state=Import.tk.NORMAL)
         Display_Revert_Button = 1 ; 
 
 def RevertRectangles():
@@ -61,7 +61,7 @@ def RevertRectangles():
         # Récupérer l'ID du dernier rectangle
         last_rectangle_id = Rectangles_Ids_List.pop()
         if not Rectangles_Ids_List:
-            Zoom_Buttons[2][0].configure(state=tk.DISABLED)
+            Zoom_Buttons[2][0].configure(state=Import.tk.DISABLED)
             Display_Revert_Button = 0 ; 
         # Supprimer le dernier rectangle du canvas
         canvas.delete(last_rectangle_id)
@@ -107,7 +107,7 @@ def ResetAllRectangles():
         canvas.update()
         Rectangles_Coordonates_List = []
         Rectangles_Ids_List = []
-        Answer = Info_Reset_Tab2()
+        Answer = Import.Info_Reset_Tab2()
         if Answer == "yes":
             Reset()
     else:
@@ -118,7 +118,7 @@ def Reset():
     InitValues()
     Picture_Size = None
     Picture_Resized = None
-    Picture_Reduction_Ratio
+    Picture_Reduction_Ratio = None
 
     Button_Select_File.config(state="normal")
     Button_Reset.config(state="disabled")
@@ -126,10 +126,10 @@ def Reset():
 
     HideScrollbars()
     #------BUTTON ZOOM +  ARE RESETED
-    Zoom_Buttons[0][0].configure(state=tk.DISABLED)
-    Zoom_Buttons[1][0].configure(state=tk.DISABLED)
-    Boutons_ControleTab2[1][0].configure(state=tk.DISABLED)
-    Zoom_Buttons[2][0].configure(state=tk.DISABLED)
+    Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
+    Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
+    Boutons_ControleTab2[1][0].configure(state=Import.tk.DISABLED)
+    Zoom_Buttons[2][0].configure(state=Import.tk.DISABLED)
 
 def ReplacePixelRectangles(image, liste_coordonnees):
     Current_Rectangle = 0
@@ -148,24 +148,24 @@ def ReplacePixelRectangles(image, liste_coordonnees):
                 image.putpixel((x, y), (0, 0, 0))  # Met les pixels en vert
         Process_Text = (str(Current_Rectangle)+" zones d'offuscation traitées sur " + str(Number_Of_Rectangles) + " zones créés")
         print((Process_Text) if debug ==1 else "")
-        UpdateProcessing(Process_Text)
+        Import.UpdateProcessing(Process_Text)
     return image
 
 def Save(Extension,Format):
     if (Selected_Picture is None):
-        messagebox.showinfo("Erreur", "Selectionnez une image")
+        Import.messagebox.showinfo("Erreur", "Selectionnez une image")
     else :
         global File_Path,Final_File_Name, Picture_Size
         Final_Saved_Picture = Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
         print((largeur, hauteur) if debug == 1 else "")
-        DisplayProcessing(Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height,tab2) #Call process
+        Import.DisplayProcessing(Import.Tab2DisplayWindow_x_position,Import.Tab2DisplayWindow_y_position,Import.Tab2DisplayWindow_width,Import.Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
-        UpdateProcessing("Enregistrement du fichier ...")
+        Import.UpdateProcessing("Enregistrement du fichier ...")
         Final_Saved_Picture.save(Final_File_Name+ Extension, Format)
-        UpdateProcessing("Fichier enregistré !")
-        Info_FileSaved()
-        HideProcessing()
+        Import.UpdateProcessing("Fichier enregistré !")
+        Import.Info_FileSaved()
+        Import.HideProcessing()
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
 def Zoom(op):
@@ -188,14 +188,14 @@ def Zoom(op):
             Picture_Best_Width = Picture_Best_Width * Picture_Zoom_Ratio 
             Picture_Best_Height = Picture_Best_Height * Picture_Zoom_Ratio 
         if(Zoom_Incrementation<=-2):
-            Zoom_Buttons[0][0].configure(state=tk.NORMAL)
-            Zoom_Buttons[1][0].configure(state=tk.DISABLED)
+            Zoom_Buttons[0][0].configure(state=Import.tk.NORMAL)
+            Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
         elif(Zoom_Incrementation>=6):
-            Zoom_Buttons[0][0].configure(state=tk.DISABLED)
-            Zoom_Buttons[1][0].configure(state=tk.NORMAL)
+            Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
+            Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
         else:
-            Zoom_Buttons[0][0].configure(state=tk.NORMAL)
-            Zoom_Buttons[1][0].configure(state=tk.NORMAL)
+            Zoom_Buttons[0][0].configure(state=Import.tk.NORMAL)
+            Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
 
         # Redimensionner l'image
         print("Zoom_Incrementation: ",Zoom_Incrementation)
@@ -211,7 +211,7 @@ def Zoom(op):
         ScrollBarLenghCalculation()
 
 # Enregistrement du module d'ouverture pour le format HEIC
-register_heif_opener()
+Import.register_heif_opener()
 
 # Fonction pour charger et afficher l'image HEIC
 def load_and_display_image(file_path):
@@ -240,7 +240,7 @@ def DisplaySelectedPicture(result,IsHeic):
     Picture_Width, Picture_Height = Selected_Picture.size
 
     #Calculate how to ajust the picture size in the UI
-    Picture_Reduction_Ratio = (Picture_Width/Tab2DisplayWindow_width)
+    Picture_Reduction_Ratio = (Picture_Width/Import.Tab2DisplayWindow_width)
     # Zoom_Incrementation = Picture_Reduction_Ratio
     print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if debug ==1 else "")
     print(("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio)) if debug ==1 else "")
@@ -264,15 +264,15 @@ def DisplaySelectedPicture(result,IsHeic):
 def ScrollBar():
     global Scrollbar_x_Direction,Scrollbar_y_Direction
         # Add horizontal scrollbar
-    Scrollbar_x_Direction = tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
+    Scrollbar_x_Direction = Import.tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
     canvas.configure(xscrollcommand=Scrollbar_x_Direction.set)
 
     # Add vertical scrollbar
-    Scrollbar_y_Direction = tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
+    Scrollbar_y_Direction = Import.tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
     canvas.configure(yscrollcommand=Scrollbar_y_Direction.set)
 
 def ScrollBarLenghCalculation():
-    canvas.config(scrollregion=canvas.bbox(tk.ALL))
+    canvas.config(scrollregion=canvas.bbox(Import.tk.ALL))
 
 def HideScrollbars():
     Scrollbar_x_Direction.pack_forget()
@@ -317,10 +317,10 @@ def ChooseFile():
     global File_Path,Final_File_Name # use for save function
     global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
     IsHeic = 0
-    result = filedialog.askopenfilename(title="Sélectionner une image", filetypes= filetypes)
+    result = Import.filedialog.askopenfilename(title="Sélectionner une image", filetypes= Import.filetypes)
     print("Mon resulat : ", result)
     # Vérifier si le fichier est au format .heic
-    _, extension = os.path.splitext(result)
+    _, extension = Import.os.path.splitext(result)
         
     if(result==''):
         print("pas d'image selectionnées")
@@ -339,41 +339,41 @@ def ChooseFile():
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
         Final_File_Name= File_Name_Without_Format + " - Obfuscated"
         if extension.lower() == '.heic':
-            IsHeic == 1
+            IsHeic = 1
             Extension,Format = ".heic" , "png"
         elif extension.lower() == '.jpg':
-            IsHeic == 0 
+            IsHeic = 0 
             Extension,Format = ".jpg" , "png"
         else:
-            IsHeic == 0 
+            IsHeic = 0 
             Extension,Format = ".png" , "png"
         DisplaySelectedPicture(result,IsHeic)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
         ShowScrollbars()
 
-        Zoom_Buttons[0][0].configure(state=tk.NORMAL)
-        Zoom_Buttons[1][0].configure(state=tk.NORMAL)
-        Boutons_ControleTab2[1][0].configure(state=tk.NORMAL)
+        Zoom_Buttons[0][0].configure(state=Import.tk.NORMAL)
+        Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
+        Boutons_ControleTab2[1][0].configure(state=Import.tk.NORMAL)
         #Disable zoom For current Milestone
-        Zoom_Buttons[0][0].configure(state=tk.DISABLED)
-        Zoom_Buttons[1][0].configure(state=tk.DISABLED)
+        Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
+        Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
 
         if (Place_Zoom_Buttons_Only_Once == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
-            PlaceButtonsAutomaticaly(Zoom_Buttons,Zoom_Buttons_Init_y_Position,Zoom_Buttons_Width,Zoom_Buttons_Height,Space_Between_Zoom_Buttons,Picture_Reducer_Value,x_Position_Recalculated_For_Zoom_Buttons,Police_Size,TextDisplay=0,Init_State=0)
+            Import.PlaceButtonsAutomaticaly(Zoom_Buttons,Import.Zoom_Buttons_Init_y_Position,Import.Zoom_Buttons_Width,Import.Zoom_Buttons_Height,Import.Space_Between_Zoom_Buttons,Import.Picture_Reducer_Value,x_Position_Recalculated_For_Zoom_Buttons,Import.Police_Size,TextDisplay=0,Init_State=0)
             Place_Zoom_Buttons_Only_Once = 1
 
 def ZoomButtonsPositionCalculation():
     global x_Position_Recalculated_For_Zoom_Buttons
     Number_Of_Buttons = len(Zoom_Buttons)
-    Space_Took_By_Zoom_Buttons = Number_Of_Buttons * (Zoom_Buttons_Width+Space_Between_Zoom_Buttons)
-    Free_Space = Tab2DisplayWindow_width - (Space_Took_By_Zoom_Buttons)
+    Space_Took_By_Zoom_Buttons = Number_Of_Buttons * (Import.Zoom_Buttons_Width+Import.Space_Between_Zoom_Buttons)
+    Free_Space = Import.Tab2DisplayWindow_width - (Space_Took_By_Zoom_Buttons)
     if(Free_Space>0):
-        x_Position_Recalculated_For_Zoom_Buttons = Tab2DisplayWindow_x_position + (Free_Space / 2)
+        x_Position_Recalculated_For_Zoom_Buttons = Import.Tab2DisplayWindow_x_position + (Free_Space / 2)
 
     else:
-        Extra_Buttons_Space = Space_Took_By_Zoom_Buttons - Tab2DisplayWindow_x_position
-        x_Position_Recalculated_For_Zoom_Buttons = Tab2DisplayWindow_x_position - (Extra_Buttons_Space / 2)
+        Extra_Buttons_Space = Space_Took_By_Zoom_Buttons - Import.Tab2DisplayWindow_x_position
+        x_Position_Recalculated_For_Zoom_Buttons = Import.Tab2DisplayWindow_x_position - (Extra_Buttons_Space / 2)
 
     return x_Position_Recalculated_For_Zoom_Buttons
 
@@ -384,42 +384,42 @@ def PictureOffuscationTab(master,root):
     global tab2
     global Zoom_Buttons,x_Position_Recalculated_For_Zoom_Buttons
     global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
-    tab2 = ttk.Frame(master)
+    tab2 = Import.ttk.Frame(master)
 
-    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
-    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
-    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
-    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
-    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+    Icon_Add_File = Import.PhotoImage(file=Import.Ressource_Path("Pictures/AddFile.png"))
+    Icon_Reset = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Reset.png"))
+    Icon_Exit = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = Import.PhotoImage(file=Import.Ressource_Path("Pictures/test.png"))
+    Icon_Validate = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Valider.png"))
 
-    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
-    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
-    Icon_Revert = PhotoImage(file=Ressource_Path("Pictures/Revert.png"))
+    Icon_Zoom_More = Import.PhotoImage(file=Import.Ressource_Path("Pictures/zoomPlus.png"))
+    Icon_Zoom_Less = Import.PhotoImage(file=Import.Ressource_Path("Pictures/zoomMoins.png"))
+    Icon_Revert = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Revert.png"))
 
-    Button_Select_File = tk.Button(tab2) ; Button_Validate = tk.Button(tab2) 
-    Button_Test = tk.Button(tab2) ; Button_Reset=tk.Button(tab2)
-    Button_Exit = tk.Button(tab2) 
-    Button_Zoom_More = tk.Button(tab2) ; Button_Zoom_Less = tk.Button(tab2) 
-    Button_Revert = tk.Button(tab2)
+    Button_Select_File = Import.tk.Button(tab2) ; Button_Validate = Import.tk.Button(tab2) 
+    Button_Test = Import.tk.Button(tab2) ; Button_Reset=Import.tk.Button(tab2)
+    Button_Exit = Import.tk.Button(tab2) 
+    Button_Zoom_More = Import.tk.Button(tab2) ; Button_Zoom_Less = Import.tk.Button(tab2) 
+    Button_Revert = Import.tk.Button(tab2)
 
-    canvas = tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
-    canvas.place(x=Tab2DisplayWindow_x_position, y=Tab2DisplayWindow_y_position,width=Tab2DisplayWindow_width, height=Tab2DisplayWindow_Height)
+    canvas = Import.tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
+    canvas.place(x=Import.Tab2DisplayWindow_x_position, y=Import.Tab2DisplayWindow_y_position,width=Import.Tab2DisplayWindow_width, height=Import.Tab2DisplayWindow_Height)
     # canvas.bind("<Button-1>", click_on_canvas)
     txt = canvas.create_text(300, 200, text="Selectionnez une image", font="Arial 16 italic", fill="blue")
 
     ScrollBar()
     Boutons_ControleTab2 = [
-        [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,tk.NORMAL ],
-        [Button_Validate, "Valider",Icon_Validate, lambda: Save(Extension,Format),tk.DISABLED],
+        [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
+        [Button_Validate, "Valider",Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Button_Reset, "Reset",Icon_Reset, ResetAllRectangles,tk.DISABLED],
-        [Button_Exit, "Quitter",Icon_Exit, root.destroy,tk.NORMAL],        
+        [Button_Reset, "Reset",Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
+        [Button_Exit, "Quitter",Icon_Exit, root.destroy,Import.tk.NORMAL],        
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
-    Position_x_recalculeeTab2,Position_y_recalculeeTab2 = ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Tab2Canvas,offset=30)
-    PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Control_Button_Width,Control_Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculeeTab2,Police_Size,TextDisplay=1,Init_State=1)
+    Position_x_recalculeeTab2,Position_y_recalculeeTab2 = Import.ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Import.Tab2Canvas,offset=30)
+    Import.PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculeeTab2,Import.Police_Size,TextDisplay=1,Init_State=1)
 
     Zoom_Buttons = [
         [Button_Zoom_More, "Zoomer",Icon_Zoom_More, lambda: Zoom("*") ],

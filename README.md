@@ -44,7 +44,9 @@ You scanned 1 document you must share to your colleague but your personal adress
 
 <img src="Documentation/LastRelease.png" alt="alt text" width="500">
 
+
 2- Download "OfficeAssistant.Vx.y.z.exe" file
+
 <img src="Documentation/ExeDownload.png" alt="alt text" width="500">
 
 3- Execute the .exe file you downloaded from step before 
