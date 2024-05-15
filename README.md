@@ -3,6 +3,7 @@
 First project to gain skills in Python, git, project management and as well answer to my need. Code is not perfectly optimized. Some refacto code session need to be performed. I did not spend time on User Interface, i like minimalist aspect.  
 
 ## Tab1-PdfCreator
+<img src="Documentation/Conversion.png" alt="alt text" width="500">
 
 ### Goal
 Merge your pictures to create 1 pdf file without load them on internet, all operations are performed localy. Your data are protected. Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
