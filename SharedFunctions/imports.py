@@ -1,17 +1,14 @@
 #-------------Pour_IG--------------------#
-from tkinter import filedialog
-from tkinter import *
-from tkinter import simpledialog
+from tkinter import PhotoImage, NO, ttk,simpledialog,filedialog
 import tkinter as tk
-from tkinter import ttk
+
 from PIL import Image
 from pillow_heif import register_heif_opener
 
-# from PicturesConversion import process_images
-from Tabs.Tab_PdfCreator.UpdatePosition import *
+from Tabs.Tab_PdfCreator.UpdatePosition import ChangePlaceUp,ChangePlaceDown,DeleteSelectedLine
 
 #MessageBox import
-from SharedFunctions.MessageBox import *
+from SharedFunctions.MessageBox import Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,INfo_Reset,Info_Reset_Tab2,Info_FileSaved
 
 #-------------Pour PYINSTALLER--------------------#
 import os
