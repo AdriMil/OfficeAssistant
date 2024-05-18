@@ -1,8 +1,6 @@
 from tkinter import messagebox
 
 
-
-
 def Error_NoTitle(Texte_From_Json,Language):
     messagebox.showinfo(Texte_From_Json["MessageBox"]["Type"]["Error"][Language], Texte_From_Json["MessageBox"]["Message"]["NoTitle"][Language])
 def Error_BadSavePath(Texte_From_Json,Language):

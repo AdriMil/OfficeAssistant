@@ -105,7 +105,7 @@ def ResetAllRectangles():
         canvas.update()
         Rectangles_Coordonates_List = []
         Rectangles_Ids_List = []
-        Answer = Import.Info_Reset_Tab2()
+        Answer = Import.Info_Reset_Tab2(Texte_From_Json,Import.Language)
         if Answer == "yes":
             Reset()
     else:

@@ -59,7 +59,7 @@ def ChooseMultiFile():
         Import.Error_Cancelation()
 
 def OpenDialogToSavePdf():
-    user_input = Import.simpledialog.simpledialog.askstring(Texte_From_Json["Tab1"]["SaveFile"]["WindowName"][Import.Language], Texte_From_Json["Tab1"]["SaveFile"]["Instruction"][Import.Language])
+    user_input = Import.simpledialog.askstring(Texte_From_Json["Tab1"]["SaveFile"]["WindowName"][Import.Language], Texte_From_Json["Tab1"]["SaveFile"]["Instruction"][Import.Language])
     if user_input is None:
         print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
     elif user_input:
@@ -85,7 +85,7 @@ def ConvertPictureToPdf(FileName):
         
 
 def Reset():
-    User_Answer=Import.INfo_Reset()
+    User_Answer=Import.Info_Reset(Texte_From_Json,Import.Language)
     if User_Answer == 'yes':
         DeleteAlldata()
 
@@ -217,7 +217,7 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
     nom = Import.os.path.join(Selected_Save_Path, f"{FileName}.pdf")
     IMG_Mult[0].save(nom, save_all=True, append_images=IMG_Mult[1:])
     Import.UpdateProcessing(Texte_From_Json["Processing"]["FinishPdfSaving"][Import.Language])
-    Import.Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
+    Import.Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path,Texte_From_Json,Import.Language)
     Import.HideProcessing()
 
 def PdfCreatorTab(master,root):
