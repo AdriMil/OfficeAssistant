@@ -25,6 +25,9 @@ def LoadText():
 
 Language = "fr"
 
+#Allows to displays print to debug
+debug = 0
+
 #------------Design UI VARIABLE SPACE-------------#
 #Tableau Tab1:
 Table_x_Position = 50 ; Table_y_Position = 200

@@ -44,7 +44,7 @@ def ChooseMultiFile():
         Button_Reset.configure(state=Import.tk.NORMAL); Button_Convert.configure(state=Import.tk.NORMAL)
         for file in Selected_Files:
             Path_List.append(file)
-            # print("Liste des chemin selectionnés : ", Path_List)
+            print(("Liste des chemin selectionnés : ", Path_List) if Import.debug == 1 else "")
             words = file.split('/')
             File_Name.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
             table.insert( '', 'end',values=(len(Path_List),words[-1],file))
@@ -61,7 +61,7 @@ def ChooseMultiFile():
 def OpenDialogToSavePdf():
     user_input = Import.simpledialog.simpledialog.askstring(Texte_From_Json["Tab1"]["SaveFile"]["WindowName"][Import.Language], Texte_From_Json["Tab1"]["SaveFile"]["Instruction"][Import.Language])
     if user_input is None:
-        print("L'utilisateur a cliqué sur Cancel.")
+        print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
     elif user_input:
         FileName = user_input
         ConvertPictureToPdf(FileName)

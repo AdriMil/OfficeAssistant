@@ -18,8 +18,6 @@ def InitValues():
     Display_Revert_Button = 0
     Extension,Format = "","" #Used to share between function kind of selected picture
 
-#Allows to displays print to debug
-debug = 1
 def test():
     print("test")
 
@@ -47,7 +45,7 @@ def FinishRectangleDrawing(event):
         Rectangles_Ids_List.append(Current_Rectangle_Id)
         First_Clic_x_Location, First_Clic_y_Location,x_image,y_image = FixValues(First_Clic_x_Location, First_Clic_y_Location,x_image,y_image)
         Rectangles_Coordonates_List.append([First_Clic_x_Location, First_Clic_y_Location,x_image,y_image])
-        print((Rectangles_Coordonates_List) if debug==1 else "")
+        print((Rectangles_Coordonates_List) if Import.debug==1 else "")
     First_Clic_x_Location = None
     First_Clic_y_Location = None
     if(Display_Revert_Button==0):
@@ -146,8 +144,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
             for y in range(int(y1), int(y2) + 1):
                 # modify pixels by black pixels
                 image.putpixel((x, y), (0, 0, 0))  # Met les pixels en vert
-        Process_Text = (str(Current_Rectangle)+" zones d'offuscation traitées sur " + str(Number_Of_Rectangles) + " zones créés")
-        print((Process_Text) if debug ==1 else "")
+        Process_Text = (str(Current_Rectangle)+Texte_From_Json["Processing"]["AreasProcessing"][Import.Language] + str(Number_Of_Rectangles) + Texte_From_Json["Processing"]["AreasNumber"][Import.Language])
         Import.UpdateProcessing(Process_Text)
     return image
 
@@ -158,7 +155,7 @@ def Save(Extension,Format):
         global File_Path,Final_File_Name, Picture_Size
         Final_Saved_Picture = Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
-        print((largeur, hauteur) if debug == 1 else "")
+        print((largeur, hauteur) if Import.debug == 1 else "")
         Import.DisplayProcessing(Import.Tab2DisplayWindow_x_position,Import.Tab2DisplayWindow_y_position,Import.Tab2DisplayWindow_width,Import.Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
         Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][Import.Language])
@@ -199,10 +196,10 @@ def Zoom(op):
             Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
 
         # Redimensionner l'image
-        print("Zoom_Incrementation: ",Zoom_Incrementation)
+        print(("Zoom_Incrementation: ",Zoom_Incrementation) if Import.debug == 1 else "")
         Picture_Zoomed = Selected_Picture.resize((Picture_Best_Width, Picture_Best_Height))
         Picture_Width, Picture_Height = Picture_Zoomed.size
-        print("Picture_Width: ", Picture_Width,"Picture_Height: ", Picture_Height)
+        print(("Picture_Width: ", Picture_Width,"Picture_Height: ", Picture_Height) if Import.debug == 1 else "")
 
         # Convertir l'image redimensionnée en PhotoImage
         Picture_Size = ImageTk.PhotoImage(Picture_Zoomed)
@@ -229,8 +226,8 @@ def DisplaySelectedPicture(result):
     #Calculate how to ajust the picture size in the UI
     Picture_Reduction_Ratio = (Picture_Width/Import.Tab2DisplayWindow_width)
     # Zoom_Incrementation = Picture_Reduction_Ratio
-    print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if debug ==1 else "")
-    print(("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio)) if debug ==1 else "")
+    print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if Import.debug ==1 else "")
+    print(("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio)) if Import.debug ==1 else "")
     #If picture width is already smaller than table width, picture size is not modifed.
     if int(Picture_Reduction_Ratio)==0:
         Picture_Best_Width = Picture_Width 
@@ -304,12 +301,12 @@ def ChooseFile():
     global File_Path,Final_File_Name # use for save function
     global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
     result = Import.filedialog.askopenfilename(title="Sélectionner une image", filetypes= Import.filetypes)
-    print("Mon resulat : ", result)
+    print(("Mon resulat : ", result)if Import.debug == 1 else "")
     # Vérifier si le fichier est au format .heic
     _, extension = Import.os.path.splitext(result)
         
     if(result==''):
-        print("pas d'image selectionnées")
+        print(("pas d'image selectionnées") if Import.debug == 1 else "")
         tab2SelectedImg = 0 
         Button_Reset.config(state="disabled")
     
@@ -414,7 +411,7 @@ def PictureOffuscationTab(master,root):
     ]
 
     x_Position_Recalculated_For_Zoom_Buttons = ZoomButtonsPositionCalculation()
-    print(("x_Position_Recalculated_For_Zoom_Buttons :", x_Position_Recalculated_For_Zoom_Buttons) if debug == 1 else "")
+    print(("x_Position_Recalculated_For_Zoom_Buttons :", x_Position_Recalculated_For_Zoom_Buttons) if Import.debug == 1 else "")
 
     canvas.bind("<MouseWheel>", MousewheelMouvement)
     canvas.bind("<Button-2>", HorizontalMouvement)
