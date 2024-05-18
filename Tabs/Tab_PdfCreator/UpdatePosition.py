@@ -1,3 +1,5 @@
+import SharedFunctions.imports as Import
+
 def ChangePlaceUp(All_Data_In_Table,index):
     if(index!=0):
         Store_Value_Temporary = All_Data_In_Table[index-1]
@@ -20,7 +22,7 @@ def ChangePlaceDown(All_Data_In_Table,index):
 
 def DeleteSelectedLine(All_Data_In_Table, index):
     All_Data_In_Table.pop(index)
-    print(All_Data_In_Table)
+    if Import.debug == 1: print(All_Data_In_Table)
     for i in range(0,len(All_Data_In_Table)):
         All_Data_In_Table[i][0] = i + 1
 

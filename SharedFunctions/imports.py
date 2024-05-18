@@ -8,12 +8,25 @@ from pillow_heif import register_heif_opener
 from Tabs.Tab_PdfCreator.UpdatePosition import ChangePlaceUp,ChangePlaceDown,DeleteSelectedLine
 
 #MessageBox import
-from SharedFunctions.MessageBox import Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,INfo_Reset,Info_Reset_Tab2,Info_FileSaved
+from SharedFunctions.MessageBox import Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,Info_Reset,Info_Reset_Tab2,Info_FileSaved
 
 #-------------Pour PYINSTALLER--------------------#
 import os
 import sys
 #Commande pour créér un .exe : pyinstaller main.spec
+
+#Data Langagae
+import json
+def LoadText():
+    # Lecture des données à partir du fichier JSON
+    with open(Ressource_Path("SharedFunctions/Language.json"), 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    return data
+
+Language = "fr"
+
+#Allows to displays print to debug
+debug = 0
 
 #------------Design UI VARIABLE SPACE-------------#
 #Tableau Tab1:

@@ -39,12 +39,12 @@ def ArrowButtons_InitPositionCalculation():
 
 def ChooseMultiFile():
     global Selected_Files,Place_Arrows_Only_Once,Button_Reset,table
-    Selected_Files = Import.filedialog.askopenfilenames(title="Sélectionner plusieurs fichiers", filetypes= Import.filetypes)
+    Selected_Files = Import.filedialog.askopenfilenames(title=Texte_From_Json["Tab1"]["SelectFiles"][Import.Language], filetypes= Import.filetypes)
     if Selected_Files:
         Button_Reset.configure(state=Import.tk.NORMAL); Button_Convert.configure(state=Import.tk.NORMAL)
         for file in Selected_Files:
             Path_List.append(file)
-            # print("Liste des chemin selectionnés : ", Path_List)
+            print(("Liste des chemin selectionnés : ", Path_List) if Import.debug == 1 else "")
             words = file.split('/')
             File_Name.append(words[-1]) #On prend la dernière valeur qui correspond au nom du fichier
             table.insert( '', 'end',values=(len(Path_List),words[-1],file))
@@ -59,14 +59,14 @@ def ChooseMultiFile():
         Import.Error_Cancelation()
 
 def OpenDialogToSavePdf():
-    user_input = Import.simpledialog.askstring("Nommez votre fichier ", "Nom du fichier :")
+    user_input = Import.simpledialog.askstring(Texte_From_Json["Tab1"]["SaveFile"]["WindowName"][Import.Language], Texte_From_Json["Tab1"]["SaveFile"]["Instruction"][Import.Language])
     if user_input is None:
-        print("L'utilisateur a cliqué sur Cancel.")
+        print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
     elif user_input:
         FileName = user_input
         ConvertPictureToPdf(FileName)
     else:
-        Import.messagebox.showinfo("Erreur", "Donnez un titre au document qui va être créé")
+        Import.Error_NoTitle(Texte_From_Json,Import.Language)
         OpenDialogToSavePdf()
 
 def ConvertPictureToPdf(FileName):
@@ -85,7 +85,7 @@ def ConvertPictureToPdf(FileName):
         
 
 def Reset():
-    User_Answer=Import.INfo_Reset()
+    User_Answer=Import.Info_Reset(Texte_From_Json,Import.Language)
     if User_Answer == 'yes':
         DeleteAlldata()
 
@@ -208,22 +208,24 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
         incrementation = incrementation + 1 
         # Convertir en mode RGB et ajouter à la liste IMG_Mult
         IMG_Mult.append(Selected_Picture.convert('RGB'))
-        texttodisplay = "Image convertie : {} / {}".format(incrementation, len(Many_Selected_Pictures_List))
+        texttodisplay = (Texte_From_Json["Processing"]["PictureSaving"][Import.Language]).format(incrementation, len(Many_Selected_Pictures_List))
         Import.UpdateProcessing(texttodisplay)
         
     # Sauvegarder le fichier PDF
-    Import.UpdateProcessing("Enregistrement du PDF")
+    Import.UpdateProcessing(Texte_From_Json["Processing"]["PdfSaving"][Import.Language])
     Import.UpdateProcessing("...")
     nom = Import.os.path.join(Selected_Save_Path, f"{FileName}.pdf")
     IMG_Mult[0].save(nom, save_all=True, append_images=IMG_Mult[1:])
-    Import.UpdateProcessing("PDF enregistré")
-    Import.Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path)
+    Import.UpdateProcessing(Texte_From_Json["Processing"]["FinishPdfSaving"][Import.Language])
+    Import.Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path,Texte_From_Json,Import.Language)
     Import.HideProcessing()
 
 def PdfCreatorTab(master,root):
     global tab1
+    global Texte_From_Json
     tab1 = Import.ttk.Frame(master)
     InitValues()
+    Texte_From_Json=Import.LoadText()
 
     Icon_Add_File = Import.PhotoImage(file=Import.Ressource_Path("Pictures/AddFile.png"))
     Icon_Reset = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Reset.png"))
@@ -244,10 +246,10 @@ def PdfCreatorTab(master,root):
     Button_Test = Import.tk.Button(tab1) ;
 
     Boutons_Controle = [
-        [Button_Select_Files, "Add file",Icon_Add_File, ChooseMultiFile,Import.tk.NORMAL ],
-        [Button_Reset, "Reset",Icon_Reset, Reset,Import.tk.DISABLED],
-        [Button_Convert, "Convertir",Icon_Convert_To_Pdf, OpenDialogToSavePdf,Import.tk.DISABLED],
-        [Button_Exit, "Quitter",Icon_Exit, root.destroy,Import.tk.NORMAL],
+        [Button_Select_Files,Texte_From_Json["Buttons"]["AddFiles"][Import.Language],Icon_Add_File, ChooseMultiFile,Import.tk.NORMAL ],
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][Import.Language],Icon_Reset, Reset,Import.tk.DISABLED],
+        [Button_Convert, Texte_From_Json["Buttons"]["Convert"][Import.Language],Icon_Convert_To_Pdf, OpenDialogToSavePdf,Import.tk.DISABLED],
+        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][Import.Language],Icon_Exit, root.destroy,Import.tk.NORMAL],
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
@@ -259,9 +261,10 @@ def PdfCreatorTab(master,root):
 
     style = Import.ttk.Style()
     style.map('Treeview', background=[('selected', '#eb0000')])
+
     #tableau
-    table = Import.ttk.Treeview(tab1, columns=('Position', 'Fichier','Chemin'))
-    headers = [("Position", "Position", 80, 65), ("Fichier", "Nom du fichier", 120, 200), ("Chemin", "Chemin", 120, 400)]
+    table = Import.ttk.Treeview(tab1, columns=(Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][Import.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][Import.Language],Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][Import.Language]))
+    headers = [(Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][Import.Language],Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][Import.Language], 80, 65), (Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][Import.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][Import.Language], 120, 200), (Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][Import.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][Import.Language], 120, 400)]
     for header in headers:
         table.heading(header[0], text=header[1])
         table.column(header[0], minwidth=header[2], width=header[3], stretch=Import.NO)
