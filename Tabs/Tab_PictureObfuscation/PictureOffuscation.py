@@ -213,28 +213,14 @@ def Zoom(op):
 # Enregistrement du module d'ouverture pour le format HEIC
 Import.register_heif_opener()
 
-# Fonction pour charger et afficher l'image HEIC
-def load_and_display_image(file_path):
-    try:
-        with Image.open(file_path) as image:
-            image = image.convert("RGB")  # Convertir en RGB pour l'affichage correct dans Tkinter
-            Selected_Picture = ImageTk.PhotoImage(image)
-            return Selected_Picture
-    except Exception as e:
-        print("Erreur lors du chargement de l'image:", e)
 
-def DisplaySelectedPicture(result,IsHeic):
+def DisplaySelectedPicture(result):
     global Updated_Picture, canvas, Picture_Size  # Assurez-vous d'avoir déclaré la variable Picture_Size comme globale
     global Selected_Picture,Picture_Size,Picture_Resized, Picture_Width, Picture_Height
     global Picture_Best_Width,Picture_Best_Height # Share init size of the picture we are displaying. Values will be use by zooms functions
     global Picture_Reduction_Ratio,Zoom_Incrementation # use for pixel selection scalling 
-    
-    if (IsHeic==0):
-        # Load an image from the file path
-        Selected_Picture = Image.open(result)
-    elif(IsHeic == 1):
-        Selected_Picture = load_and_display_image(result)
 
+    Selected_Picture = Image.open(result)
 
     #Get selected picture size.
     Picture_Width, Picture_Height = Selected_Picture.size
@@ -316,7 +302,6 @@ def ChooseFile():
     global Place_Zoom_Buttons_Only_Once #Know if zoom btns have already been positionned
     global File_Path,Final_File_Name # use for save function
     global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
-    IsHeic = 0
     result = Import.filedialog.askopenfilename(title="Sélectionner une image", filetypes= Import.filetypes)
     print("Mon resulat : ", result)
     # Vérifier si le fichier est au format .heic
@@ -339,15 +324,13 @@ def ChooseFile():
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
         Final_File_Name= File_Name_Without_Format + " - Obfuscated"
         if extension.lower() == '.heic':
-            IsHeic = 1
             Extension,Format = ".heic" , "png"
         elif extension.lower() == '.jpg':
-            IsHeic = 0 
             Extension,Format = ".jpg" , "png"
         else:
-            IsHeic = 0 
             Extension,Format = ".png" , "png"
-        DisplaySelectedPicture(result,IsHeic)
+
+        DisplaySelectedPicture(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
         ShowScrollbars()
