@@ -153,7 +153,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
 
 def Save(Extension,Format):
     if (Selected_Picture is None):
-        Import.messagebox.showinfo("Erreur", "Selectionnez une image")
+        Import.Error_NoPicture(Texte_From_Json,Import.Language)
     else :
         global File_Path,Final_File_Name, Picture_Size
         Final_Saved_Picture = Image.open(File_Path)
@@ -161,10 +161,11 @@ def Save(Extension,Format):
         print((largeur, hauteur) if debug == 1 else "")
         Import.DisplayProcessing(Import.Tab2DisplayWindow_x_position,Import.Tab2DisplayWindow_y_position,Import.Tab2DisplayWindow_width,Import.Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
-        Import.UpdateProcessing("Enregistrement du fichier ...")
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][Import.Language])
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][Import.Language])
         Final_Saved_Picture.save(Final_File_Name+ Extension, Format)
-        Import.UpdateProcessing("Fichier enregistré !")
-        Import.Info_FileSaved()
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["FinishFileSaving"][Import.Language])
+        Import.Info_FileSaved(Texte_From_Json,Import.Language)
         Import.HideProcessing()
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
@@ -362,12 +363,14 @@ def ZoomButtonsPositionCalculation():
 
 def PictureOffuscationTab(master,root):
     InitValues()
+    global Texte_From_Json
     global canvas, txt
     global Button_Reset,Button_Select_File,Button_Revert
     global tab2
     global Zoom_Buttons,x_Position_Recalculated_For_Zoom_Buttons
     global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
     tab2 = Import.ttk.Frame(master)
+    Texte_From_Json=Import.LoadText()
 
     Icon_Add_File = Import.PhotoImage(file=Import.Ressource_Path("Pictures/AddFile.png"))
     Icon_Reset = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Reset.png"))
@@ -388,15 +391,15 @@ def PictureOffuscationTab(master,root):
     canvas = Import.tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
     canvas.place(x=Import.Tab2DisplayWindow_x_position, y=Import.Tab2DisplayWindow_y_position,width=Import.Tab2DisplayWindow_width, height=Import.Tab2DisplayWindow_Height)
     # canvas.bind("<Button-1>", click_on_canvas)
-    txt = canvas.create_text(300, 200, text="Selectionnez une image", font="Arial 16 italic", fill="blue")
+    txt = canvas.create_text(300, 200, text=Texte_From_Json["Tab2"]["Instruction"][Import.Language], font="Arial 16 italic", fill="blue")
 
     ScrollBar()
     Boutons_ControleTab2 = [
-        [Button_Select_File, "Add file",Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
-        [Button_Validate, "Valider",Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
+        [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][Import.Language],Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
+        [Button_Validate, Texte_From_Json["Buttons"]["Validate"][Import.Language],Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Button_Reset, "Reset",Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
-        [Button_Exit, "Quitter",Icon_Exit, root.destroy,Import.tk.NORMAL],        
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][Import.Language],Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
+        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][Import.Language],Icon_Exit, root.destroy,Import.tk.NORMAL],        
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
