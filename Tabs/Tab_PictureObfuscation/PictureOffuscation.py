@@ -309,6 +309,7 @@ def ChooseFile():
         print(("pas d'image selectionnées") if Import.debug == 1 else "")
         tab2SelectedImg = 0 
         Button_Reset.config(state="disabled")
+        Import.Error_Cancelation(Texte_From_Json,Import.Language)
     
     else : 
         Button_Reset.config(state="normal")

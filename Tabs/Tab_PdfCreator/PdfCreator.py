@@ -56,7 +56,7 @@ def ChooseMultiFile():
         DisableButtonIfNecessery()
 
     else:
-        Import.Error_Cancelation()
+        Import.Error_Cancelation(Texte_From_Json,Import.Language)
 
 def OpenDialogToSavePdf():
     user_input = Import.simpledialog.askstring(Texte_From_Json["Tab1"]["SaveFile"]["WindowName"][Import.Language], Texte_From_Json["Tab1"]["SaveFile"]["Instruction"][Import.Language])

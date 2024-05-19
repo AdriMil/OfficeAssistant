@@ -17,13 +17,13 @@ import sys
 
 #Data Langagae
 import json
+from SharedFunctions.AppStringsTranslated import My_App_Strings
+
 def LoadText():
-    # Lecture des données à partir du fichier JSON
-    with open(Ressource_Path("SharedFunctions/Language.json"), 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    data = json.loads(My_App_Strings)
     return data
 
-Language = "fr"
+Language = "en"
 
 #Allows to displays print to debug
 debug = 0
@@ -57,7 +57,8 @@ Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_
 Picture_Reducer_Value =  1
 
 #Format for pictures to import
-filetypes = [("Images compatibles", "*.png;*.jpg;*.heic")]
+Texte_From_Json = LoadText()
+filetypes = [(Texte_From_Json["Common"]["FilesTypeSelection"][Language], "*.png;*.jpg;*.heic")]
 
 #Gestion chemin fichier #Format adapté pour pyinstaller :
 def Ressource_Path(relative_path):

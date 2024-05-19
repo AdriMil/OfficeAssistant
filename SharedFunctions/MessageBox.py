@@ -10,8 +10,7 @@ def Error_NoPicture(Texte_From_Json,Language):
 def Error_Cancelation(Texte_From_Json,Language):
     messagebox.showinfo(Texte_From_Json["MessageBox"]["Type"]["Error"][Language], Texte_From_Json["MessageBox"]["Message"]["Error_Cancelation"][Language])
 def Info_ProcessFinished(liste_chemin,FileName,chemin_final,Texte_From_Json,Language):
-    message = "Fichier pdf créé avec succès\n\nDétails:\n- Nombre d'images : "+ str(len(liste_chemin)) +"\n- Nom du fichier : "+FileName+"\n- Chemin : "+chemin_final
-    message = Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part1"][Language]+ str(len(liste_chemin)) +Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part2"][Language]+FileName+Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part3"][Language]+chemin_final
+    message = Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part1"][Language]+"\n\n" + Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part1.1"][Language] + str(len(liste_chemin))+"\n" +Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part2"][Language]+FileName+"\n" +Texte_From_Json["MessageBox"]["Message"]["Info_ProcessFinished"]["part3"][Language]+chemin_final+"\n"
     messagebox.showinfo(Texte_From_Json["MessageBox"]["Type"]["Info"][Language], message)
 def Info_Reset(Texte_From_Json,Language):
     reponse = messagebox.askquestion(Texte_From_Json["MessageBox"]["Type"]["Confirmation"][Language], Texte_From_Json["MessageBox"]["Message"]["Info_Reset"][Language])
