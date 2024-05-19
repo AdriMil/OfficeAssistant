@@ -23,7 +23,7 @@ def LoadText():
     data = json.loads(My_App_Strings)
     return data
 
-Language = "en"
+Language = "fr"
 
 #Allows to displays print to debug
 debug = 0
