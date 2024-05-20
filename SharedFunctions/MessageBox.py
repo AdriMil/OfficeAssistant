@@ -20,3 +20,6 @@ def Info_Reset_Tab2(Texte_From_Json,Language):
     return reponse
 def Info_FileSaved(Texte_From_Json,Language):
     messagebox.showinfo(Texte_From_Json["MessageBox"]["Type"]["Info"][Language], Texte_From_Json["MessageBox"]["Message"]["Info_FileSaved"][Language])
+def Info_Change_Language(Texte_From_Json,Language):
+    reponse = messagebox.askquestion(Texte_From_Json["MessageBox"]["Type"]["Confirmation"][Language], Texte_From_Json["MessageBox"]["Message"]["ChangeLanguage"][Language])
+    return reponse

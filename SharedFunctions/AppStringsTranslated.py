@@ -262,6 +262,12 @@ My_App_Strings = '''
                 "en": "File saved",
                 "es": "Archivo guardado",
                 "ge": "Datei gespeichert"
+            },
+            "ChangeLanguage": {
+                "fr": "Si vous changez de langue, vous perdrez vos modifications. Voulez vous continuer ?",
+                "en": "If you change languages, you will lose your changes. Do you want to continue?",
+                "es": "Si cambia de idioma, perderá los cambios. ¿Quieres continuar?",
+                "ge": "Wenn Sie die Sprache ändern, gehen Ihre Änderungen verloren. Möchtest du fortfahren?"
             }
         }
     }
