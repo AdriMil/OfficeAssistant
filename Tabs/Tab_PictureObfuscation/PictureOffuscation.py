@@ -1,9 +1,13 @@
 import SharedFunctions.imports as Import
 from PIL import Image
 from PIL import ImageTk  
+from SharedFunctions.imports import AppLanguages
 
 Place_Zoom_Buttons_Only_Once = 0 #Should never reseted
 
+def Tab2UpdateLangages(Current_Language):
+    Boutons_ControleTab2[0][0].update()
+    
 def InitValues():
     global Selected_Picture, x_Position_Recalculated_For_Zoom_Buttons, Zoom_Incrementation, Rectangles_Coordonates_List, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location,Display_Revert_Button
     global Extension,Format
@@ -17,9 +21,6 @@ def InitValues():
     First_Clic_y_Location = None #Store first clic y locatoin
     Display_Revert_Button = 0
     Extension,Format = "","" #Used to share between function kind of selected picture
-
-def test():
-    print("test")
 
 # When left clik on mouse,  start rectangle creation
 def StartRectangleDrawing(event):
@@ -105,7 +106,7 @@ def ResetAllRectangles():
         canvas.update()
         Rectangles_Coordonates_List = []
         Rectangles_Ids_List = []
-        Answer = Import.Info_Reset_Tab2(Texte_From_Json,Import.Language)
+        Answer = Import.Info_Reset_Tab2(Texte_From_Json,AppLanguages.Language)
         if Answer == "yes":
             Reset()
     else:
@@ -144,13 +145,13 @@ def ReplacePixelRectangles(image, liste_coordonnees):
             for y in range(int(y1), int(y2) + 1):
                 # modify pixels by black pixels
                 image.putpixel((x, y), (0, 0, 0))  # Met les pixels en vert
-        Process_Text = (str(Current_Rectangle)+Texte_From_Json["Processing"]["AreasProcessing"][Import.Language] + str(Number_Of_Rectangles) + Texte_From_Json["Processing"]["AreasNumber"][Import.Language])
+        Process_Text = (str(Current_Rectangle)+Texte_From_Json["Processing"]["AreasProcessing"][AppLanguages.Language] + str(Number_Of_Rectangles) + Texte_From_Json["Processing"]["AreasNumber"][AppLanguages.Language])
         Import.UpdateProcessing(Process_Text)
     return image
 
 def Save(Extension,Format):
     if (Selected_Picture is None):
-        Import.Error_NoPicture(Texte_From_Json,Import.Language)
+        Import.Error_NoPicture(Texte_From_Json,AppLanguages.Language)
     else :
         global File_Path,Final_File_Name, Picture_Size
         Final_Saved_Picture = Image.open(File_Path)
@@ -158,11 +159,11 @@ def Save(Extension,Format):
         print((largeur, hauteur) if Import.debug == 1 else "")
         Import.DisplayProcessing(Import.Tab2DisplayWindow_x_position,Import.Tab2DisplayWindow_y_position,Import.Tab2DisplayWindow_width,Import.Tab2DisplayWindow_Height,tab2) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Rectangles_Coordonates_List)
-        Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][Import.Language])
-        Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][Import.Language])
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][AppLanguages.Language])
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][AppLanguages.Language])
         Final_Saved_Picture.save(Final_File_Name+ Extension, Format)
-        Import.UpdateProcessing(Texte_From_Json["Processing"]["FinishFileSaving"][Import.Language])
-        Import.Info_FileSaved(Texte_From_Json,Import.Language)
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["FinishFileSaving"][AppLanguages.Language])
+        Import.Info_FileSaved(Texte_From_Json,AppLanguages.Language)
         Import.HideProcessing()
 
 #Function Zoom is called when both button zoom + or button -. They send "*" or // depend on zoom + or zoom -
@@ -309,6 +310,7 @@ def ChooseFile():
         print(("pas d'image selectionnées") if Import.debug == 1 else "")
         tab2SelectedImg = 0 
         Button_Reset.config(state="disabled")
+        Import.Error_Cancelation(Texte_From_Json,AppLanguages.Language)
     
     else : 
         Button_Reset.config(state="normal")
@@ -388,15 +390,15 @@ def PictureOffuscationTab(master,root):
     canvas = Import.tk.Canvas(tab2, highlightthickness=1, highlightbackground="black")
     canvas.place(x=Import.Tab2DisplayWindow_x_position, y=Import.Tab2DisplayWindow_y_position,width=Import.Tab2DisplayWindow_width, height=Import.Tab2DisplayWindow_Height)
     # canvas.bind("<Button-1>", click_on_canvas)
-    txt = canvas.create_text(300, 200, text=Texte_From_Json["Tab2"]["Instruction"][Import.Language], font="Arial 16 italic", fill="blue")
+    txt = canvas.create_text(300, 200, text=Texte_From_Json["Tab2"]["Instruction"][AppLanguages.Language], font="Arial 16 italic", fill="blue")
 
     ScrollBar()
     Boutons_ControleTab2 = [
-        [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][Import.Language],Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
-        [Button_Validate, Texte_From_Json["Buttons"]["Validate"][Import.Language],Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
+        [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
+        [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][Import.Language],Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
-        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][Import.Language],Icon_Exit, root.destroy,Import.tk.NORMAL],        
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
+        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Icon_Exit, root.destroy,Import.tk.NORMAL],        
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 

@@ -1,3 +1,5 @@
+import json 
+My_App_Strings = '''
 {
     "MainWindows": {
         "Name": {
@@ -5,6 +7,14 @@
             "en": "OfficeAssistant",
             "es": "AsistenteDeOficina",
             "ge": "BüroAssistent"
+        }
+    },
+    "Common": {
+        "FilesTypeSelection": {
+            "fr": "Images compatibles",
+            "en": "Compatible pictures",
+            "es": "Imágenes compatibles",
+            "ge": "Kompatible bilder"
         }
     },
     "Buttons": {
@@ -211,22 +221,28 @@
             },
             "Info_ProcessFinished": {
                 "part1": {
-                    "fr": "Fichier pdf créé avec succès\n\nDétails:\n- Nombre d'images : ",
-                    "en": "Pdf file successfully created\n\nDetails: \n- Number of pictures: ",
-                    "es": "Archivo pdf creado con éxito\n\nDetalles: \n- Número de imágenes: ",
-                    "ge": "PDF-Datei erfolgreich erstellt\n\nDetails: \n- Anzahl der Bilder: "
+                    "fr": "Fichier pdf créé avec succès Détails:",
+                    "en": "Pdf file successfully created Details:",
+                    "es": "Archivo pdf creado con éxito Detalles:",
+                    "ge": "PDF-Datei erfolgreich erstellt Details:"
+                },
+                "part1.1": {
+                    "fr": "- Nombre d'images : ",
+                    "en": "- Number of pictures: ",
+                    "es": "- Número de imágenes: ",
+                    "ge": "- Anzahl der Bilder: "
                 },
                 "part2": {
-                    "fr": "\n- Nom du fichier : ",
-                    "en": "\n- File name: ",
-                    "es": "\n- Nombre del archivo: ",
-                    "ge": "\n- Dateiname: "
+                    "fr": "- Nom du fichier : ",
+                    "en": "- File name: ",
+                    "es": "- Nombre del archivo: ",
+                    "ge": "- Dateiname: "
                 },
                 "part3": {
-                    "fr": "\n- Chemin : ",
-                    "en": "\n- Path: ",
-                    "es": "\n- Ruta: ",
-                    "ge": "\n- Pfad: "
+                    "fr": "- Chemin : ",
+                    "en": "- Path: ",
+                    "es": "- Ruta: ",
+                    "ge": "- Pfad: "
                 }
             },
             "Info_Reset": {
@@ -246,7 +262,14 @@
                 "en": "File saved",
                 "es": "Archivo guardado",
                 "ge": "Datei gespeichert"
+            },
+            "ChangeLanguage": {
+                "fr": "Si vous changez de langue, vous perdrez vos modifications. Voulez vous continuer ?",
+                "en": "If you change languages, you will lose your changes. Do you want to continue?",
+                "es": "Si cambia de idioma, perderá los cambios. ¿Quieres continuar?",
+                "ge": "Wenn Sie die Sprache ändern, gehen Ihre Änderungen verloren. Möchtest du fortfahren?"
             }
         }
     }
-}
+}'''
+

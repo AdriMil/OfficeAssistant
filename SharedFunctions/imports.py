@@ -1,32 +1,33 @@
 #-------------Pour_IG--------------------#
 from tkinter import PhotoImage, NO, ttk,simpledialog,filedialog
 import tkinter as tk
-
 from PIL import Image
 from pillow_heif import register_heif_opener
-
 from Tabs.Tab_PdfCreator.UpdatePosition import ChangePlaceUp,ChangePlaceDown,DeleteSelectedLine
-
 #MessageBox import
-from SharedFunctions.MessageBox import Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,Info_Reset,Info_Reset_Tab2,Info_FileSaved
+from SharedFunctions.MessageBox import Error_NoTitle,Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,Info_Reset,Info_Reset_Tab2,Info_FileSaved, Info_Change_Language
 
-#-------------Pour PYINSTALLER--------------------#
+#-------------PYINSTALLER--------------------#
 import os
 import sys
-#Commande pour créér un .exe : pyinstaller main.spec
+#Create a .exe file : pyinstaller main.spec
 
-#Data Langagae
+#-------------App Languages--------------------#
 import json
+from SharedFunctions.AppStringsTranslated import My_App_Strings
 def LoadText():
-    # Lecture des données à partir du fichier JSON
-    with open(Ressource_Path("SharedFunctions/Language.json"), 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    data = json.loads(My_App_Strings)
     return data
 
-Language = "fr"
+class AppLanguages:
+    Language = "fr"
+    languages = ["Français", "English", "Español","German"]
 
-#Allows to displays print to debug
+#Allows to displays print, only for debug purpose
 debug = 0
+
+#------------langage Menu Shape-------------#
+Language_Button_Width = 20 ; Language_Button_Height = 1 ;
 
 #------------Design UI VARIABLE SPACE-------------#
 #Tableau Tab1:
@@ -34,30 +35,31 @@ Table_x_Position = 50 ; Table_y_Position = 200
 Table_Width = 600 ; Table_Height = 250
 Tab1Table = [Table_x_Position,Table_y_Position,Table_Width,Table_Height]
 
-#Fenetre d'affichage Tab2
+#Tab2
 Tab2DisplayWindow_x_position = 50 ; Tab2DisplayWindow_y_position = 100
 Tab2DisplayWindow_width = 600 ; Tab2DisplayWindow_Height = 400
 Tab2Canvas = [Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height]
 
-#Bouton Controle Paramètre
+#Commun buttons parameters
 Control_Button_Width = 50 ; Control_Button_Height = 50 ; Space_Between_Button = 10
 Control_Button_Init_x_Position = 0 ; Control_Button_Init_y_Position = Table_y_Position - Control_Button_Height - 30
-Window_Height = Table_Height + Control_Button_Init_y_Position + Table_y_Position
+Window_Height = Table_Height + Control_Button_Init_y_Position + Table_y_Position + (Language_Button_Height + 30)
 Police_Size = 10
 
-#Bouton Fleches Tab 1 PAramètres
+#Arrows Boutons Tab 1 parameters
 Arrows_Buttons_Width = 25 ; Arrows_Buttons_Height = 25 ; Space_Between_Arrows_Buttons = 10
 Arrows_Buttons_Init_y_Position = Table_y_Position + Table_Height + 10
 
-#Bouton Zoom Tab 2 PAramètres
+#Arrows Boutons Tab 2 parameters
 Zoom_Buttons_Width = 25 ; Zoom_Buttons_Height = 25 ; Space_Between_Zoom_Buttons = 10
 Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_Height + 10
 
-#image Btn Controle
+#Icone reducer - Will zoom on icone. 1 = 100%. 2= 200% ...
 Picture_Reducer_Value =  1
 
-#Format for pictures to import
-filetypes = [("Images compatibles", "*.png;*.jpg;*.heic")]
+#Available Formats user will see when selecting files to import
+Texte_From_Json = LoadText()
+filetypes = [(Texte_From_Json["Common"]["FilesTypeSelection"][AppLanguages.Language], "*.png;*.jpg;*.heic")]
 
 #Gestion chemin fichier #Format adapté pour pyinstaller :
 def Ressource_Path(relative_path):
@@ -133,3 +135,20 @@ def UpdateProcessing(TexteToUpdate):
 def HideProcessing():
     cadre.place_forget()
     texte.delete(1.0, tk.END)
+
+#Give number and language depend the input
+def ConvertLanguage(Current_Language):
+    if Current_Language=="Français" or Current_Language=="fr" or Current_Language==0:
+        Converted_language="fr"
+        Language_Number = 0 
+    elif Current_Language=="English" or Current_Language=="en" or Current_Language==1:
+        Converted_language="en"
+        Language_Number = 1
+    elif Current_Language=="Español" or Current_Language=="es" or Current_Language==2:
+        Converted_language="es"
+        Language_Number = 2 
+    elif Current_Language=="German" or Current_Language=="ge" or Current_Language==3:
+        Converted_language="ge"
+        Language_Number = 3 
+
+    return Converted_language,Language_Number
