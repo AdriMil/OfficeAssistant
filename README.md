@@ -1,6 +1,8 @@
 # Office Assistant
 
-First project to gain skills in Python, git, project management and as well answer to my need. Code is not perfectly optimized. Some refacto code session need to be performed. I did not spend time on User Interface, i like minimalist aspect.  
+First project to gain skills in Python, git, project management and as well answer to my need. Code is not perfectly optimized. Some refacto code session need to be performed. Minimalist user interface has been chosen.
+
+Langugage switching is available within the user interface. Available languages are French, English, Spanish and German.
 
 ## Tab1-PdfCreator
 <img src="Documentation/Conversion.png" alt="alt text" width="500">
@@ -49,6 +51,9 @@ You scanned 1 document you must share to your colleague but your personal adress
 
 
 2- Download "OfficeAssistant.Vx.y.z.exe" file
+
+Be sure you selected  the latest release version, which is display by the green information (see picture below).
+And download .exe file
 
 <img src="Documentation/ExeDownload.png" alt="alt text" width="500">
 
