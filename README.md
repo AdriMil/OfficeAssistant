@@ -1,8 +1,10 @@
 # Office Assistant
+Earn some time by using this minimalist interface for your administrative topics. 
+All operations are performed localy. You do not have to share your personals documents on internet anymore. 
 
-First project to gain skills in Python, git, project management and as well answer to my need. Code is not perfectly optimized. Some refacto code session need to be performed. Minimalist user interface has been chosen.
+Code is not perfectly optimized. 
 
-Langugage switching is available within the user interface. Available languages are French, English, Spanish and German.
+Language switching is available within the user interface. Available languages are French, English, Spanish and German.
 
 ## Tab1-PdfCreator
 <img src="Documentation/Conversion.png" alt="alt text" width="500">
@@ -15,9 +17,9 @@ You scanned 15 invoices and you want gather them in 1 files. In few clicks load 
 
 ### Notes
 - Differents pictures formats can be added at the same time.
-- Order of loaded pictures can be easily modify thanks Up and Down arrows.
+- Loaded pictures order can be easily modify thanks Up and Down arrows.
 - Loaded pictures can be delete one by one using the bottom Trash button. 
-- Loaded pictures can be delete in 1 clic with Trash button.
+- Loaded pictures can be deleted in 1 clic with Trash button.
 - When your pictures are loaded and well ordered, you can create your pdf file by selecting "Convert" button.
     * You must add a title
     * And select the path where you want save the new pdf
@@ -27,12 +29,12 @@ You scanned 15 invoices and you want gather them in 1 files. In few clicks load 
 <img src="Documentation/OffusctationExample.png" alt="alt text" width="500">
 
 ### Goal
-Hide parts of a pictures by drawing a rectangles on zone you want keep secret.
+Hide parts of a picture by drawing a rectangle on zone you want keep secret.
 All operations are performed localy, without internet. Your data are protected.
 Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
 
 ### Application exemple
-You scanned 1 document you must share to your colleague but your personal adress is visible. Draw a rectangle above area where your adress is visible and save. You can now send your new obfuscated picture.
+You scanned 1 document you must share to your colleague but your personal adress is visible. Draw a rectangle above areas where your adress is visible and save. You can now send your new obfuscated picture.
 
 ### Notes
 - Differents pictures formats can be loaded.
@@ -59,7 +61,7 @@ And download .exe file
 
 3- Execute the .exe file you downloaded from step before 
 
-**WARNING** : As I do not have (yet) security certification, **your firewall will send a Warning message at the .exe execution**. See exemple below : 
+**WARNING** : As I do not have security certification, **your firewall will send a Warning message at the .exe execution**. See exemple below : 
 
 <img src="Documentation/WindowDefenderWarning.png" alt="alt text" width="300">
 
