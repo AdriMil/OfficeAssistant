@@ -54,6 +54,24 @@ Arrows_Buttons_Init_y_Position = Table_y_Position + Table_Height + 10
 Zoom_Buttons_Width = 25 ; Zoom_Buttons_Height = 25 ; Space_Between_Zoom_Buttons = 10
 Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_Height + 10
 
+#Buttons Pictures
+def InitButtonsIcones():
+    global Icon_Add_File, Icon_Reset,Icon_Exit,Icon_Test,Icon_Validate,Icon_Zoom_More,Icon_Zoom_Less,Icon_Revert
+    global Icon_Convert_To_Pdf,Icon_Arrow_Up,Icon_Arrow_Down,Icon_Delete_Selected_Line
+
+    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
+    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
+    Icon_Revert = PhotoImage(file=Ressource_Path("Pictures/Revert.png"))
+    Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
+    Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
+    Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
+    Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+
 #Icone reducer - Will zoom on icone. 1 = 100%. 2= 200% ...
 Picture_Reducer_Value =  1
 

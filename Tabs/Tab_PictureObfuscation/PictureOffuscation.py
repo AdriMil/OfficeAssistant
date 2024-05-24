@@ -1,6 +1,4 @@
 import SharedFunctions.imports as Import
-from PIL import Image
-from PIL import ImageTk  
 from SharedFunctions.imports import AppLanguages
 
 Place_Zoom_Buttons_Only_Once = 0 #Should never reseted
@@ -154,7 +152,7 @@ def Save(Extension,Format):
         Import.Error_NoPicture(Texte_From_Json,AppLanguages.Language)
     else :
         global File_Path,Final_File_Name, Picture_Size
-        Final_Saved_Picture = Image.open(File_Path)
+        Final_Saved_Picture = Import.Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
         print((largeur, hauteur) if Import.debug == 1 else "")
         Import.DisplayProcessing(Import.Tab2DisplayWindow_x_position,Import.Tab2DisplayWindow_y_position,Import.Tab2DisplayWindow_width,Import.Tab2DisplayWindow_Height,tab2) #Call process
@@ -203,7 +201,7 @@ def Zoom(op):
         print(("Picture_Width: ", Picture_Width,"Picture_Height: ", Picture_Height) if Import.debug == 1 else "")
 
         # Convertir l'image redimensionnée en PhotoImage
-        Picture_Size = ImageTk.PhotoImage(Picture_Zoomed)
+        Picture_Size = Import.ImageTk.PhotoImage(Picture_Zoomed)
 
         # Mettre à jour l'image dans le canevas
         canvas.itemconfig(Updated_Picture, image=Picture_Size)
@@ -219,7 +217,7 @@ def DisplaySelectedPicture(result):
     global Picture_Best_Width,Picture_Best_Height # Share init size of the picture we are displaying. Values will be use by zooms functions
     global Picture_Reduction_Ratio,Zoom_Incrementation # use for pixel selection scalling 
 
-    Selected_Picture = Image.open(result)
+    Selected_Picture = Import.Image.open(result)
 
     #Get selected picture size.
     Picture_Width, Picture_Height = Selected_Picture.size
@@ -240,7 +238,7 @@ def DisplaySelectedPicture(result):
     Picture_Resized = Selected_Picture.resize((Picture_Best_Width, Picture_Best_Height))
 
     # Convert the resized image to a PhotoImage object
-    Picture_Size = ImageTk.PhotoImage(Picture_Resized)
+    Picture_Size = Import.ImageTk.PhotoImage(Picture_Resized)
 
     # Add the image to the Canvas
     Updated_Picture = canvas.create_image(0, 0, anchor="nw", image=Picture_Size)
@@ -370,16 +368,7 @@ def PictureOffuscationTab(master,root):
     global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
     tab2 = Import.ttk.Frame(master)
     Texte_From_Json=Import.LoadText()
-
-    Icon_Add_File = Import.PhotoImage(file=Import.Ressource_Path("Pictures/AddFile.png"))
-    Icon_Reset = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Reset.png"))
-    Icon_Exit = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Exit.png"))
-    Icon_Test = Import.PhotoImage(file=Import.Ressource_Path("Pictures/test.png"))
-    Icon_Validate = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Valider.png"))
-
-    Icon_Zoom_More = Import.PhotoImage(file=Import.Ressource_Path("Pictures/zoomPlus.png"))
-    Icon_Zoom_Less = Import.PhotoImage(file=Import.Ressource_Path("Pictures/zoomMoins.png"))
-    Icon_Revert = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Revert.png"))
+    Import.InitButtonsIcones() #Load button icones
 
     Button_Select_File = Import.tk.Button(tab2) ; Button_Validate = Import.tk.Button(tab2) 
     Button_Test = Import.tk.Button(tab2) ; Button_Reset=Import.tk.Button(tab2)
@@ -394,11 +383,11 @@ def PictureOffuscationTab(master,root):
 
     ScrollBar()
     Boutons_ControleTab2 = [
-        [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
-        [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
+        [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Import.Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
+        [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Import.Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
-        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
-        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Icon_Exit, root.destroy,Import.tk.NORMAL],        
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, ResetAllRectangles,Import.tk.DISABLED],
+        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],        
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
@@ -407,9 +396,9 @@ def PictureOffuscationTab(master,root):
     Import.PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculeeTab2,Import.Police_Size,TextDisplay=1,Init_State=1)
 
     Zoom_Buttons = [
-        [Button_Zoom_More, "Zoomer",Icon_Zoom_More, lambda: Zoom("*") ],
-        [Button_Zoom_Less, "Dézoomer",Icon_Zoom_Less, lambda: Zoom("//")],
-        [Button_Revert, "Revert",Icon_Revert, RevertRectangles],
+        [Button_Zoom_More, "Zoomer",Import.Icon_Zoom_More, lambda: Zoom("*") ],
+        [Button_Zoom_Less, "Dézoomer",Import.Icon_Zoom_Less, lambda: Zoom("//")],
+        [Button_Revert, "Revert",Import.Icon_Revert, RevertRectangles],
     ]
 
     x_Position_Recalculated_For_Zoom_Buttons = ZoomButtonsPositionCalculation()
