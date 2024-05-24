@@ -10,7 +10,8 @@ Language switching is available within the user interface. Available languages a
 <img src="Documentation/Conversion.png" alt="alt text" width="500">
 
 ### Goal
-Merge your pictures to create 1 pdf file without load them on internet, all operations are performed localy. Your data are protected. Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
+Merge your pictures to create 1 pdf file. 
+Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
 
 ### Application exemple
 You scanned 15 invoices and you want gather them in 1 files. In few clicks load all your scanned pictures, modify pictures order and create a pdf ! 
@@ -30,7 +31,6 @@ You scanned 15 invoices and you want gather them in 1 files. In few clicks load 
 
 ### Goal
 Hide parts of a picture by drawing a rectangle on zone you want keep secret.
-All operations are performed localy, without internet. Your data are protected.
 Compatible pictures formats are PNG, JPG and HEIC (iphone pictures) 
 
 ### Application exemple
