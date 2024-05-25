@@ -68,6 +68,7 @@ Font_Path = "arial.ttf"  # Remplacez par le chemin de votre police si nécessair
 def InitButtonsIcones():
     global Icon_Add_File, Icon_Reset,Icon_Exit,Icon_Test,Icon_Validate,Icon_Zoom_More,Icon_Zoom_Less,Icon_Revert
     global Icon_Convert_To_Pdf,Icon_Arrow_Up,Icon_Arrow_Down,Icon_Delete_Selected_Line
+    global Icon_Text_Modifications
 
     Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
     Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
@@ -81,6 +82,7 @@ def InitButtonsIcones():
     Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
     Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
     Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Text_Modifications = PhotoImage(file=Ressource_Path("Pictures/TextModification.png"))
 
 #Icone reducer - Will zoom on icone. 1 = 100%. 2= 200% ...
 Picture_Reducer_Value =  1
