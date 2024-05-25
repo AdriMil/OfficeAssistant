@@ -258,9 +258,8 @@ def AddFiligram(master,root):
     ScrollBar()
     Boutons_ControleTab2 = [
         [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Import.Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
-        # [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Import.Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
         [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Import.Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
-        # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],
         [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],        
         # [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
     ]
