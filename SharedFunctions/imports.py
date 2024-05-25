@@ -25,6 +25,16 @@ class AppLanguages:
     Language = "fr"
     languages = ["Français", "English", "Español","German"]
 
+class Watermark:
+    Canvas = None
+    Text = ""
+    Transparency = 75 #Value between 0 and 254
+    Font_Size = 25
+    Color = (255, 0, 0)
+    Space_Between_Text = 50
+    Width =None
+    Height = None
+    Lines_Coordonate = []
 #Allows to displays print, only for debug purpose
 debug = 1
 
@@ -182,3 +192,10 @@ def ConvertLanguage(Current_Language):
         Language_Number = 3 
 
     return Converted_language,Language_Number
+
+def TransparencyCrossProduct(Selected_Value,Step):
+    if Step == "From_Slider":
+        Transparency_Value = (Selected_Value*254)//100
+    elif Step == "From_RealValue":
+        Transparency_Value = (Selected_Value*100)//254
+    return Transparency_Value

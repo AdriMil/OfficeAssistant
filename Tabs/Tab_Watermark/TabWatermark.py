@@ -1,95 +1,50 @@
 import SharedFunctions.imports as Import
 from SharedFunctions.imports import AppLanguages
 from Tabs.Tab_Watermark.EditingTools import AddEditingCanvas, HideEditingCanvas , EditingCanvas
+from Tabs.Tab_Watermark.CreateWatermarkLayer import create_text_image, DisplayText
 from PIL import Image, ImageTk, ImageDraw, ImageFont
-class Watermark:
-    Text = ""
-    Transparency = 75 #Value between 0 and 254
-    Font_Size = 25
-    Color = (255, 0, 0)
 
 
 #Define init Watermark text with today date
 def WaterMarkInitText():
     current_date = Import.datetime.date.today()
     formatted_date = current_date.strftime("%d/%m/%Y")
-    Watermark.Text = ("Watermarked on " + formatted_date)
+    Import.Watermark.Text = ("Watermarked on " + formatted_date)
 
 
 
-def EditWatermarkText():
-    user_input = Import.simpledialog.askstring(Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WindowName"][AppLanguages.Language], Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["Instruction"][AppLanguages.Language], initialvalue=Watermark.Text)
+def TOBEDEFINEDAFRTERCANVASEDITING():
+    user_input = Import.simpledialog.askstring(Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WindowName"][AppLanguages.Language], Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["Instruction"][AppLanguages.Language], initialvalue=Import.Watermark.Text)
     if user_input is None:
         print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
     elif user_input:
         Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
         Import.UpdateProcessing(Texte_From_Json["MessageBox"]["Message"]["LoadingTime"][AppLanguages.Language])
 
-        Watermark.Text = user_input
+        Import.Watermark.Text = user_input
         canvas.delete(Superposed_Picture)
         Import.HideProcessing()
-        DisplayText()
+        DisplayText(canvas)
     else:
         Import.Error_EmptyField(Texte_From_Json,AppLanguages.Language)
         EditWatermarkText()
 
 
-def test():
+def EditWatermarkText():
     if EditingCanvas.IsDiplayed == 0 : 
         EditingCanvas.IsDiplayed = 1
         AddEditingCanvas(tab3,Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
-
     else : 
         EditingCanvas.IsDiplayed = 0
         HideEditingCanvas()
-       
-
-
-
-#This funcction create a transparency picture with text. This picture will be put above the loaded picture. 
-def create_text_image(Filigram_Text, Font_Path,font_size, Color, Transparency, Filigram_y_Start, Picture_Width, Picture_Height,Coordonate_Liste,Step):
-    image = Image.new("RGBA", (Picture_Width, Picture_Height), (255, 255, 255, 0)) #Create transparency picture to put above loaded picture
-    draw = ImageDraw.Draw(image)
-    
-    # Load font  and #Color + transparency
-    font = ImageFont.truetype(Font_Path, font_size)
-    text_color = (*Color, Transparency)
-
-    # When visualisation step, save filigram texts coordonates for displayed picture (which is reduced in canvas)
-    if Step == "visualisation":
-        for i in range(0, Picture_Height, space_between_text):
-            x = 0
-            y = Filigram_y_Start + i
-            draw.text((x, y), Filigram_Text, font=font, fill=text_color)
-            text_coordinates.append([x, y])
-        if Import.debug == 1: print("Visualisation sptep texte coordonates : ", text_coordinates)
-
-    # When saving step, apply filigram coordonates for real picture (which is greater than the one displayed in canvas)
-    elif Step == "saving":
-        for coordonates in Coordonate_Liste:
-            x,y = coordonates
-            draw.text((x, y), Filigram_Text, font=font, fill=text_color)
-    return image
-
-
-def DisplayText():
-    global text_image  # Déclarez text_image comme variable globale pour pouvoir l'utiliser dans save_image
-    global Superposed_Picture
-    # Création de l'image du texte avec transparence
-    text_image = create_text_image(Watermark.Text,Import.Font_Path, Watermark.Font_Size, Watermark.Color, Watermark.Transparency, 0, Picture_Width, Picture_Height,text_coordinates,Step="visualisation")
-    text_image_tk = ImageTk.PhotoImage(text_image)
-    # Affichage de l'image du texte sur le canvas
-    Superposed_Picture  = canvas.create_image(0, 0, anchor="nw", image=text_image_tk)
-    # Stocker l'image pour éviter qu'elle soit garbage collected
-    canvas.text_image_tk = text_image_tk
 
 
 def ReplacePixelRectangles(image, liste_coordonnees):
     global space_between_text_recalculated
-    Current_Rectangle = 0
+    Current_Rectangle = 0 ; text_coordinates_recalculate = []
     Number_Of_Rectangles = len(liste_coordonnees)
-    font_size_recalculated = int(Watermark.Font_Size * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else Watermark.Font_Size
-    space_between_text_recalculated = int(space_between_text * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else space_between_text
+    font_size_recalculated = int(Import.Watermark.Font_Size * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else Import.Watermark.Font_Size
+    space_between_text_recalculated = int(Import.Watermark.Space_Between_Text * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else Import.Watermark.Space_Between_Text
 
     for coordonnees in liste_coordonnees:
         Current_Rectangle = Current_Rectangle  + 1
@@ -99,7 +54,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
         if int(Picture_Reduction_Ratio) != 0: x1, y1 = [int(coord * Picture_Reduction_Ratio) for coord in (x1, y1)]
         text_coordinates_recalculate.append([x1,y1])
     print("Saving sptep texte coordonates recalculée: ", text_coordinates_recalculate)
-    text_image = create_text_image(Watermark.Text, Import.Font_Path, font_size_recalculated, Watermark.Color, Watermark.Transparency, 100, Picture_Width, Picture_Height,text_coordinates_recalculate,Step= "saving")
+    text_image = create_text_image(Import.Watermark.Text, Import.Font_Path, font_size_recalculated,Import.Watermark.Space_Between_Text, Import.Watermark.Color, Import.Watermark.Transparency, 100, Picture_Width, Picture_Height,text_coordinates_recalculate,Step= "saving")
     
     Process_Text = (str(Current_Rectangle)+Texte_From_Json["Processing"]["AreasProcessing"][AppLanguages.Language] + str(Number_Of_Rectangles) + Texte_From_Json["Processing"]["AreasNumber"][AppLanguages.Language])
     Import.UpdateProcessing(Process_Text)
@@ -114,7 +69,7 @@ def Save(Extension,Format):
         Final_Saved_Picture = Import.Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
         print((largeur, hauteur) if Import.debug == 1 else "")
-        Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, text_coordinates)
+        Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Import.Watermark.Lines_Coordonate)
         combined_image = Image.alpha_composite(Selected_Picture.convert("RGBA"), Final_Saved_Picture)
         Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][AppLanguages.Language])
         combined_image.save(Final_File_Name+ Extension, Format)
@@ -128,12 +83,12 @@ def Tab2UpdateLangages(Current_Language):
 def InitValues():
     global Selected_Picture, text_coordinates
     global Extension,Format,text_coordinates_recalculate
-    global space_between_text, space_between_text_recalculated
+    global space_between_text_recalculated
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     global Superposed_Picture
     Selected_Picture = None
     text_coordinates  = [] ; text_coordinates_recalculate  = [] 
-    space_between_text = 50 ; space_between_text_recalculated = None
+    space_between_text_recalculated = None
     Picture_Size = None ; Picture_Resized = None ; Picture_Reduction_Ratio = None
     Extension,Format = "","" #Used to share between function kind of selected picture
     Superposed_Picture = None #Will be the displayed layer with watermark visible
@@ -165,6 +120,8 @@ def DisplaySelectedPicture(result):
 
     #Get selected picture size.
     Picture_Width, Picture_Height = Selected_Picture.size
+    Import.Watermark.Width = Picture_Width
+    Import.Watermark.Height = Picture_Height
 
     if Import.debug==1 : print("Picture Width: ",Picture_Width, "Picture Height: ", Picture_Height)
     #Calculate how to ajust the picture size in the UI
@@ -265,7 +222,7 @@ def ChooseFile():
         ScrollBarLenghCalculation()
         ShowScrollbars()
 
-        DisplayText()
+        DisplayText(canvas)
         
 
 
@@ -286,6 +243,7 @@ def AddWatermark(master,root):
     Button_Exit = Import.tk.Button(tab3) ; Button_Text_Modification = Import.tk.Button(tab3)
 
     canvas = Import.tk.Canvas(tab3, highlightthickness=1, highlightbackground="black")
+    Import.Watermark.Canvas = canvas
     canvas.place(x=Import.Tab2DisplayWindow_x_position, y=Import.Tab2DisplayWindow_y_position,width=Import.Tab2DisplayWindow_width, height=Import.Tab2DisplayWindow_Height)
     # canvas.bind("<Button-1>", click_on_canvas)
     txt = canvas.create_text(300, 200, text=Texte_From_Json["Tab2"]["Instruction"][AppLanguages.Language], font="Arial 16 italic", fill="blue")
@@ -300,7 +258,7 @@ def AddWatermark(master,root):
         [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],       
         [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],        
 
-        [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
+        # [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
