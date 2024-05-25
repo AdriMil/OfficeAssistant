@@ -1,11 +1,14 @@
 import SharedFunctions.imports as Import
 from SharedFunctions.imports import AppLanguages
-
+from Tabs.Tab_Watermark.EditingTools import AddEditingCanvas, HideEditingCanvas , EditingCanvas
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 class Watermark:
     Text = ""
-    Transparency = 25 #Value between 0 and 254
-    
+    Transparency = 75 #Value between 0 and 254
+    Font_Size = 25
+    Color = (255, 0, 0)
+
+
 #Define init Watermark text with today date
 def WaterMarkInitText():
     current_date = Import.datetime.date.today()
@@ -19,12 +22,28 @@ def EditWatermarkText():
     if user_input is None:
         print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
     elif user_input:
+        Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
+        Import.UpdateProcessing(Texte_From_Json["MessageBox"]["Message"]["LoadingTime"][AppLanguages.Language])
+
         Watermark.Text = user_input
         canvas.delete(Superposed_Picture)
+        Import.HideProcessing()
         DisplayText()
     else:
         Import.Error_EmptyField(Texte_From_Json,AppLanguages.Language)
         EditWatermarkText()
+
+
+def test():
+    if EditingCanvas.IsDiplayed == 0 : 
+        EditingCanvas.IsDiplayed = 1
+        AddEditingCanvas(tab3,Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
+
+    else : 
+        EditingCanvas.IsDiplayed = 0
+        HideEditingCanvas()
+       
+
 
 
 #This funcction create a transparency picture with text. This picture will be put above the loaded picture. 
@@ -55,11 +74,9 @@ def create_text_image(Filigram_Text, Font_Path,font_size, Color, Transparency, F
 
 def DisplayText():
     global text_image  # Déclarez text_image comme variable globale pour pouvoir l'utiliser dans save_image
-    global font_size
     global Superposed_Picture
-    font_size = 50
     # Création de l'image du texte avec transparence
-    text_image = create_text_image(Watermark.Text, Import.Font_Path, font_size, (255, 0, 0), Watermark.Transparency, 0, Picture_Width, Picture_Height,text_coordinates,Step="visualisation")
+    text_image = create_text_image(Watermark.Text,Import.Font_Path, Watermark.Font_Size, Watermark.Color, Watermark.Transparency, 0, Picture_Width, Picture_Height,text_coordinates,Step="visualisation")
     text_image_tk = ImageTk.PhotoImage(text_image)
     # Affichage de l'image du texte sur le canvas
     Superposed_Picture  = canvas.create_image(0, 0, anchor="nw", image=text_image_tk)
@@ -71,7 +88,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
     global space_between_text_recalculated
     Current_Rectangle = 0
     Number_Of_Rectangles = len(liste_coordonnees)
-    font_size_recalculated = int(font_size * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else font_size
+    font_size_recalculated = int(Watermark.Font_Size * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else Watermark.Font_Size
     space_between_text_recalculated = int(space_between_text * Picture_Reduction_Ratio) if int(Picture_Reduction_Ratio) != 0 else space_between_text
 
     for coordonnees in liste_coordonnees:
@@ -82,7 +99,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
         if int(Picture_Reduction_Ratio) != 0: x1, y1 = [int(coord * Picture_Reduction_Ratio) for coord in (x1, y1)]
         text_coordinates_recalculate.append([x1,y1])
     print("Saving sptep texte coordonates recalculée: ", text_coordinates_recalculate)
-    text_image = create_text_image(Watermark.Text, Import.Font_Path, font_size_recalculated, (255, 0, 0), Watermark.Transparency, 100, Picture_Width, Picture_Height,text_coordinates_recalculate,Step= "saving")
+    text_image = create_text_image(Watermark.Text, Import.Font_Path, font_size_recalculated, Watermark.Color, Watermark.Transparency, 100, Picture_Width, Picture_Height,text_coordinates_recalculate,Step= "saving")
     
     Process_Text = (str(Current_Rectangle)+Texte_From_Json["Processing"]["AreasProcessing"][AppLanguages.Language] + str(Number_Of_Rectangles) + Texte_From_Json["Processing"]["AreasNumber"][AppLanguages.Language])
     Import.UpdateProcessing(Process_Text)
@@ -92,13 +109,13 @@ def Save(Extension,Format):
     if (Selected_Picture is None):
         Import.Error_NoPicture(Texte_From_Json,AppLanguages.Language)
     else :
+        Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
+        Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][AppLanguages.Language])
         Final_Saved_Picture = Import.Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
         print((largeur, hauteur) if Import.debug == 1 else "")
-        Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, text_coordinates)
         combined_image = Image.alpha_composite(Selected_Picture.convert("RGBA"), Final_Saved_Picture)
-        Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][AppLanguages.Language])
         Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][AppLanguages.Language])
         combined_image.save(Final_File_Name+ Extension, Format)
         Import.UpdateProcessing(Texte_From_Json["Processing"]["FinishFileSaving"][AppLanguages.Language])
@@ -131,7 +148,6 @@ def Reset():
     Button_Text_Modification.config(state="disabled")
     canvas.delete("all")
     HideScrollbars() 
-    Boutons_ControleTab3[1][0].configure(state=Import.tk.DISABLED)
 
 
 
@@ -150,6 +166,7 @@ def DisplaySelectedPicture(result):
     #Get selected picture size.
     Picture_Width, Picture_Height = Selected_Picture.size
 
+    if Import.debug==1 : print("Picture Width: ",Picture_Width, "Picture Height: ", Picture_Height)
     #Calculate how to ajust the picture size in the UI
     Picture_Reduction_Ratio = (Picture_Width/Import.Tab2DisplayWindow_width)
     print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if Import.debug ==1 else "")
@@ -220,6 +237,9 @@ def ChooseFile():
         Import.Error_Cancelation(Texte_From_Json,AppLanguages.Language)
     
     else : 
+        Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
+        Import.UpdateProcessing(Texte_From_Json["MessageBox"]["Message"]["LoadingTime"][AppLanguages.Language])
+
         Button_Reset.config(state="normal")
         Button_Select_File.config(state="disabled")
         Button_Text_Modification.config(state="normal")
@@ -239,13 +259,14 @@ def ChooseFile():
             Extension,Format = ".jpg" , "png"
         else:
             Extension,Format = ".png" , "png"
-
+        Import.HideProcessing()
         DisplaySelectedPicture(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
         ScrollBarLenghCalculation()
         ShowScrollbars()
 
         DisplayText()
+        
 
 
 
@@ -279,7 +300,7 @@ def AddWatermark(master,root):
         [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],       
         [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],        
 
-        # [Button_Test, "Test",Import.Icon_Test, DisplayText, Import.tk.NORMAL],
+        [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
     ]
 
     # Boucle placement des bouttons

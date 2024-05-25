@@ -303,6 +303,24 @@ My_App_Strings = '''
                 "en": "The field remained empty, add at least 1 character.",
                 "es": "El campo quedó vacío, añade al menos 1 carácter.",
                 "ge": "Das Feld ist leer geblieben, fügen Sie mindestens 1 Zeichen hinzu."
+            },
+            "LoadingTimeHighDefinition": {
+                "fr": "Image en haute definition, le chargement est en cours, veuillez patientez quelques secondes",
+                "en": "High-definition picture, loading in progress, please wait a few seconds.",
+                "es": "Imagen de alta definición, carga en progreso, por favor espere unos segundos.",
+                "ge": "Hochauflösendes Bild, Laden läuft, bitte warten Sie einige Sekunden."
+            },
+            "LoadingTimeNormalDefinition": {
+                "fr": "Le chargement est en cours, veuillez patientez quelques secondes",
+                "en": "Loading in progress, please wait a few seconds.",
+                "es": "Carga en progreso, por favor espere unos segundos.",
+                "ge": "Laden läuft, bitte warten Sie einige Sekunden."
+            },
+            "LoadingTime": {
+                "fr": "Le chargement est en cours, veuillez patientez quelques secondes",
+                "en": "Loading in progress, please wait a few seconds.",
+                "es": "Carga en progreso, por favor espere unos segundos.",
+                "ge": "Laden läuft, bitte warten Sie einige Sekunden."
             }
         }
     }
