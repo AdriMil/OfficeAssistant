@@ -6,7 +6,8 @@ from pillow_heif import register_heif_opener
 from Tabs.Tab_PdfCreator.UpdatePosition import ChangePlaceUp,ChangePlaceDown,DeleteSelectedLine
 #MessageBox import
 from SharedFunctions.MessageBox import Error_NoTitle,Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,Info_Reset,Info_Reset_Tab2,Info_FileSaved, Info_Change_Language
-
+from PIL import Image
+from PIL import ImageTk  
 #-------------PYINSTALLER--------------------#
 import os
 import sys
@@ -24,7 +25,7 @@ class AppLanguages:
     languages = ["Français", "English", "Español","German"]
 
 #Allows to displays print, only for debug purpose
-debug = 0
+debug = 1
 
 #------------langage Menu Shape-------------#
 Language_Button_Width = 20 ; Language_Button_Height = 1 ;
@@ -40,6 +41,11 @@ Tab2DisplayWindow_x_position = 50 ; Tab2DisplayWindow_y_position = 100
 Tab2DisplayWindow_width = 600 ; Tab2DisplayWindow_Height = 400
 Tab2Canvas = [Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height]
 
+#Tab3
+Tab3DisplayWindow_x_position = 50 ; Tab3DisplayWindow_y_position = 100
+Tab3DisplayWindow_width = 600 ; Tab3DisplayWindow_Height = 400
+Tab3Canvas = [Tab3DisplayWindow_x_position,Tab3DisplayWindow_y_position,Tab3DisplayWindow_width,Tab3DisplayWindow_Height]
+
 #Commun buttons parameters
 Control_Button_Width = 50 ; Control_Button_Height = 50 ; Space_Between_Button = 10
 Control_Button_Init_x_Position = 0 ; Control_Button_Init_y_Position = Table_y_Position - Control_Button_Height - 30
@@ -53,6 +59,10 @@ Arrows_Buttons_Init_y_Position = Table_y_Position + Table_Height + 10
 #Arrows Boutons Tab 2 parameters
 Zoom_Buttons_Width = 25 ; Zoom_Buttons_Height = 25 ; Space_Between_Zoom_Buttons = 10
 Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_Height + 10
+
+#Police
+Police_Typo  = "Helvetica"
+Font_Path = "arial.ttf"  # Remplacez par le chemin de votre police si nécessaire
 
 #Buttons Pictures
 def InitButtonsIcones():
@@ -91,7 +101,6 @@ def Ressource_Path(relative_path):
 
 print(Ressource_Path("Pictures/AddFile.png"))
 
-
 # Work with HEIC Picture
 def ConvertHeicToPillowFormat(heic_path):
     # Enregistrement du module d'ouverture pour le format HEIC
@@ -126,7 +135,7 @@ def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYour
 def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculee,Police_Size,TextDisplay,Init_State):
     for i in range(0,len(Button_List)):
         Button_List[i][2] = Button_List[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
-        Button_List[i][0].configure( width=Button_Width, height= Button_Height, font=("Helvetica", Police_Size),image=Button_List[i][2], command=Button_List[i][3] )
+        Button_List[i][0].configure( width=Button_Width, height= Button_Height, font=(Police_Typo, Police_Size),image=Button_List[i][2], command=Button_List[i][3] )
         Button_List[i][0].place(x=Position_x_recalculee, y=Position_y_recalculee)
         if(TextDisplay==1):Button_List[i][0].configure(text = Button_List[i][1],compound=tk.TOP)
         if(Init_State==1):Button_List[i][0].configure(state=Button_List[i][4])
