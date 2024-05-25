@@ -5,7 +5,7 @@ import Tabs.Tab_PictureObfuscation.PictureOffuscation as PictureOffuscationFunct
 import SharedFunctions.imports as Import
 from Tabs.Tab_PictureObfuscation.PictureOffuscation import Tab2UpdateLangages
 from SharedFunctions.imports import AppLanguages
-import Tabs.Tab_Filigram.TabFiligram as AddFiligram
+import Tabs.Tab_Watermark.TabWatermark as AddWatermark
 
 #Init Soft version, will be overwrite by Pipelines process
 def MyUserInterface(root):
@@ -17,10 +17,10 @@ def InitTabs(root):
     tabControl = Import.ttk.Notebook(root)
     tab1 = PdfCreatorFunctions.PdfCreatorTab(tabControl,root)
     tab2 = PictureOffuscationFunctions.PictureOffuscationTab(tabControl,root)
-    tab3 = AddFiligram.AddFiligram(tabControl,root)
+    tab3 = AddWatermark.AddWatermark(tabControl,root)
     tabControl.add(tab1, text=Texte_From_Json["Tab1"]["TabName"][AppLanguages.Language])
     tabControl.add(tab2, text=Texte_From_Json["Tab2"]["TabName"][AppLanguages.Language])
-    tabControl.add(tab3, text=Texte_From_Json["Tab2"]["TabName"][AppLanguages.Language])
+    tabControl.add(tab3, text=Texte_From_Json["Tab3"]["TabName"][AppLanguages.Language])
     tabControl.pack(expand=1, fill="both")
 
 def LanguageChanged(Current_Language):

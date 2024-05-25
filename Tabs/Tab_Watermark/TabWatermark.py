@@ -5,32 +5,32 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 
 #This funcction create a transparency picture with text. This picture will be put above the loaded picture. 
-def create_text_image(text, font_path, font_size, color, alpha, x_offset, width, height,coordonate_Liste,step):
-    image = Image.new("RGBA", (width, height), (255, 255, 255, 0)) #Create transparency picture to put above loaded picture
+def create_text_image(Filigram_Text, Font_Path, Color, Transparency, Filigram_y_Start, Picture_Width, Picture_Height,Coordonate_Liste,Step):
+    image = Image.new("RGBA", (Picture_Width, Picture_Height), (255, 255, 255, 0)) #Create transparency picture to put above loaded picture
     draw = ImageDraw.Draw(image)
     
     # Load font  and #Color + transparency
-    font = ImageFont.truetype(font_path, font_size)
-    text_color = (*color, alpha)
+    font = ImageFont.truetype(Font_Path, font_size)
+    text_color = (*Color, Transparency)
 
     # When visualisation step, save filigram texts coordonates for displayed picture (which is reduced in canvas)
-    if step == "visualisation":
-        for i in range(0, height, space_between_text):
+    if Step == "visualisation":
+        for i in range(0, Picture_Height, space_between_text):
             x = 0
-            y = x_offset + i
-            draw.text((x, y), text, font=font, fill=text_color)
+            y = Filigram_y_Start + i
+            draw.text((x, y), Filigram_Text, font=font, fill=text_color)
             text_coordinates.append([x, y])
         if Import.debug == 1: print("Visualisation sptep texte coordonates : ", text_coordinates)
 
     # When saving step, apply filigram coordonates for real picture (which is greater than the one displayed in canvas)
-    elif step == "saving":
-        for coordonates in coordonate_Liste:
+    elif Step == "saving":
+        for coordonates in Coordonate_Liste:
             x,y = coordonates
-            draw.text((x, y), text, font=font, fill=text_color)
+            draw.text((x, y), Filigram_Text, font=font, fill=text_color)
     return image
 
 
-def test():
+def DisplayText():
     global text_image  # Déclarez text_image comme variable globale pour pouvoir l'utiliser dans save_image
     global font_size
     font_size = 50
@@ -58,7 +58,7 @@ def ReplacePixelRectangles(image, liste_coordonnees):
         Current_Rectangle = Current_Rectangle  + 1
         x1, y1 = coordonnees
         
-        #If picture is narrower than canvas, we do not apply recalculation of the Rectangles_Ids_List positions
+        #If picture is narrower than canvas, we do not apply recalculation of text positions
         if int(Picture_Reduction_Ratio) != 0: x1, y1 = [int(coord * Picture_Reduction_Ratio) for coord in (x1, y1)]
         text_coordinates_recalculate.append([x1,y1])
     print("Saving sptep texte coordonates recalculée: ", text_coordinates_recalculate)
@@ -87,38 +87,27 @@ def Save(Extension,Format):
         Import.HideProcessing()
 
 def Tab2UpdateLangages(Current_Language):
-    Boutons_ControleTab2[0][0].update()
+    Boutons_ControleTab3[0][0].update()
     
 def InitValues():
-    global Selected_Picture, text_coordinates, Rectangles_Ids_List, Current_Rectangle_Id, First_Clic_x_Location, First_Clic_y_Location,Display_Revert_Button
+    global Selected_Picture, text_coordinates
     global Extension,Format,text_coordinates_recalculate
     global space_between_text, space_between_text_recalculated
+    global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     Selected_Picture = None
-    text_coordinates  = [] 
-    text_coordinates_recalculate  = [] 
-    space_between_text = 50
-    space_between_text_recalculated = None
-    Rectangles_Ids_List = [] # Store rectangle's id
-    Current_Rectangle_Id = None # Store current rectangle's id
-    First_Clic_x_Location = None #Store first clic x locatoin
-    First_Clic_y_Location = None #Store first clic y locatoin
-    Display_Revert_Button = 0
+    text_coordinates  = [] ; text_coordinates_recalculate  = [] 
+    space_between_text = 50 ; space_between_text_recalculated = None
+    Picture_Size = None ; Picture_Resized = None ; Picture_Reduction_Ratio = None
     Extension,Format = "","" #Used to share between function kind of selected picture
-
-
 
 def Reset():
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     InitValues()
-    Picture_Size = None
-    Picture_Resized = None
-    Picture_Reduction_Ratio = None
-
     Button_Select_File.config(state="normal")
     Button_Reset.config(state="disabled")
     canvas.delete("all")
     HideScrollbars() 
-    Boutons_ControleTab2[1][0].configure(state=Import.tk.DISABLED)
+    Boutons_ControleTab3[1][0].configure(state=Import.tk.DISABLED)
 
 
 
@@ -229,26 +218,26 @@ def ChooseFile():
         ScrollBarLenghCalculation()
         ShowScrollbars()
 
-        Boutons_ControleTab2[1][0].configure(state=Import.tk.NORMAL)
+        Boutons_ControleTab3[1][0].configure(state=Import.tk.NORMAL)
 
-        test()
+        DisplayText()
 
 
 
-def AddFiligram(master,root):
+def AddWatermark(master,root):
     InitValues()
     global Texte_From_Json
     global canvas, txt
     global Button_Reset,Button_Select_File
     global tab3
-    global Boutons_ControleTab2 # Used to active or disable button depend on UI actions
+    global Boutons_ControleTab3 # Used to active or disable button depend on UI actions
     tab3 = Import.ttk.Frame(master)
     Texte_From_Json=Import.LoadText()
     Import.InitButtonsIcones() #Load button icones
 
     Button_Select_File = Import.tk.Button(tab3) ; Button_Validate = Import.tk.Button(tab3) 
     Button_Test = Import.tk.Button(tab3) ; Button_Reset=Import.tk.Button(tab3)
-    Button_Exit = Import.tk.Button(tab3) 
+    Button_Exit = Import.tk.Button(tab3) ; Button_Text_Modification = Import.tk.Button(tab3)
 
     canvas = Import.tk.Canvas(tab3, highlightthickness=1, highlightbackground="black")
     canvas.place(x=Import.Tab2DisplayWindow_x_position, y=Import.Tab2DisplayWindow_y_position,width=Import.Tab2DisplayWindow_width, height=Import.Tab2DisplayWindow_Height)
@@ -256,17 +245,19 @@ def AddFiligram(master,root):
     txt = canvas.create_text(300, 200, text=Texte_From_Json["Tab2"]["Instruction"][AppLanguages.Language], font="Arial 16 italic", fill="blue")
 
     ScrollBar()
-    Boutons_ControleTab2 = [
+    Boutons_ControleTab3 = [
         [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Import.Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
+        [Button_Text_Modification, Texte_From_Json["Buttons"]["TextModification"][AppLanguages.Language],Import.Icon_Text_Modifications, root.destroy,Import.tk.DISABLED],
         [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Import.Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
-        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],       
         [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],        
-        # [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
+
+        # [Button_Test, "Test",Import.Icon_Test, DisplayText, Import.tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
-    Position_x_recalculeeTab2,Position_y_recalculeeTab2 = Import.ControlsButtonsInitPositionCalculation(Boutons_ControleTab2,Import.Tab2Canvas,offset=30)
-    Import.PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculeeTab2,Import.Police_Size,TextDisplay=1,Init_State=1)
+    Position_x_recalculeeTab2,Position_y_recalculeeTab2 = Import.ControlsButtonsInitPositionCalculation(Boutons_ControleTab3,Import.Tab2Canvas,offset=30)
+    Import.PlaceButtonsAutomaticaly(Boutons_ControleTab3,Position_y_recalculeeTab2,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculeeTab2,Import.Police_Size,TextDisplay=1,Init_State=1)
 
     canvas.bind("<MouseWheel>", MousewheelMouvement)
     canvas.bind("<Button-2>", HorizontalMouvement)
