@@ -231,6 +231,7 @@ def ChooseFile():
 
         Boutons_ControleTab2[1][0].configure(state=Import.tk.NORMAL)
 
+        test()
 
 
 
@@ -261,7 +262,7 @@ def AddFiligram(master,root):
         [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Import.Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
         # [Btn_ConvertirTab2, "Convertir",img_ConvertTab2, test,tk.DISABLED],
         [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],        
-        [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
+        # [Button_Test, "Test",Import.Icon_Test, test, Import.tk.NORMAL],
     ]
 
     # Boucle placement des bouttons
