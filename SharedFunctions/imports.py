@@ -5,8 +5,10 @@ from PIL import Image
 from pillow_heif import register_heif_opener
 from Tabs.Tab_PdfCreator.UpdatePosition import ChangePlaceUp,ChangePlaceDown,DeleteSelectedLine
 #MessageBox import
-from SharedFunctions.MessageBox import Error_NoTitle,Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,Info_Reset,Info_Reset_Tab2,Info_FileSaved, Info_Change_Language
-
+from SharedFunctions.MessageBox import Error_NoTitle,Error_BadSavePath,Error_NoPicture,Error_Cancelation,Info_ProcessFinished,Info_Reset,Info_Reset_Tab2,Info_FileSaved, Info_Change_Language,Error_EmptyField
+from PIL import Image
+from PIL import ImageTk  
+import datetime
 #-------------PYINSTALLER--------------------#
 import os
 import sys
@@ -23,8 +25,18 @@ class AppLanguages:
     Language = "fr"
     languages = ["Français", "English", "Español","German"]
 
+class Watermark:
+    Canvas = None
+    Text = ""
+    Transparency = 75 #Value between 0 and 254
+    Font_Size = 25
+    Color = (255, 0, 0)
+    Space_Between_Text = 50
+    Width =None
+    Height = None
+    Lines_Coordonate = []
 #Allows to displays print, only for debug purpose
-debug = 0
+debug = 1
 
 #------------langage Menu Shape-------------#
 Language_Button_Width = 20 ; Language_Button_Height = 1 ;
@@ -40,6 +52,11 @@ Tab2DisplayWindow_x_position = 50 ; Tab2DisplayWindow_y_position = 100
 Tab2DisplayWindow_width = 600 ; Tab2DisplayWindow_Height = 400
 Tab2Canvas = [Tab2DisplayWindow_x_position,Tab2DisplayWindow_y_position,Tab2DisplayWindow_width,Tab2DisplayWindow_Height]
 
+#Tab3
+Tab3DisplayWindow_x_position = 50 ; Tab3DisplayWindow_y_position = 100
+Tab3DisplayWindow_width = 600 ; Tab3DisplayWindow_Height = 400
+Tab3Canvas = [Tab3DisplayWindow_x_position,Tab3DisplayWindow_y_position,Tab3DisplayWindow_width,Tab3DisplayWindow_Height]
+
 #Commun buttons parameters
 Control_Button_Width = 50 ; Control_Button_Height = 50 ; Space_Between_Button = 10
 Control_Button_Init_x_Position = 0 ; Control_Button_Init_y_Position = Table_y_Position - Control_Button_Height - 30
@@ -53,6 +70,30 @@ Arrows_Buttons_Init_y_Position = Table_y_Position + Table_Height + 10
 #Arrows Boutons Tab 2 parameters
 Zoom_Buttons_Width = 25 ; Zoom_Buttons_Height = 25 ; Space_Between_Zoom_Buttons = 10
 Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_Height + 10
+
+#Police
+Police_Typo  = "Helvetica"
+Font_Path = "arial.ttf"  # Remplacez par le chemin de votre police si nécessaire
+
+#Buttons Pictures
+def InitButtonsIcones():
+    global Icon_Add_File, Icon_Reset,Icon_Exit,Icon_Test,Icon_Validate,Icon_Zoom_More,Icon_Zoom_Less,Icon_Revert
+    global Icon_Convert_To_Pdf,Icon_Arrow_Up,Icon_Arrow_Down,Icon_Delete_Selected_Line
+    global Icon_Text_Modifications
+
+    Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+    Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+    Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+    Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+    Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
+    Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
+    Icon_Revert = PhotoImage(file=Ressource_Path("Pictures/Revert.png"))
+    Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
+    Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
+    Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
+    Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+    Icon_Text_Modifications = PhotoImage(file=Ressource_Path("Pictures/TextModification.png"))
 
 #Icone reducer - Will zoom on icone. 1 = 100%. 2= 200% ...
 Picture_Reducer_Value =  1
@@ -72,7 +113,6 @@ def Ressource_Path(relative_path):
     return os.path.join(base_path, relative_path)
 
 print(Ressource_Path("Pictures/AddFile.png"))
-
 
 # Work with HEIC Picture
 def ConvertHeicToPillowFormat(heic_path):
@@ -108,7 +148,7 @@ def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYour
 def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculee,Police_Size,TextDisplay,Init_State):
     for i in range(0,len(Button_List)):
         Button_List[i][2] = Button_List[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
-        Button_List[i][0].configure( width=Button_Width, height= Button_Height, font=("Helvetica", Police_Size),image=Button_List[i][2], command=Button_List[i][3] )
+        Button_List[i][0].configure( width=Button_Width, height= Button_Height, font=(Police_Typo, Police_Size),image=Button_List[i][2], command=Button_List[i][3] )
         Button_List[i][0].place(x=Position_x_recalculee, y=Position_y_recalculee)
         if(TextDisplay==1):Button_List[i][0].configure(text = Button_List[i][1],compound=tk.TOP)
         if(Init_State==1):Button_List[i][0].configure(state=Button_List[i][4])
@@ -152,3 +192,10 @@ def ConvertLanguage(Current_Language):
         Language_Number = 3 
 
     return Converted_language,Language_Number
+
+def TransparencyCrossProduct(Selected_Value,Step):
+    if Step == "From_Slider":
+        Transparency_Value = (Selected_Value*254)//100
+    elif Step == "From_RealValue":
+        Transparency_Value = (Selected_Value*100)//254
+    return Transparency_Value

@@ -227,15 +227,7 @@ def PdfCreatorTab(master,root):
     tab1 = Import.ttk.Frame(master)
     InitValues()
     Texte_From_Json=Import.LoadText()
-
-    Icon_Add_File = Import.PhotoImage(file=Import.Ressource_Path("Pictures/AddFile.png"))
-    Icon_Reset = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Reset.png"))
-    Icon_Convert_To_Pdf = Import.PhotoImage(file=Import.Ressource_Path("Pictures/ConvertInPdf.png"))
-    Icon_Exit = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Exit.png"))
-    Icon_Test = Import.PhotoImage(file=Import.Ressource_Path("Pictures/test.png"))
-    Icon_Arrow_Up = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Icon_Arrow_Up.png"))
-    Icon_Arrow_Down = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Icon_Arrow_Down.png"))
-    Icon_Delete_Selected_Line = Import.PhotoImage(file=Import.Ressource_Path("Pictures/Reset.png"))
+    Import.InitButtonsIcones() #Load button icones
     
     global Button_Select_Files,Button_Reset,Button_Exit,Button_Convert,Button_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Button_Delete_Selected_Line 
     global TraitementConversion,x_Position_Recalculated_For_Arrows_Buttons
@@ -247,10 +239,10 @@ def PdfCreatorTab(master,root):
     Button_Test = Import.tk.Button(tab1) ;
 
     Boutons_Controle = [
-        [Button_Select_Files,Texte_From_Json["Buttons"]["AddFiles"][AppLanguages.Language],Icon_Add_File, ChooseMultiFile,Import.tk.NORMAL ],
-        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Icon_Reset, Reset,Import.tk.DISABLED],
-        [Button_Convert, Texte_From_Json["Buttons"]["Convert"][AppLanguages.Language],Icon_Convert_To_Pdf, OpenDialogToSavePdf,Import.tk.DISABLED],
-        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Icon_Exit, root.destroy,Import.tk.NORMAL],
+        [Button_Select_Files,Texte_From_Json["Buttons"]["AddFiles"][AppLanguages.Language],Import.Icon_Add_File, ChooseMultiFile,Import.tk.NORMAL ],
+        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],
+        [Button_Convert, Texte_From_Json["Buttons"]["Convert"][AppLanguages.Language],Import.Icon_Convert_To_Pdf, OpenDialogToSavePdf,Import.tk.DISABLED],
+        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],
         # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
     ]
 
@@ -279,9 +271,9 @@ def PdfCreatorTab(master,root):
     Button_Arrow_Up = Import.tk.Button(tab1) ; Button_Arrow_Dow = Import.tk.Button(tab1) ;  Button_Delete_Selected_Line = Import.tk.Button(tab1)
 
     Arrows_Buttons = [
-        [Button_Arrow_Up, "Monter",Icon_Arrow_Up, ButtonArrowUpAction ],
-        [Button_Delete_Selected_Line, "Supprimer",Icon_Delete_Selected_Line, DeleteSelectedLineFromTable],
-        [Button_Arrow_Dow, "Descendre",Icon_Arrow_Down, ButtonArrowDownAction],
+        [Button_Arrow_Up, "Monter",Import.Icon_Arrow_Up, ButtonArrowUpAction ],
+        [Button_Delete_Selected_Line, "Supprimer",Import.Icon_Delete_Selected_Line, DeleteSelectedLineFromTable],
+        [Button_Arrow_Dow, "Descendre",Import.Icon_Arrow_Down, ButtonArrowDownAction],
     ]
 
     # Boucle placement des bouttons

@@ -5,6 +5,7 @@ import Tabs.Tab_PictureObfuscation.PictureOffuscation as PictureOffuscationFunct
 import SharedFunctions.imports as Import
 from Tabs.Tab_PictureObfuscation.PictureOffuscation import Tab2UpdateLangages
 from SharedFunctions.imports import AppLanguages
+import Tabs.Tab_Watermark.TabWatermark as AddWatermark
 
 #Init Soft version, will be overwrite by Pipelines process
 def MyUserInterface(root):
@@ -12,23 +13,25 @@ def MyUserInterface(root):
     root.title("Office Assistant V " + version )
 #Tab init Function, used at the begining and when language is changed
 def InitTabs(root):
-    global tabControl,tab1,tab2
+    global tabControl,tab1,tab2,tab3
     tabControl = Import.ttk.Notebook(root)
     tab1 = PdfCreatorFunctions.PdfCreatorTab(tabControl,root)
     tab2 = PictureOffuscationFunctions.PictureOffuscationTab(tabControl,root)
+    tab3 = AddWatermark.AddWatermark(tabControl,root)
     tabControl.add(tab1, text=Texte_From_Json["Tab1"]["TabName"][AppLanguages.Language])
     tabControl.add(tab2, text=Texte_From_Json["Tab2"]["TabName"][AppLanguages.Language])
+    tabControl.add(tab3, text=Texte_From_Json["Tab3"]["TabName"][AppLanguages.Language])
     tabControl.pack(expand=1, fill="both")
 
 def LanguageChanged(Current_Language):
-    global tab1,tab2,tabControl, language_menu
+    global tab1,tab2,tab3,tabControl, language_menu
     global Old_Language,Old_Number_Language
     AppLanguages.Language,_ = Import.ConvertLanguage(Current_Language)
     #Ask question if you are sure to change language
     User_answer = Import.Info_Change_Language(Texte_From_Json,AppLanguages.Language)
 
     if User_answer == "yes":
-        tabControl.destroy(); tab1.destroy(); tab2.destroy(); language_menu.destroy() #Destroy all table
+        tabControl.destroy(); tab1.destroy(); tab2.destroy(); tab3.destroy(); language_menu.destroy() #Destroy all table
         InitTabs(root)  #REstore All tables 
         InitLanguageMenu() #Restore Menu languages
         Old_Language,Old_Number_Language = Import.ConvertLanguage(AppLanguages.Language) #Current Language is store as Old, then save for next language update.

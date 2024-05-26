@@ -59,6 +59,12 @@ My_App_Strings = '''
             "en": "Test",
             "es": "Prueba",
             "ge": "Test"
+        },
+        "TextModification": {
+            "fr": "Editer",
+            "en": "Edit",
+            "es": "Editar",
+            "ge": "ändern"
         }
     },
     "Tab1": {
@@ -173,6 +179,29 @@ My_App_Strings = '''
             "ge": "erstellt"
         }
     },
+    "Tab3": {
+        "TabName": {
+            "fr": "Ajouter un filigrane",
+            "en": "Add a watermark",
+            "es": "Filigrana",
+            "ge": "Wasserzeichen"
+        },
+        "Edit_Watermark_Text": {
+            "WindowName": {
+                "fr": "Éditez le filigrane",
+                "en": "Edit watermark",
+                "es": "Editar la marca de agua",
+                "ge": "Bearbeiten Sie das Wasserzeichen"
+            },
+            "Instruction": {
+                "fr": "Éditez le filigrane",
+                "en": "Edit watermark",
+                "es": "Editar la marca de agua",
+                "ge": "Bearbeiten Sie das Wasserzeichen"
+            }
+        }
+    
+    },
     "MessageBox": {
         "Type": {
             "Error": {
@@ -268,6 +297,30 @@ My_App_Strings = '''
                 "en": "If you change languages, you will lose your changes. Do you want to continue?",
                 "es": "Si cambia de idioma, perderá los cambios. ¿Quieres continuar?",
                 "ge": "Wenn Sie die Sprache ändern, gehen Ihre Änderungen verloren. Möchtest du fortfahren?"
+            },
+            "EmptyField": {
+                "fr": "Le champs est resté vide, ajoutez au moins 1 caractère",
+                "en": "The field remained empty, add at least 1 character.",
+                "es": "El campo quedó vacío, añade al menos 1 carácter.",
+                "ge": "Das Feld ist leer geblieben, fügen Sie mindestens 1 Zeichen hinzu."
+            },
+            "LoadingTimeHighDefinition": {
+                "fr": "Image en haute definition, le chargement est en cours, veuillez patientez quelques secondes",
+                "en": "High-definition picture, loading in progress, please wait a few seconds.",
+                "es": "Imagen de alta definición, carga en progreso, por favor espere unos segundos.",
+                "ge": "Hochauflösendes Bild, Laden läuft, bitte warten Sie einige Sekunden."
+            },
+            "LoadingTimeNormalDefinition": {
+                "fr": "Le chargement est en cours, veuillez patientez quelques secondes",
+                "en": "Loading in progress, please wait a few seconds.",
+                "es": "Carga en progreso, por favor espere unos segundos.",
+                "ge": "Laden läuft, bitte warten Sie einige Sekunden."
+            },
+            "LoadingTime": {
+                "fr": "Le chargement est en cours, veuillez patientez quelques secondes",
+                "en": "Loading in progress, please wait a few seconds.",
+                "es": "Carga en progreso, por favor espere unos segundos.",
+                "ge": "Laden läuft, bitte warten Sie einige Sekunden."
             }
         }
     }
