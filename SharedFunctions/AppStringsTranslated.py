@@ -17,6 +17,20 @@ My_App_Strings = '''
             "ge": "Kompatible bilder"
         }
     },
+    "File_Extension": {
+        "Obfuscation": {
+            "fr": "Obfusqué",
+            "en": "Obfuscated",
+            "es": "Ofuscado",
+            "ge": "Verschleiert"
+        },
+    "Watermark": {
+            "fr": "Filigrané",
+            "en": "Watermarked",
+            "es": "Marca",
+            "ge": "Wasserzeichen"
+        }
+    },
     "Buttons": {
         "AddFiles": {
             "fr": "Ajouter",

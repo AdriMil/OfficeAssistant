@@ -209,7 +209,7 @@ def ChooseFile():
         File_Name_Splited = result.split('.')
         File_Name_Without_Format = File_Name_Splited[0]
     #-------Nom identique lors de la sauvegadre avec ajout de "- Transparent"
-        Final_File_Name= File_Name_Without_Format + " - Obfuscated"
+        Final_File_Name= File_Name_Without_Format + " -" + Texte_From_Json["File_Extension"]["Watermark"][AppLanguages.Language]
         if extension.lower() == '.heic':
             Extension,Format = ".heic" , "png"
         elif extension.lower() == '.jpg':
