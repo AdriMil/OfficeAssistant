@@ -48,7 +48,7 @@ def FinishRectangleDrawing(event):
     First_Clic_x_Location = None
     First_Clic_y_Location = None
     if(Display_Revert_Button==0):
-        Zoom_Buttons[2][0].configure(state=Import.tk.NORMAL)
+        Button_Revert.configure(state=Import.tk.NORMAL)
         Display_Revert_Button = 1 ; 
 
 def RevertRectangles():
@@ -58,7 +58,7 @@ def RevertRectangles():
         # Récupérer l'ID du dernier rectangle
         last_rectangle_id = Rectangles_Ids_List.pop()
         if not Rectangles_Ids_List:
-            Zoom_Buttons[2][0].configure(state=Import.tk.DISABLED)
+            Button_Revert.configure(state=Import.tk.DISABLED)
             Display_Revert_Button = 0 ; 
         # Supprimer le dernier rectangle du canvas
         canvas.delete(last_rectangle_id)
@@ -123,10 +123,10 @@ def Reset():
 
     HideScrollbars()
     #------BUTTON ZOOM +  ARE RESETED
-    Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
-    Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
+    # Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
+    # Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
     Boutons_ControleTab2[1][0].configure(state=Import.tk.DISABLED)
-    Zoom_Buttons[2][0].configure(state=Import.tk.DISABLED)
+    Button_Revert.configure(state=Import.tk.DISABLED)
 
 def ReplacePixelRectangles(image, liste_coordonnees):
     Current_Rectangle = 0
@@ -333,15 +333,15 @@ def ChooseFile():
         ScrollBarLenghCalculation()
         ShowScrollbars()
 
-        Zoom_Buttons[0][0].configure(state=Import.tk.NORMAL)
-        Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
+        # Zoom_Buttons[0][0].configure(state=Import.tk.NORMAL)
+        # Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
         Boutons_ControleTab2[1][0].configure(state=Import.tk.NORMAL)
         #Disable zoom For current Milestone
-        Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
-        Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
+        # Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
+        # Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
 
         if (Place_Zoom_Buttons_Only_Once == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons zoom
-            Import.PlaceButtonsAutomaticaly(Zoom_Buttons,Import.Zoom_Buttons_Init_y_Position,Import.Zoom_Buttons_Width,Import.Zoom_Buttons_Height,Import.Space_Between_Zoom_Buttons,Import.Picture_Reducer_Value,x_Position_Recalculated_For_Zoom_Buttons,Import.Police_Size,TextDisplay=0,Init_State=0)
+            Import.PlaceButtonsAutomaticaly(Zoom_Buttons,Import.Zoom_Buttons_Init_y_Position,Import.Zoom_Buttons_Width,Import.Zoom_Buttons_Height,Import.Space_Between_Zoom_Buttons,Import.Picture_Reducer_Value,x_Position_Recalculated_For_Zoom_Buttons,Import.Police_Size,TextDisplay=0,Init_State=1)
             Place_Zoom_Buttons_Only_Once = 1
 
 def ZoomButtonsPositionCalculation():
@@ -396,9 +396,9 @@ def PictureOffuscationTab(master,root):
     Import.PlaceButtonsAutomaticaly(Boutons_ControleTab2,Position_y_recalculeeTab2,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculeeTab2,Import.Police_Size,TextDisplay=1,Init_State=1)
 
     Zoom_Buttons = [
-        [Button_Zoom_More, "Zoomer",Import.Icon_Zoom_More, lambda: Zoom("*") ],
-        [Button_Zoom_Less, "Dézoomer",Import.Icon_Zoom_Less, lambda: Zoom("//")],
-        [Button_Revert, "Revert",Import.Icon_Revert, RevertRectangles],
+        # [Button_Zoom_More, "Zoomer",Import.Icon_Zoom_More, lambda: Zoom("*") ],
+        # [Button_Zoom_Less, "Dézoomer",Import.Icon_Zoom_Less, lambda: Zoom("//")],
+        [Button_Revert, "Revert",Import.Icon_Revert, RevertRectangles, Import.tk.DISABLED],
     ]
 
     x_Position_Recalculated_For_Zoom_Buttons = ZoomButtonsPositionCalculation()
