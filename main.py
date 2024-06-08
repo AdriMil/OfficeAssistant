@@ -35,6 +35,7 @@ def LanguageChanged(Current_Language):
         InitTabs(root)  #REstore All tables 
         InitLanguageMenu() #Restore Menu languages
         Old_Language,Old_Number_Language = Import.ConvertLanguage(AppLanguages.Language) #Current Language is store as Old, then save for next language update.
+        PictureOffuscationFunctions.Place_Zoom_Buttons_Only_Once = 0
     else:
         #If no, need to remember an display n-1 selected language.
         AppLanguages.Language = Old_Language
