@@ -9,14 +9,14 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 def WaterMarkInitText():
     current_date = Import.datetime.date.today()
     formatted_date = current_date.strftime("%d/%m/%Y")
-    Import.Watermark.Text = ("Watermarked on " + formatted_date)
+    Import.Watermark.Text = (Texte_From_Json["Tab3"]["Init_Watermark_Text"][AppLanguages.Language] + formatted_date)
 
 
 
 def TOBEDEFINEDAFRTERCANVASEDITING():
     user_input = Import.simpledialog.askstring(Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WindowName"][AppLanguages.Language], Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["Instruction"][AppLanguages.Language], initialvalue=Import.Watermark.Text)
     if user_input is None:
-        print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
+        if Import.debug == 1: print("L'utilisateur a cliqué sur Cancel.")
     elif user_input:
         Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
         Import.UpdateProcessing(Texte_From_Json["MessageBox"]["Message"]["LoadingTime"][AppLanguages.Language])
@@ -28,7 +28,6 @@ def TOBEDEFINEDAFRTERCANVASEDITING():
     else:
         Import.Error_EmptyField(Texte_From_Json,AppLanguages.Language)
         EditWatermarkText()
-
 
 def EditWatermarkText():
     if EditingCanvas.IsDiplayed == 0 : 
@@ -68,7 +67,7 @@ def Save(Extension,Format):
         Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][AppLanguages.Language])
         Final_Saved_Picture = Import.Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
-        print((largeur, hauteur) if Import.debug == 1 else "")
+        if Import.debug == 1: print(largeur, hauteur)
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Import.Watermark.Lines_Coordonate)
         combined_image = Image.alpha_composite(Selected_Picture.convert("RGBA"), Final_Saved_Picture)
         Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][AppLanguages.Language])
@@ -79,6 +78,12 @@ def Save(Extension,Format):
 
 def Tab2UpdateLangages(Current_Language):
     Boutons_ControleTab3[0][0].update()
+
+def Init_Watermark_Editing_Values():
+    Import.Watermark.Transparency = 75 #Value between 0 and 254
+    Import.Watermark.Font_Size = 50
+    Import.Watermark.Space_Between_Text = 200
+    Import.Watermark.Lines_Coordonate = []
     
 def InitValues():
     global Selected_Picture, text_coordinates
@@ -86,6 +91,7 @@ def InitValues():
     global space_between_text_recalculated
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     global Superposed_Picture
+    Init_Watermark_Editing_Values()
     Selected_Picture = None
     text_coordinates  = [] ; text_coordinates_recalculate  = [] 
     space_between_text_recalculated = None
@@ -93,9 +99,11 @@ def InitValues():
     Extension,Format = "","" #Used to share between function kind of selected picture
     Superposed_Picture = None #Will be the displayed layer with watermark visible
     WaterMarkInitText() #Define init Watermark text with today date
+    EditingCanvas.IsDiplayed = 0 ; #Needed in case of language change if editing tool is open.
 
 def Reset():
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
+    HideEditingCanvas()
     InitValues()
     Button_Select_File.config(state="normal")
     Button_Reset.config(state="disabled")
@@ -103,7 +111,6 @@ def Reset():
     Button_Text_Modification.config(state="disabled")
     canvas.delete("all")
     Import.HideScrollbars() 
-
 
 
 # Enregistrement du module d'ouverture pour le format HEIC
@@ -126,8 +133,9 @@ def DisplaySelectedPicture(result):
     if Import.debug==1 : print("Picture Width: ",Picture_Width, "Picture Height: ", Picture_Height)
     #Calculate how to ajust the picture size in the UI
     Picture_Reduction_Ratio = (Picture_Width/Import.Tab2DisplayWindow_width)
-    print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if Import.debug ==1 else "")
-    print(("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio)) if Import.debug ==1 else "")
+    if Import.debug ==1: print("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio)
+    if Import.debug ==1: print("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio))
+
     #If picture width is already smaller than table width, picture size is not modifed.
     if int(Picture_Reduction_Ratio)==0:
         Picture_Best_Width = Picture_Width 
@@ -150,12 +158,12 @@ def ChooseFile():
     global File_Path,Final_File_Name # use for save function
     global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
     result = Import.filedialog.askopenfilename(title="Sélectionner une image", filetypes= Import.filetypes)
-    print(("Mon resulat : ", result)if Import.debug == 1 else "")
+    if Import.debug == 1: print("Mon resulat : ", result)
     # Vérifier si le fichier est au format .heic
     _, extension = Import.os.path.splitext(result)
         
     if(result==''):
-        print(("pas d'image selectionnées") if Import.debug == 1 else "")
+        if Import.debug == 1: print("pas d'image selectionnées")
         tab2SelectedImg = 0 
         Button_Reset.config(state="disabled")
         Import.Error_Cancelation(Texte_From_Json,AppLanguages.Language)
@@ -201,8 +209,8 @@ def AddWatermark(master,root):
     global tab3
     global Boutons_ControleTab3 # Used to active or disable button depend on UI actions
     tab3 = Import.ttk.Frame(master)
-    InitValues()
     Texte_From_Json=Import.LoadText()
+    InitValues()
     Import.InitButtonsIcones() #Load button icones
 
     Button_Select_File = Import.tk.Button(tab3) ; Button_Validate = Import.tk.Button(tab3) 
