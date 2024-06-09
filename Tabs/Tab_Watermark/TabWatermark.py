@@ -103,6 +103,7 @@ def InitValues():
 
 def Reset():
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
+    HideEditingCanvas()
     InitValues()
     Button_Select_File.config(state="normal")
     Button_Reset.config(state="disabled")
@@ -110,7 +111,6 @@ def Reset():
     Button_Text_Modification.config(state="disabled")
     canvas.delete("all")
     Import.HideScrollbars() 
-
 
 
 # Enregistrement du module d'ouverture pour le format HEIC
