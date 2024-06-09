@@ -79,6 +79,12 @@ def Save(Extension,Format):
 
 def Tab2UpdateLangages(Current_Language):
     Boutons_ControleTab3[0][0].update()
+
+def Init_Watermark_Editing_Values():
+    Import.Watermark.Transparency = 75 #Value between 0 and 254
+    Import.Watermark.Font_Size = 50
+    Import.Watermark.Space_Between_Text = 200
+    Import.Watermark.Lines_Coordonate = []
     
 def InitValues():
     global Selected_Picture, text_coordinates
@@ -86,6 +92,7 @@ def InitValues():
     global space_between_text_recalculated
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
     global Superposed_Picture
+    Init_Watermark_Editing_Values()
     Selected_Picture = None
     text_coordinates  = [] ; text_coordinates_recalculate  = [] 
     space_between_text_recalculated = None
@@ -204,6 +211,7 @@ def AddWatermark(master,root):
     tab3 = Import.ttk.Frame(master)
     InitValues()
     Texte_From_Json=Import.LoadText()
+    InitValues()
     Import.InitButtonsIcones() #Load button icones
 
     Button_Select_File = Import.tk.Button(tab3) ; Button_Validate = Import.tk.Button(tab3) 

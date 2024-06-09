@@ -29,9 +29,9 @@ class Watermark:
     Canvas = None
     Text = ""
     Transparency = 75 #Value between 0 and 254
-    Font_Size = 25
+    Font_Size = 50
     Color = (255, 0, 0)
-    Space_Between_Text = 50
+    Space_Between_Text = 200
     Width =None
     Height = None
     Lines_Coordonate = []
