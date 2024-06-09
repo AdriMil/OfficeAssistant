@@ -31,12 +31,16 @@ class Watermark:
     Transparency = 75 #Value between 0 and 254
     Font_Size = 50
     Color = (255, 0, 0)
+    Display_Color = '#fa5047' 
     Space_Between_Text = 200
     Width =None
     Height = None
     Lines_Coordonate = []
 #Allows to displays print, only for debug purpose
 debug = 1
+
+#TAB3
+tab3 = None
 
 #------------langage Menu Shape-------------#
 Language_Button_Width = 20 ; Language_Button_Height = 1 ;
