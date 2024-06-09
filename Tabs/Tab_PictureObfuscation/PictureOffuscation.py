@@ -121,7 +121,7 @@ def Reset():
     Button_Reset.config(state="disabled")
     canvas.delete("all")
 
-    HideScrollbars()
+    Import.HideScrollbars()
     #------BUTTON ZOOM +  ARE RESETED
     # Zoom_Buttons[0][0].configure(state=Import.tk.DISABLED)
     # Zoom_Buttons[1][0].configure(state=Import.tk.DISABLED)
@@ -205,7 +205,7 @@ def Zoom(op):
 
         # Mettre à jour l'image dans le canevas
         canvas.itemconfig(Updated_Picture, image=Picture_Size)
-        ScrollBarLenghCalculation()
+        Import.ScrollBarLenghCalculation(Import,canvas)
 
 # Enregistrement du module d'ouverture pour le format HEIC
 Import.register_heif_opener()
@@ -242,34 +242,8 @@ def DisplaySelectedPicture(result):
 
     # Add the image to the Canvas
     Updated_Picture = canvas.create_image(0, 0, anchor="nw", image=Picture_Size)
-    ScrollBarLenghCalculation()
+    Import.ScrollBarLenghCalculation(Import,canvas)
         
-def ScrollBar():
-    global Scrollbar_x_Direction,Scrollbar_y_Direction
-        # Add horizontal scrollbar
-    Scrollbar_x_Direction = Import.tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
-    canvas.configure(xscrollcommand=Scrollbar_x_Direction.set)
-
-    # Add vertical scrollbar
-    Scrollbar_y_Direction = Import.tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
-    canvas.configure(yscrollcommand=Scrollbar_y_Direction.set)
-
-def ScrollBarLenghCalculation():
-    canvas.config(scrollregion=canvas.bbox(Import.tk.ALL))
-
-def HideScrollbars():
-    Scrollbar_x_Direction.pack_forget()
-    Scrollbar_y_Direction.pack_forget()
-
-def ShowScrollbars():
-    Scrollbar_x_Direction.pack(side="bottom", fill="x")
-    Scrollbar_y_Direction.pack(side="right", fill="y")
-
-def HorizontalMouvement(event):
-    global Last_x_Mouse_Position, Last_y_Mouse_Position
-    Last_x_Mouse_Position = event.x_root
-    Last_y_Mouse_Position = event.y_root
-
 def MouseMouvement(event):
     global Last_x_Mouse_Position, Last_y_Mouse_Position
     x = event.x_root
@@ -286,13 +260,6 @@ def MouseMouvement(event):
         canvas.yview_scroll(1, "units")   # Défilement vers le bas
     Last_x_Mouse_Position = x
     Last_y_Mouse_Position = y
-
-def MousewheelMouvement(event):
-    if event.delta > 0:
-        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
-    else:
-        canvas.yview_scroll(1, "units")   # Défilement vers le bas
-    
 
 def ChooseFile():
     global canvas, txt,tab2SelectedImg,Button_Reset,Button_Select_File
@@ -330,8 +297,8 @@ def ChooseFile():
 
         DisplaySelectedPicture(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
-        ScrollBarLenghCalculation()
-        ShowScrollbars()
+        Import.ScrollBarLenghCalculation(Import,canvas)
+        Import.ShowScrollbars()
 
         # Zoom_Buttons[0][0].configure(state=Import.tk.NORMAL)
         # Zoom_Buttons[1][0].configure(state=Import.tk.NORMAL)
@@ -381,7 +348,7 @@ def PictureOffuscationTab(master,root):
     # canvas.bind("<Button-1>", click_on_canvas)
     txt = canvas.create_text(300, 200, text=Texte_From_Json["Tab2"]["Instruction"][AppLanguages.Language], font="Arial 16 italic", fill="blue")
 
-    ScrollBar()
+    Import.ScrollBar(Import,canvas)
     Boutons_ControleTab2 = [
         [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Import.Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
         [Button_Validate, Texte_From_Json["Buttons"]["Validate"][AppLanguages.Language],Import.Icon_Validate, lambda: Save(Extension,Format),Import.tk.DISABLED],
@@ -404,8 +371,8 @@ def PictureOffuscationTab(master,root):
     x_Position_Recalculated_For_Zoom_Buttons = ZoomButtonsPositionCalculation()
     print(("x_Position_Recalculated_For_Zoom_Buttons :", x_Position_Recalculated_For_Zoom_Buttons) if Import.debug == 1 else "")
 
-    canvas.bind("<MouseWheel>", MousewheelMouvement)
-    canvas.bind("<Button-2>", HorizontalMouvement)
+    canvas.bind("<MouseWheel>", lambda event: Import.MousewheelMouvement(event, canvas))
+    canvas.bind("<Button-2>", Import.HorizontalMouvement)
     canvas.bind("<B2-Motion>", MouseMouvement)
     canvas.bind("<Motion>", UpdateRectangleDrawing)
     canvas.bind("<Button-1>", StartRectangleDrawing)

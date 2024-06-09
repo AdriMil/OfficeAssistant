@@ -199,3 +199,37 @@ def TransparencyCrossProduct(Selected_Value,Step):
     elif Step == "From_RealValue":
         Transparency_Value = (Selected_Value*100)//254
     return Transparency_Value
+
+
+#--------------Scroll Bar-----------------------
+def ScrollBar(Import,canvas):
+    global Scrollbar_x_Direction,Scrollbar_y_Direction
+        # Add horizontal scrollbar
+    Scrollbar_x_Direction = Import.tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
+    canvas.configure(xscrollcommand=Scrollbar_x_Direction.set)
+
+    # Add vertical scrollbar
+    Scrollbar_y_Direction = Import.tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
+    canvas.configure(yscrollcommand=Scrollbar_y_Direction.set)
+
+def ScrollBarLenghCalculation(Import,canvas):
+    canvas.config(scrollregion=canvas.bbox(Import.tk.ALL))
+
+def HideScrollbars():
+    Scrollbar_x_Direction.pack_forget()
+    Scrollbar_y_Direction.pack_forget()
+
+def ShowScrollbars():
+    Scrollbar_x_Direction.pack(side="bottom", fill="x")
+    Scrollbar_y_Direction.pack(side="right", fill="y")
+
+def HorizontalMouvement(event):
+    global Last_x_Mouse_Position, Last_y_Mouse_Position
+    Last_x_Mouse_Position = event.x_root
+    Last_y_Mouse_Position = event.y_root
+
+def MousewheelMouvement(event,canvas):
+    if event.delta > 0:
+        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
+    else:
+        canvas.yview_scroll(1, "units")   # Défilement vers le bas

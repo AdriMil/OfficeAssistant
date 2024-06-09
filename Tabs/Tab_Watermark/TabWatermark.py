@@ -102,7 +102,7 @@ def Reset():
     Button_Validate.config(state="disabled")
     Button_Text_Modification.config(state="disabled")
     canvas.delete("all")
-    HideScrollbars() 
+    Import.HideScrollbars() 
 
 
 
@@ -143,40 +143,7 @@ def DisplaySelectedPicture(result):
 
     # Add the image to the Canvas
     Updated_Picture = canvas.create_image(0, 0, anchor="nw", image=Picture_Size)
-    ScrollBarLenghCalculation()
-        
-def ScrollBar():
-    global Scrollbar_x_Direction,Scrollbar_y_Direction
-        # Add horizontal scrollbar
-    Scrollbar_x_Direction = Import.tk.Scrollbar(canvas, orient="horizontal", command=canvas.xview)
-    canvas.configure(xscrollcommand=Scrollbar_x_Direction.set)
-
-    # Add vertical scrollbar
-    Scrollbar_y_Direction = Import.tk.Scrollbar(canvas, orient="vertical", command=canvas.yview)
-    canvas.configure(yscrollcommand=Scrollbar_y_Direction.set)
-
-def ScrollBarLenghCalculation():
-    canvas.config(scrollregion=canvas.bbox(Import.tk.ALL))
-
-def HideScrollbars():
-    Scrollbar_x_Direction.pack_forget()
-    Scrollbar_y_Direction.pack_forget()
-
-def ShowScrollbars():
-    Scrollbar_x_Direction.pack(side="bottom", fill="x")
-    Scrollbar_y_Direction.pack(side="right", fill="y")
-
-def HorizontalMouvement(event):
-    global Last_x_Mouse_Position, Last_y_Mouse_Position
-    Last_x_Mouse_Position = event.x_root
-    Last_y_Mouse_Position = event.y_root
-
-def MousewheelMouvement(event):
-    if event.delta > 0:
-        canvas.yview_scroll(-1, "units")  # Défilement vers le haut
-    else:
-        canvas.yview_scroll(1, "units")   # Défilement vers le bas
-    
+    Import.ScrollBarLenghCalculation(Import,canvas)
 
 def ChooseFile():
     global canvas, txt,tab2SelectedImg,Button_Reset,Button_Select_File
@@ -219,8 +186,8 @@ def ChooseFile():
         Import.HideProcessing()
         DisplaySelectedPicture(result)
         canvas.delete(txt) #Suppression de l'écriture bleu en cas de chargement d'une image transparente
-        ScrollBarLenghCalculation()
-        ShowScrollbars()
+        Import.ScrollBarLenghCalculation(Import,canvas)
+        Import.ShowScrollbars()
 
         DisplayText(canvas)
         
@@ -250,7 +217,7 @@ def AddWatermark(master,root):
 
 
 
-    ScrollBar()
+    Import.ScrollBar(Import,canvas)
     Boutons_ControleTab3 = [
         [Button_Select_File, Texte_From_Json["Buttons"]["OpenFile"][AppLanguages.Language],Import.Icon_Add_File, ChooseFile,Import.tk.NORMAL ],
         [Button_Text_Modification, Texte_From_Json["Buttons"]["TextModification"][AppLanguages.Language],Import.Icon_Text_Modifications, EditWatermarkText,Import.tk.DISABLED],
@@ -265,8 +232,8 @@ def AddWatermark(master,root):
     Position_x_recalculeeTab2,Position_y_recalculeeTab2 = Import.ControlsButtonsInitPositionCalculation(Boutons_ControleTab3,Import.Tab2Canvas,offset=30)
     Import.PlaceButtonsAutomaticaly(Boutons_ControleTab3,Position_y_recalculeeTab2,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculeeTab2,Import.Police_Size,TextDisplay=1,Init_State=1)
 
-    canvas.bind("<MouseWheel>", MousewheelMouvement)
-    canvas.bind("<Button-2>", HorizontalMouvement)
+    canvas.bind("<MouseWheel>", lambda event: Import.MousewheelMouvement(event, canvas))
+    canvas.bind("<Button-2>", Import.HorizontalMouvement)
 
     return tab3
     
