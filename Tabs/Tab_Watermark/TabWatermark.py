@@ -16,7 +16,7 @@ def WaterMarkInitText():
 def TOBEDEFINEDAFRTERCANVASEDITING():
     user_input = Import.simpledialog.askstring(Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WindowName"][AppLanguages.Language], Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["Instruction"][AppLanguages.Language], initialvalue=Import.Watermark.Text)
     if user_input is None:
-        print(("L'utilisateur a cliqué sur Cancel.")if Import.debug == 1 else "")
+        if Import.debug == 1: print("L'utilisateur a cliqué sur Cancel.")
     elif user_input:
         Import.DisplayProcessing(Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
         Import.UpdateProcessing(Texte_From_Json["MessageBox"]["Message"]["LoadingTime"][AppLanguages.Language])
@@ -68,7 +68,7 @@ def Save(Extension,Format):
         Import.UpdateProcessing(Texte_From_Json["Processing"]["FileSaving"][AppLanguages.Language])
         Final_Saved_Picture = Import.Image.open(File_Path)
         largeur, hauteur = Final_Saved_Picture.size
-        print((largeur, hauteur) if Import.debug == 1 else "")
+        if Import.debug == 1: print(largeur, hauteur)
         Final_Saved_Picture = ReplacePixelRectangles(Selected_Picture, Import.Watermark.Lines_Coordonate)
         combined_image = Image.alpha_composite(Selected_Picture.convert("RGBA"), Final_Saved_Picture)
         Import.UpdateProcessing(Texte_From_Json["Processing"]["UpdateProcessing"][AppLanguages.Language])
@@ -126,8 +126,9 @@ def DisplaySelectedPicture(result):
     if Import.debug==1 : print("Picture Width: ",Picture_Width, "Picture Height: ", Picture_Height)
     #Calculate how to ajust the picture size in the UI
     Picture_Reduction_Ratio = (Picture_Width/Import.Tab2DisplayWindow_width)
-    print(("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio) if Import.debug ==1 else "")
-    print(("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio)) if Import.debug ==1 else "")
+    if Import.debug ==1: print("Picture_Reduction_Ratio brut : ",Picture_Reduction_Ratio)
+    if Import.debug ==1: print("Picture_Reduction_Ratio int() : ",int(Picture_Reduction_Ratio))
+
     #If picture width is already smaller than table width, picture size is not modifed.
     if int(Picture_Reduction_Ratio)==0:
         Picture_Best_Width = Picture_Width 
@@ -150,12 +151,12 @@ def ChooseFile():
     global File_Path,Final_File_Name # use for save function
     global Extension,Format # Use to send format and extension to save modified picture with same format as original picture
     result = Import.filedialog.askopenfilename(title="Sélectionner une image", filetypes= Import.filetypes)
-    print(("Mon resulat : ", result)if Import.debug == 1 else "")
+    if Import.debug == 1: print("Mon resulat : ", result)
     # Vérifier si le fichier est au format .heic
     _, extension = Import.os.path.splitext(result)
         
     if(result==''):
-        print(("pas d'image selectionnées") if Import.debug == 1 else "")
+        if Import.debug == 1: print("pas d'image selectionnées")
         tab2SelectedImg = 0 
         Button_Reset.config(state="disabled")
         Import.Error_Cancelation(Texte_From_Json,AppLanguages.Language)
