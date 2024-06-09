@@ -30,9 +30,10 @@ def TOBEDEFINEDAFRTERCANVASEDITING():
         EditWatermarkText()
 
 def EditWatermarkText():
+    Edit_Watermark_Windows_Height = Import.Tab3DisplayWindow_y_position - Position_y_recalculeeTab2
     if EditingCanvas.IsDiplayed == 0 : 
         EditingCanvas.IsDiplayed = 1
-        AddEditingCanvas(tab3,Import.Tab3DisplayWindow_x_position,Import.Tab3DisplayWindow_y_position,Import.Tab3DisplayWindow_width,Import.Tab3DisplayWindow_Height,tab3) #Call process
+        AddEditingCanvas(tab3,Import.Tab3DisplayWindow_x_position,Position_y_recalculeeTab2-10,Import.Tab3DisplayWindow_width,Edit_Watermark_Windows_Height) #Call process
     else : 
         EditingCanvas.IsDiplayed = 0
         HideEditingCanvas()
@@ -84,6 +85,8 @@ def Init_Watermark_Editing_Values():
     Import.Watermark.Font_Size = 50
     Import.Watermark.Space_Between_Text = 200
     Import.Watermark.Lines_Coordonate = []
+    Import.Watermark.Display_Color = '#fa5047'
+    Import.Watermark.Color = (255, 0, 0)
     
 def InitValues():
     global Selected_Picture, text_coordinates
@@ -199,16 +202,15 @@ def ChooseFile():
 
         DisplayText(canvas)
         
-
-
-
 def AddWatermark(master,root):
     global Texte_From_Json
     global canvas, txt
     global Button_Reset,Button_Select_File,Button_Validate,Button_Text_Modification
     global tab3
     global Boutons_ControleTab3 # Used to active or disable button depend on UI actions
+    global Position_y_recalculeeTab2 #Used to place Watermark editing canvas
     tab3 = Import.ttk.Frame(master)
+    Import.tab3 = tab3
     Texte_From_Json=Import.LoadText()
     InitValues()
     Import.InitButtonsIcones() #Load button icones

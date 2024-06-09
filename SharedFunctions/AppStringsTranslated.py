@@ -257,11 +257,11 @@ My_App_Strings = '''
                 "es": "Anular",
                 "ge": "Stornieren"
         },
-            "Validate":{
-                "fr": "Valider",
-                "en": "Validate",
-                "es": "Validar",
-                "ge": "Bestätigen"
+            "Preview":{
+                "fr": "Aperçu",
+                "en": "Preview",
+                "es": "Avance",
+                "ge": "Vorschau"
         },
             "Close":{
                 "fr": "Fermer",
