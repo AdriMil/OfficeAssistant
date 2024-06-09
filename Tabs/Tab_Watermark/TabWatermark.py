@@ -9,7 +9,7 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 def WaterMarkInitText():
     current_date = Import.datetime.date.today()
     formatted_date = current_date.strftime("%d/%m/%Y")
-    Import.Watermark.Text = ("Watermarked on " + formatted_date)
+    Import.Watermark.Text = (Texte_From_Json["Tab3"]["Init_Watermark_Text"][AppLanguages.Language] + formatted_date)
 
 
 

@@ -200,6 +200,12 @@ My_App_Strings = '''
             "es": "Filigrana",
             "ge": "Wasserzeichen"
         },
+        "Init_Watermark_Text": {
+            "fr": "Filigrané le ",
+            "en": "Watermarked on ",
+            "es": "Filigrana el",
+            "ge": "Wasserzeichen am"
+        },
         "Edit_Watermark_Text": {
             "WindowName": {
                 "fr": "Éditez le filigrane",
@@ -212,8 +218,60 @@ My_App_Strings = '''
                 "en": "Edit watermark",
                 "es": "Editar la marca de agua",
                 "ge": "Bearbeiten Sie das Wasserzeichen"
+            },
+            "WaterMark_Color": {
+                "fr": "Couleur",
+                "en": "Color",
+                "es": "Color",
+                "ge": "Farbe"
+            },
+            "WaterMark_Transparency": {
+                "fr": "Transparence",
+                "en": "Transparency",
+                "es": "Transparencia",
+                "ge": "Transparenz"
+            },
+            "WaterMark_FontSize": {
+                "fr": "Taille du texte",
+                "en": "Font Size",
+                "es": "Tamano del texto",
+                "ge": "Textgröße"
+            },
+            "WaterMark_Space_Between_Text": {
+                "fr": "Inter lignes",
+                "en": "Inter lines",
+                "es": "líneas internas",
+                "ge": "Inter-Linien"
+            },
+            "WaterMark_Text": {
+                "fr": "Texte",
+                "en": "Text",
+                "es": "Texto",
+                "ge": "Text"
             }
+        },
+        "Edit_Watermark_Buttons":{
+            "Cancel":{
+                "fr": "Annuler",
+                "en": "Cancel",
+                "es": "Anular",
+                "ge": "Stornieren"
+        },
+            "Validate":{
+                "fr": "Valider",
+                "en": "Validate",
+                "es": "Validar",
+                "ge": "Bestätigen"
+        },
+            "Close":{
+                "fr": "Fermer",
+                "en": "Close",
+                "es": "Cerca",
+                "ge": "Schließen"
         }
+        
+        }
+        
     
     },
     "MessageBox": {

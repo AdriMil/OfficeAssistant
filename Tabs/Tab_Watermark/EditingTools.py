@@ -1,6 +1,9 @@
 import SharedFunctions.imports as Import
 from tkinter import colorchooser
 from Tabs.Tab_Watermark.CreateWatermarkLayer import DisplayText
+from SharedFunctions.imports import AppLanguages
+
+Texte_From_Json=Import.LoadText()
 
 class EditingCanvas:
     IsDiplayed = 0
@@ -17,40 +20,40 @@ def AddEditingCanvas(master,Display_Window_x_position,Displa_yWindow_y_position,
     frame.pack(pady=20, padx=20)
 
     # Ajouter le bouton au cadre
-    button = Import.tk.Button(frame, text="Color", command=choose_color)
+    button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WaterMark_Color"][AppLanguages.Language], command=choose_color)
     button.grid(row=0, column=0, columnspan=2, pady=10)
 
     # Ajouter le premier curseur (Cursors_Transparency) au cadre
-    curseur1_label = Import.tk.Label(frame, text="Transparency", bg='lightgray')
+    curseur1_label = Import.tk.Label(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WaterMark_Transparency"][AppLanguages.Language], bg='lightgray')
     curseur1_label.grid(row=1, column=0, padx=5, pady=5, sticky='e')
     Cursors_Transparency = Import.tk.Scale(frame, from_=1, to=100, orient=Import.tk.HORIZONTAL, bg='lightgray')
     Cursors_Transparency.grid(row=1, column=1, padx=5, pady=5, sticky='w')
 
     # Ajouter le deuxième curseur (Cursors_Font_Size) au cadre
-    curseur2_label = Import.tk.Label(frame, text="Font_Size", bg='lightgray')
+    curseur2_label = Import.tk.Label(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WaterMark_FontSize"][AppLanguages.Language], bg='lightgray')
     curseur2_label.grid(row=2, column=0, padx=5, pady=5, sticky='e')
     Cursors_Font_Size = Import.tk.Scale(frame, from_=0, to=100, orient=Import.tk.HORIZONTAL, bg='lightgray')
     Cursors_Font_Size.grid(row=2, column=1, padx=5, pady=5, sticky='w')
 
-    curseur3_label = Import.tk.Label(frame, text="Space_Between_Text", bg='lightgray')
+    curseur3_label = Import.tk.Label(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WaterMark_Space_Between_Text"][AppLanguages.Language], bg='lightgray')
     curseur3_label.grid(row=3, column=0, padx=5, pady=5, sticky='e')
-    Cursors_Space_Between_Text = Import.tk.Scale(frame, from_=0, to=100, orient=Import.tk.HORIZONTAL, bg='lightgray')
+    Cursors_Space_Between_Text = Import.tk.Scale(frame, from_=25, to=300, orient=Import.tk.HORIZONTAL, bg='lightgray')
     Cursors_Space_Between_Text.grid(row=3, column=1, padx=5, pady=5, sticky='w')
 
     # Ajouter une entrée de texte (TexteInput) au cadre
-    texte_input_label = Import.tk.Label(frame, text="TexteInput", bg='lightgray')
+    texte_input_label = Import.tk.Label(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WaterMark_Text"][AppLanguages.Language], bg='lightgray')
     texte_input_label.grid(row=4, column=0, padx=5, pady=5, sticky='e')
     Text_Input_Watermark_Text = Import.tk.Entry(frame)
     Text_Input_Watermark_Text.grid(row=4, column=1, padx=5, pady=5, sticky='w')
 
     # Ajouter les boutons Annuler et Valider au cadre
-    annuler_button = Import.tk.Button(frame, text="Annuler", command=CancelCanvasEditing)
+    annuler_button = Import.tk.Button(frame,text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Cancel"][AppLanguages.Language], command=CancelCanvasEditing)
     annuler_button.grid(row=5, column=0, padx=10, pady=10)
 
-    valider_button = Import.tk.Button(frame, text="Valider", command=valider_clicked)
+    valider_button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Validate"][AppLanguages.Language], command=valider_clicked)
     valider_button.grid(row=5, column=1, padx=10, pady=10)
 
-    close_button = Import.tk.Button(frame, text="Fermer", command=HideEditingCanvas)
+    close_button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Close"][AppLanguages.Language], command=HideEditingCanvas)
     close_button.grid(row=5, column=2, padx=10, pady=10)
 
     InitEditingCanvas()
