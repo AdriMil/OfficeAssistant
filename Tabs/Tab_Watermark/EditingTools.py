@@ -40,7 +40,7 @@ def AddEditingCanvas(master,x_Position,y_Position,Width,Height):
 
     # Ajouter les boutons Annuler et Valider au cadre
     Cancel_Button = Import.tk.Button(frame,text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Cancel"][AppLanguages.Language], command=CancelCanvasEditing)
-    Validate_Button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Validate"][AppLanguages.Language],width=8,height=2, command=valider_clicked )
+    Validate_Button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Preview"][AppLanguages.Language],width=8,height=2, command=valider_clicked )
     Close_Button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Buttons"]["Close"][AppLanguages.Language],width=8,height=2, command=HideEditingCanvas)
     Color_Button = Import.tk.Button(frame, text=Texte_From_Json["Tab3"]["Edit_Watermark_Text"]["WaterMark_Color"][AppLanguages.Language],width=16, command=choose_color, bg= Import.Watermark.Display_Color)
  # Arrange widgets in the frame
