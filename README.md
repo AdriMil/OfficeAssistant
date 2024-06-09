@@ -6,7 +6,16 @@ Code is not perfectly optimized.
 
 Language switching is available within the user interface. Available languages are French, English, Spanish and German.
 
-## Tab1-PdfCreator
+Check the [installation guide](#installation) to install it.
+
+## Table of Contents
+1. [Tab1 - PdfCreator](#pdfcreator)
+2. [Tab2 - Picture Obfuscation](#picture-obfuscation)
+3. [ Tab3 - Add a watermark on your pictures](#add-a-watermark-on-your-pictures)
+4. [Installation guide](#installation)
+5. [More infos for developers](#more-infos-for-developers)
+
+## PdfCreator
 <img src="Documentation/Conversion.png" alt="alt text" width="500">
 
 ### Goal
@@ -21,11 +30,11 @@ You scanned 15 invoices and you want gather them in 1 files. In few clicks load 
 - Loaded pictures order can be easily modify thanks Up and Down arrows.
 - Loaded pictures can be delete one by one using the bottom Trash button. 
 - Loaded pictures can be deleted in 1 clic with Trash button.
-- When your pictures are loaded and well ordered, you can create your pdf file by selecting "Convert" button.
-    * You must add a title
-    * And select the path where you want save the new pdf
+- When your pictures are loaded and well ordered, you can create your pdf file by selecting "Convert" button:
+    * You must add a title.
+    * And select the path where you want save the new pdf.
 
-## Tab2 - Picture Obfuscation
+## Picture Obfuscation
 
 <img src="Documentation/OffusctationExample.png" alt="alt text" width="500">
 
@@ -38,19 +47,34 @@ You scanned 1 document you must share to your colleague but your personal adress
 
 ### Notes
 - Differents pictures formats can be loaded.
-- By saving, a new picture is created in the same format as original one and without loss of quality.
-- When saving, the picture is save in the same folder as the original one, with the same name but ending by "- obfuscated"
-- You can delete rectangle one by one by using the "Revert" Arrow from the bottom
-- You can delete drew rectangles one by one by using the "Revert" Arrow from the bottom
-- You can delete all drew rectangles in one click with Trash button
-- Zoom buttons appears but cannot be used for the moment.
+- By saving, a new picture is created in the same format as original one and without loss of quality. Picture is save in the same folder as the original one, with the same name but ending by "- obfuscated".
+- You can delete rectangle one by one by using the "Revert" Arrow from the bottom.
+- You can delete drew rectangles one by one by using the "Revert" Arrow from the bottom.
+- You can delete all drew rectangles in one click with Trash button.
+
+## Add a watermark on your pictures
+
+### Goal
+You must send a critical document to someone but you want ensure this document won't be used for malicious actions.
+Put a watermark which won't hide any data but which allow to identify where the document comes from.
+
+### Application exemple
+You must send a picture of your identity card for an house rent on houserent.com on 09/06/24.
+To ensure this picture won't be used for identity theft, you can watermark the picture with "Send to houserent.com on 09/06/24".
+If your picture is sent by a malicious person in an other context than houserent.com on 09/06/24, the guy who will received the picture would directly understand something is wrong.
+
+<img src="Documentation/Watermark_Exemple.jpg" alt="alt text" width="500">
+
+### Notes
+- Differents pictures formats can be loaded.
+- By saving, a new picture is created in the same format as original one and without loss of quality. Picture is save in the same folder as the original one, with the same name but ending by "- watermarked".
+- You can edit watermark text, size, color, lines spacing, transparency.
 
 ## Installation
 
-1- From Github last release : 
+1- From Github [last release](https://github.com/AdriMil/OfficeAssistant/releases) : 
 
 <img src="Documentation/LastRelease.png" alt="alt text" width="500">
-
 
 2- Download "OfficeAssistant.Vx.y.z.exe" file
 
@@ -72,7 +96,7 @@ Go through this warning by clicking on "Execute Anyway".
 <br />
 <br />
 
-# Only for Devs/Contributors
+# More infos for developers
 ## Get .exe file Process 
 Process to get .exe one file
 ![Texte alternatif](Documentation/Release%20Process.png)

@@ -23,3 +23,5 @@ def Info_FileSaved(Texte_From_Json,Language):
 def Info_Change_Language(Texte_From_Json,Language):
     reponse = messagebox.askquestion(Texte_From_Json["MessageBox"]["Type"]["Confirmation"][Language], Texte_From_Json["MessageBox"]["Message"]["ChangeLanguage"][Language])
     return reponse
+def Error_EmptyField(Texte_From_Json,Language):
+    messagebox.showinfo(Texte_From_Json["MessageBox"]["Type"]["Error"][Language], Texte_From_Json["MessageBox"]["Message"]["EmptyField"][Language])
