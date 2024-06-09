@@ -29,7 +29,6 @@ def TOBEDEFINEDAFRTERCANVASEDITING():
         Import.Error_EmptyField(Texte_From_Json,AppLanguages.Language)
         EditWatermarkText()
 
-
 def EditWatermarkText():
     if EditingCanvas.IsDiplayed == 0 : 
         EditingCanvas.IsDiplayed = 1
@@ -100,6 +99,7 @@ def InitValues():
     Extension,Format = "","" #Used to share between function kind of selected picture
     Superposed_Picture = None #Will be the displayed layer with watermark visible
     WaterMarkInitText() #Define init Watermark text with today date
+    EditingCanvas.IsDiplayed = 0 ; #Needed in case of language change if editing tool is open.
 
 def Reset():
     global Picture_Size, Picture_Resized,Picture_Reduction_Ratio
@@ -209,7 +209,6 @@ def AddWatermark(master,root):
     global tab3
     global Boutons_ControleTab3 # Used to active or disable button depend on UI actions
     tab3 = Import.ttk.Frame(master)
-    InitValues()
     Texte_From_Json=Import.LoadText()
     InitValues()
     Import.InitButtonsIcones() #Load button icones
