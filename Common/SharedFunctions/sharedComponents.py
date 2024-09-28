@@ -1,0 +1,15 @@
+from Common.SharedFunctions.sharedFunctions import PhotoImage, Ressource_Path
+
+Icon_Add_File = PhotoImage(file=Ressource_Path("Pictures/AddFile.png"))
+Icon_Reset = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+Icon_Exit = PhotoImage(file=Ressource_Path("Pictures/Exit.png"))
+Icon_Test = PhotoImage(file=Ressource_Path("Pictures/test.png"))
+Icon_Validate = PhotoImage(file=Ressource_Path("Pictures/Valider.png"))
+Icon_Zoom_More = PhotoImage(file=Ressource_Path("Pictures/zoomPlus.png"))
+Icon_Zoom_Less = PhotoImage(file=Ressource_Path("Pictures/zoomMoins.png"))
+Icon_Revert = PhotoImage(file=Ressource_Path("Pictures/Revert.png"))
+Icon_Convert_To_Pdf = PhotoImage(file=Ressource_Path("Pictures/ConvertInPdf.png"))
+Icon_Arrow_Up = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Up.png"))
+Icon_Arrow_Down = PhotoImage(file=Ressource_Path("Pictures/Icon_Arrow_Down.png"))
+Icon_Delete_Selected_Line = PhotoImage(file=Ressource_Path("Pictures/Reset.png"))
+Icon_Text_Modifications = PhotoImage(file=Ressource_Path("Pictures/TextModification.png"))
