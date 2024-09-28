@@ -1,5 +1,8 @@
 import Common.SharedFunctions.sharedFunctions as Import
-from Common.SharedFunctions.sharedFunctions import AppLanguages
+from Common.SharedFunctions.sharedFunctions import AppLanguages, Texte_From_Json
+from Tabs.Tab_PdfCreator.initComponents import tab1, myMainButtons, Button_Select_Files, Button_Reset, Button_Convert, Button_Exit,control_arrows, Button_Arrow_Up, Button_Arrow_Down, Button_Delete_Selected_Line
+from Common.classes import Button
+
 
 #-------------------INIT-----------#
 def InitValues():
@@ -23,8 +26,8 @@ def WindowsSizeSendData():
 #-------------------------------------------------------------
 
 def ArrowButtons_InitPositionCalculation():
-    global Table_Width,x_Position_Recalculated_For_Arrows_Buttons,Window_Width
-    Buttons_Number = len(Arrows_Buttons)
+    global x_Position_Recalculated_For_Arrows_Buttons,Window_Width
+    Buttons_Number = len(control_arrows)
     Spaces_Used_By_Buttons = Buttons_Number * (Import.Arrows_Buttons_Width+Import.Space_Between_Arrows_Buttons)
     Free_Space = Import.Table_Width - (Spaces_Used_By_Buttons)
     if(Free_Space>0):
@@ -39,10 +42,11 @@ def ArrowButtons_InitPositionCalculation():
     return x_Position_Recalculated_For_Arrows_Buttons
 
 def ChooseMultiFile():
-    global Selected_Files,Place_Arrows_Only_Once,Button_Reset,table
+    global Selected_Files,Place_Arrows_Only_Once,table
     Selected_Files = Import.filedialog.askopenfilenames(title=Texte_From_Json["Tab1"]["SelectFiles"][AppLanguages.Language], filetypes= Import.filetypes)
     if Selected_Files:
-        Button_Reset.configure(state=Import.tk.NORMAL); Button_Convert.configure(state=Import.tk.NORMAL)
+        Button_Reset.availability("unlock")
+        Button_Convert.availability("unlock")
         for file in Selected_Files:
             Path_List.append(file)
             print(("Liste des chemin selectionnés : ", Path_List) if Import.debug == 1 else "")
@@ -52,7 +56,7 @@ def ChooseMultiFile():
             All_Data_In_Table.append([len(Path_List),words[-1],file]) #Give list of all data in tab -> will use do modify file order
 
         if (Place_Arrows_Only_Once == 0 ): #Bloquer la repetitiuon d'ajoute  des boutons fleches
-            Import.PlaceButtonsAutomaticaly(Arrows_Buttons,Import.Arrows_Buttons_Init_y_Position,Import.Arrows_Buttons_Width,Import.Arrows_Buttons_Height,Import.Space_Between_Arrows_Buttons,Import.Picture_Reducer_Value,x_Position_Recalculated_For_Arrows_Buttons,Import.Police_Size,TextDisplay=0,Init_State=0)
+            Import.buttons_position(control_arrows,Import.Tab1Table[0],Import.Tab1Table[1]+(Import.Tab1Table[3]),Import.Tab1Table[2])
             Place_Arrows_Only_Once = 1
         DisableButtonIfNecessery()
 
@@ -81,7 +85,7 @@ def ConvertPictureToPdf(FileName):
         Import.Error_NoPicture()
     else:                               #Si plusieurs images à convertir
         # TraitementConversion.place(x=Table_x_Position + 1, y=Table_y_Position + 24, width=Table_Width, height=Table_Height)
-        Import.DisplayProcessing(Import.Table_x_Position,Import.Table_y_Position,Import.Table_Width,Import.Table_Height,tab1) #Call process
+        Import.DisplayProcessing(Import.Table_x_Position,Import.Table_y_Position,Import.Table_Width,Import.Table_Height,tab1.frame) #Call process
         PicturesProcessing(Files_Paths_Updated_List, FileName, Selected_Save_Path)
         
 
@@ -102,7 +106,7 @@ def DeleteAlldata():
     Button_Reset.configure(state=Import.tk.DISABLED); Button_Convert.configure(state=Import.tk.DISABLED)
     Path_List.clear() #RESET de la liste Path_List
     File_Name.clear() #RESET de la liste File_Name
-    x_Position_Recalculated_For_Arrows_Buttons = ArrowButtons_InitPositionCalculation() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
+    # x_Position_Recalculated_For_Arrows_Buttons = ArrowButtons_InitPositionCalculation() #Permet de reset la position des btns et donc d'éviter un décallage des btns à chaque reset
 
     #REset displayed data in Tableau
     table.delete(*table.get_children())
@@ -176,17 +180,17 @@ def NextLineToBeAutoSelected(action):
 
 def DisableButtonIfNecessery():
     if((Selected_Line_Index==All_Data_In_Table[0][0]) and (Selected_Line_Index==All_Data_In_Table[-1][0])):
-        Button_Arrow_Dow.configure(state=Import.tk.DISABLED)
-        Button_Arrow_Up.configure(state=Import.tk.DISABLED)
+        Button_Arrow_Down.availability("lock")
+        Button_Arrow_Up.availability("lock")
     elif (Selected_Line_Index==All_Data_In_Table[-1][0]):
-        Button_Arrow_Dow.configure(state=Import.tk.DISABLED)
-        Button_Arrow_Up.configure(state=Import.tk.NORMAL)
+        Button_Arrow_Down.availability("lock")
+        Button_Arrow_Up.availability("unlock")
     elif (Selected_Line_Index==All_Data_In_Table[0][0]):
-        Button_Arrow_Dow.configure(state=Import.tk.NORMAL)
-        Button_Arrow_Up.configure(state=Import.tk.DISABLED)
+        Button_Arrow_Down.availability("unlock")
+        Button_Arrow_Up.availability("lock")
     else:
-        Button_Arrow_Up.configure(state=Import.tk.NORMAL)
-        Button_Arrow_Dow.configure(state=Import.tk.NORMAL)
+        Button_Arrow_Up.availability("unlock")
+        Button_Arrow_Down.availability("unlock")
 
 
 def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
@@ -221,42 +225,33 @@ def PicturesProcessing(Path_List, FileName, Selected_Save_Path):
     Import.Info_ProcessFinished(Files_Paths_Updated_List,FileName,Selected_Save_Path,Texte_From_Json,AppLanguages.Language)
     Import.HideProcessing()
 
+
 def PdfCreatorTab(master,root):
-    global tab1
-    global Texte_From_Json
-    tab1 = Import.ttk.Frame(master)
     InitValues()
-    Texte_From_Json=Import.LoadText()
+    
     Import.InitButtonsIcones() #Load button icones
     
-    global Button_Select_Files,Button_Reset,Button_Exit,Button_Convert,Button_Test,Boutons_Controle,Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Dow, Button_Delete_Selected_Line 
+    global Arrows_Buttons,table,Button_Arrow_Up ,Button_Arrow_Down, Button_Delete_Selected_Line 
     global TraitementConversion,x_Position_Recalculated_For_Arrows_Buttons
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
 
-    Button_Select_Files = Import.tk.Button(tab1) ; Button_Reset = Import.tk.Button(tab1) ;
-    Button_Convert = Import.tk.Button(tab1) ; Button_Exit = Import.tk.Button(tab1) ;
-    Button_Test = Import.tk.Button(tab1) ;
+    Import.buttons_position(myMainButtons,Import.Tab1Table[0],Import.Tab1Table[1]-(1.3*Button.HEIGHT),Import.Tab1Table[2])
 
-    Boutons_Controle = [
-        [Button_Select_Files,Texte_From_Json["Buttons"]["AddFiles"][AppLanguages.Language],Import.Icon_Add_File, ChooseMultiFile,Import.tk.NORMAL ],
-        [Button_Reset, Texte_From_Json["Buttons"]["Reset"][AppLanguages.Language],Import.Icon_Reset, Reset,Import.tk.DISABLED],
-        [Button_Convert, Texte_From_Json["Buttons"]["Convert"][AppLanguages.Language],Import.Icon_Convert_To_Pdf, OpenDialogToSavePdf,Import.tk.DISABLED],
-        [Button_Exit, Texte_From_Json["Buttons"]["Exit"][AppLanguages.Language],Import.Icon_Exit, root.destroy,Import.tk.NORMAL],
-        # [Button_Test, "Test",Icon_Test, HideProcessing, tk.NORMAL],
-    ]
+    Button_Select_Files.associate_a_function(ChooseMultiFile)
+    Button_Reset.associate_a_function(Reset)
+    Button_Convert.associate_a_function(OpenDialogToSavePdf)
+    Button_Exit.associate_a_function(Import.exit)
 
-    # Boucle placement des bouttons
-    Position_x_recalculee,Position_y_recalculee = Import.ControlsButtonsInitPositionCalculation(Boutons_Controle,Import.Tab1Table,offset=30)
-
-    #Function which place buttons
-    Import.PlaceButtonsAutomaticaly(Boutons_Controle,Position_y_recalculee,Import.Control_Button_Width,Import.Control_Button_Height,Import.Space_Between_Button,Import.Picture_Reducer_Value,Position_x_recalculee,Import.Police_Size,TextDisplay=1,Init_State=1)
+    Button_Arrow_Up.associate_a_function(ButtonArrowUpAction)
+    Button_Arrow_Down.associate_a_function(ButtonArrowDownAction)
+    Button_Delete_Selected_Line.associate_a_function(DeleteSelectedLineFromTable)
 
     style = Import.ttk.Style()
     style.map('Treeview', background=[('selected', '#eb0000')])
 
     #tableau
-    table = Import.ttk.Treeview(tab1, columns=(Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][AppLanguages.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][AppLanguages.Language],Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][AppLanguages.Language]))
+    table = Import.ttk.Treeview(tab1.frame, columns=(Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][AppLanguages.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][AppLanguages.Language],Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][AppLanguages.Language]))
     headers = [(Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][AppLanguages.Language],Texte_From_Json["Tab1"]["PannelHeader"]["Column1"][AppLanguages.Language], 80, 65), (Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][AppLanguages.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column2"][AppLanguages.Language], 120, 200), (Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][AppLanguages.Language], Texte_From_Json["Tab1"]["PannelHeader"]["Column3"][AppLanguages.Language], 120, 400)]
     for header in headers:
         table.heading(header[0], text=header[1])
@@ -264,22 +259,22 @@ def PdfCreatorTab(master,root):
     table['show'] = 'headings' # sans ceci, il y avait une colonne vide à gauche qui a pour rôle d'afficher le paramètre "text" qui peut être spécifié lors du insert
     table.place(x=Import.Table_x_Position, y=Import.Table_y_Position, width=Import.Table_Width, height=Import.Table_Height)
 
-    TraitementConversion = Import.tk.Label(tab1, text="", borderwidth=1, relief="solid")
+    TraitementConversion = Import.tk.Label(tab1.frame, text="", borderwidth=1, relief="solid")
 
     #----------------------------------------
     #Nom Bouton, Texte, Image, Fonction
-    Button_Arrow_Up = Import.tk.Button(tab1) ; Button_Arrow_Dow = Import.tk.Button(tab1) ;  Button_Delete_Selected_Line = Import.tk.Button(tab1)
+    # Button_Arrow_Up = Import.tk.Button(tab1.frame) ; Button_Arrow_Down = Import.tk.Button(tab1.frame) ;  Button_Delete_Selected_Line = Import.tk.Button(tab1.frame)
 
-    Arrows_Buttons = [
-        [Button_Arrow_Up, "Monter",Import.Icon_Arrow_Up, ButtonArrowUpAction ],
-        [Button_Delete_Selected_Line, "Supprimer",Import.Icon_Delete_Selected_Line, DeleteSelectedLineFromTable],
-        [Button_Arrow_Dow, "Descendre",Import.Icon_Arrow_Down, ButtonArrowDownAction],
-    ]
+    # Arrows_Buttons = [
+    #     [Button_Arrow_Up, "Monter",Import.Icon_Arrow_Up, ButtonArrowUpAction ],
+    #     [Button_Delete_Selected_Line, "Supprimer",Import.Icon_Delete_Selected_Line, DeleteSelectedLineFromTable],
+    #     [Button_Arrow_Down, "Descendre",Import.Icon_Arrow_Down, ButtonArrowDownAction],
+    # ]
 
     # Boucle placement des bouttons
-    x_Position_Recalculated_For_Arrows_Buttons = ArrowButtons_InitPositionCalculation()
+    # x_Position_Recalculated_For_Arrows_Buttons = ArrowButtons_InitPositionCalculation()
 
     # Associer la fonction DisplaySelectedLineContent à l'événement de clic sur une ligne
     table.bind('<ButtonRelease-1>', DisplaySelectedLineContent)
 
-    return tab1
+    return tab1.frame

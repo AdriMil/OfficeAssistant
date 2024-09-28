@@ -1,4 +1,6 @@
 from Common.myImports import *
+from Common.classes import Button
+from Common.init import root
 
 #-------------App Languages--------------------#
 from Common.SharedFunctions.AppStringsTranslated import My_App_Strings
@@ -64,6 +66,9 @@ Zoom_Buttons_Init_y_Position = Tab2DisplayWindow_y_position + Tab2DisplayWindow_
 #Police
 Police_Typo  = "Helvetica"
 Font_Path = "arial.ttf"  # Remplacez par le chemin de votre police si nécessaire
+
+def exit():
+    root.destroy()
 
 #Buttons Pictures
 def InitButtonsIcones():
@@ -135,6 +140,8 @@ def ControlsButtonsInitPositionCalculation(Liste_Boutons_De_Control,TableForYour
 
     return Control_Button_Init_x_Position,Control_Button_Init_y_Position
 
+
+####Will be deleted
 def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Button_Height,Space_Between_Button,Picture_Reducer_Value,Position_x_recalculee,Police_Size,TextDisplay,Init_State):
     for i in range(0,len(Button_List)):
         Button_List[i][2] = Button_List[i][2].subsample(Picture_Reducer_Value, Picture_Reducer_Value) #Réduction de la taille de l'image
@@ -145,6 +152,47 @@ def PlaceButtonsAutomaticaly(Button_List,Position_y_recalculee,Button_Width,Butt
         Position_x_recalculee = Position_x_recalculee + Button_Width + Space_Between_Button
         Button_List[i].append(Position_x_recalculee) #Sauvegarde de la valeur x du bouton à la fin de la liste
         Button_List[i].append(Position_y_recalculee) #Sauvegarde de la valeur y du bouton à la fin de la liste
+
+
+def buttons_position(buttons_list :list, reference_x : int, refence_y :int, reference_width :int) -> float:
+    """
+    This function will be use to place an amount of buttons on a given width. If the amount of button is too high for line width, then a new line will be created.
+
+    Args:
+        buttons_list (list): List with all buttons which should be placed
+        reference_x (int): x point used to calculate button centering
+        refence_y (int): y point used to calculate button centering
+        reference_width (int): width substarcted to x position to know length where button will be centered
+
+    Returns:
+        float: 1st button x position calculated to allow centering of all buttons
+    """
+    global place
+    button_number = len(buttons_list)
+    if debug==1 : print(button_number, "Button in my list")
+    
+    free_space = reference_width - (button_number * (Button.WIDTH + Button.SPACE_BETWEEN_BUTTON))
+
+    place = reference_x + (free_space / 2)                                                #Buttons will be centered on reference, without line break
+    calculate_button_position(buttons_list, place, refence_y) 
+  
+    return place
+    
+
+    
+def calculate_button_position(buttons_list :list, x_position: int,y_position: int):           #Update button position.
+    """
+    Will be call to place an amount of button centered on one line.
+
+    Args:
+        buttons_list (list): all button which should be placed on one line
+        x_position (int): x position for the first button of the buttons_list
+        y_position (int): y position for the first button of the buttons_list
+    """
+    for mybutton in buttons_list:
+        mybutton.update_button_position(xposition=x_position,yposition=y_position)
+        if debug == 1 : print("My x position is : ",x_position, " My y position is : ", y_position)
+        x_position = x_position + mybutton.width + mybutton.space_between_button
 
 #Processing information
 def DisplayProcessing(Display_Window_x_position,Displa_yWindow_y_position,Display_Window_Width,Display_Window_Height,tab):
