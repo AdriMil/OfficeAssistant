@@ -5,6 +5,7 @@ import Common.SharedFunctions.sharedFunctions as Import
 from Tabs.Tab_PictureObfuscation.PictureOffuscation import Tab2UpdateLangages
 from Common.SharedFunctions.sharedFunctions import AppLanguages
 import Tabs.Tab_Watermark.TabWatermark as AddWatermark
+from Common.init import root, tabControl
 
 #Init Soft version, will be overwrite by Pipelines process
 def MyUserInterface(root):
@@ -13,7 +14,6 @@ def MyUserInterface(root):
 #Tab init Function, used at the begining and when language is changed
 def InitTabs(root):
     global tabControl,tab1,tab2,tab3
-    tabControl = Import.ttk.Notebook(root)
     tab1 = PdfCreatorFunctions.PdfCreatorTab(tabControl,root)
     tab2 = PictureOffuscationFunctions.PictureOffuscationTab(tabControl,root)
     tab3 = AddWatermark.AddWatermark(tabControl,root)
@@ -51,7 +51,6 @@ def InitLanguageMenu():
 Texte_From_Json=Import.LoadText()
 
 # WindowCreation
-root = Import.tk.Tk()
 root.resizable(width=False, height=False) #blocage de la taille de la fenetre
 MyUserInterface(root)
 InitTabs(root)
