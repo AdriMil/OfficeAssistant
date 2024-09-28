@@ -1,5 +1,5 @@
-import SharedFunctions.imports as Import
-from SharedFunctions.imports import AppLanguages
+import Common.SharedFunctions.sharedFunctions as Import
+from Common.SharedFunctions.sharedFunctions import AppLanguages
 from Tabs.Tab_Watermark.EditingTools import AddEditingCanvas, HideEditingCanvas , EditingCanvas
 from Tabs.Tab_Watermark.CreateWatermarkLayer import create_text_image, DisplayText
 from PIL import Image, ImageTk, ImageDraw, ImageFont

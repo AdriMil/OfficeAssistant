@@ -1,5 +1,5 @@
-import SharedFunctions.imports as Import
-from SharedFunctions.imports import AppLanguages
+import Common.SharedFunctions.sharedFunctions as Import
+from Common.SharedFunctions.sharedFunctions import AppLanguages
 
 #-------------------INIT-----------#
 def InitValues():

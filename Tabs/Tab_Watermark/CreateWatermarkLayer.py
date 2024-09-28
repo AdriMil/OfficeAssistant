@@ -1,4 +1,4 @@
-import SharedFunctions.imports as Import
+import Common.SharedFunctions.sharedFunctions as Import
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 #This funcction create a transparency picture with text. This picture will be put above the loaded picture. 

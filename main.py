@@ -1,9 +1,9 @@
 #-----------Chargment des onglets-----------------#
 import Tabs.Tab_PdfCreator.PdfCreator as PdfCreatorFunctions
 import Tabs.Tab_PictureObfuscation.PictureOffuscation as PictureOffuscationFunctions
-import SharedFunctions.imports as Import
+import Common.SharedFunctions.sharedFunctions as Import
 from Tabs.Tab_PictureObfuscation.PictureOffuscation import Tab2UpdateLangages
-from SharedFunctions.imports import AppLanguages
+from Common.SharedFunctions.sharedFunctions import AppLanguages
 import Tabs.Tab_Watermark.TabWatermark as AddWatermark
 
 #Init Soft version, will be overwrite by Pipelines process

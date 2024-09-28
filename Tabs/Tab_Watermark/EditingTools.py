@@ -1,7 +1,7 @@
-import SharedFunctions.imports as Import
+import Common.SharedFunctions.sharedFunctions as Import
 from tkinter import colorchooser
 from Tabs.Tab_Watermark.CreateWatermarkLayer import DisplayText
-from SharedFunctions.imports import AppLanguages
+from Common.SharedFunctions.sharedFunctions import AppLanguages
 
 Texte_From_Json=Import.LoadText()
 

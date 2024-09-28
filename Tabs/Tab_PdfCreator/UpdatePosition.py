@@ -1,4 +1,4 @@
-import SharedFunctions.imports as Import
+import Common.SharedFunctions.sharedFunctions as Import
 
 def ChangePlaceUp(All_Data_In_Table,index):
     if(index!=0):
