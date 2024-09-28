@@ -1,49 +1,54 @@
-import tkinter as tk
-from app.myImports import root
+from Common.myImports import tk,ttk
+# from app.myImports import root
 
-class Chrono:
-    def __init__(self):
-        self.value = 82800
-        self.state = "Pause"
-        self.negative_count = 82801
-        self.running = False
-
-GlobalSeanceChrono = Chrono()
-MainChrono = Chrono()
+class Tab:
+    def __init__(self, notebook, name):
+        self.notebook = notebook
+        self.name = name
+        self.frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.frame, text=self.name)
 
 class Button:
-    id = 0
-    police_size = 8
 
-    def __init__(self,component,text,icone,width,height):
+    id = 0
+    POILCE_SIZE = 8
+    HEIGHT = 40
+    WIDTH = 40
+    SPACE_BETWEEN_BUTTON = 10
+
+    def __init__(self,component,text,icone, width= None, height= None, avaibable= True):
         self.id = id ; Button.id += 1; 
         self.text = text
         self.icone = icone
-        self.width = width
-        self.height = height
+        self.width = Button.WIDTH if not width else width
+        self.height = Button.HEIGHT if not height else height
+        self.space_between_button = Button.SPACE_BETWEEN_BUTTON
         self.function = None
         self.xposition = None
         self.yposition = None
         self.click_number = 0
+        
     
-        self.button = tk.Button(component,font=("Helvetica", self.police_size), text=self.text)
-        self.button.config(image=self.icone, compound=tk.TOP,width=self.width, height=self.height)
+        self.btn = tk.Button(component,font=("Helvetica", self.POILCE_SIZE), text=self.text)
+        self.btn.config(image=self.icone, compound=tk.TOP,width=self.width, height=self.height)
+        if not avaibable:
+            self.btn.config(state=tk.DISABLED)
 
     def update_button_position(self,xposition,yposition):
         print("In update_button_position")
-        self.button.place(x=xposition,y=yposition)
+        self.btn.place(x=xposition,y=yposition)
         self.xposition = xposition
         self.yposition = yposition
     
     def associate_a_function(self,function):
-        self.button.configure(command=function)
+        self.btn.configure(command=function)
         self.function = function
     
     def availability(self,state):
         if state == "lock":
-            self.button.config(state=tk.DISABLED)
+            self.btn.config(state=tk.DISABLED)
         elif state == "unlock":
-            self.button.config(state=tk.NORMAL)
+            self.btn.config(state=tk.NORMAL)
         else :
             print("Bad arguments, try 'lock' or 'unlock'")
     
